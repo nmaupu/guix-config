@@ -8,10 +8,10 @@
 
 (define my-home
   (home-environment
-    (packages (append
-        shells-packages))
-    (services
-      (append 
-        (bash-service)))))
+    (packages (specifications->packages
+                (append
+                  shells-packages)))
+    (services (append 
+        bash-service))))
 
 my-home
