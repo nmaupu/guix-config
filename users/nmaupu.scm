@@ -5,16 +5,19 @@
  #:use-module (guix packages)
  #:use-module (guix gexp)
  #:use-module (home shells)
- #:use-module (home base))
+ #:use-module (home base)
+ #:use-module (home wm))
 
 (define my-home
   (home-environment
     (packages (specifications->packages
                 (append
                   base-packages
-                  shells-packages)))
+                  shells-packages
+                  wm-packages)))
     (services (append
                zsh-service
-               bash-service))))
+               bash-service
+               xmonad-service))))
 
 my-home
