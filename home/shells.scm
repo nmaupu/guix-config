@@ -9,7 +9,8 @@
   (list
     "zsh"
     "bash"
-    "antigen"))
+    "antigen"
+    "zsh-autosuggestions"))
 
 (define env-vars
   '(("TEST" . "val")
@@ -22,7 +23,7 @@
 (define-public bash-service
   (list
     (service home-bash-service-type
-      (home-bash-configuration 
+      (home-bash-configuration
         (aliases aliases)
         (environment-variables env-vars)
         (bashrc (list (local-file
@@ -31,3 +32,12 @@
         (bash-logout (list (local-file
                              "../files/bash_logout"
                              "bash_logout")))))))
+
+(define-public zsh-service
+  (list
+    (service home-zsh-service-type
+      (home-zsh-configuration
+        (environment-variables env-vars)
+        (zshrc (list (local-file
+                      "../files/zshrc"
+                      "zshrc")))))))

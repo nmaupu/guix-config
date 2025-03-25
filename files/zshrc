@@ -16,10 +16,8 @@ setopt HIST_REDUCE_BLANKS
 #############
 # Some vars #
 #############
-export TERM=rxvt-unicode-256color
-#eval `/usr/bin/dircolors ~/.dircolors`
+export TERM=xterm-256color
 export GIT_EDITOR=nvim
-export GOPATH=$HOME/go
 export ANSIBLE_NOCOWS=1
 export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
@@ -27,8 +25,7 @@ export QT_IM_MODULE=ibus
 export DOCKER_ID_USER=nmaupu
 #https://wiki.archlinux.org/index.php/Xmonad#LibreOffice_-_focus_flicking_between_main_window_and_dialog
 export SAL_USE_VCLPLUGIN=gen lowriter
-export JAVA_HOME=/opt/jdk
-export PATH=$PATH:$GOPATH/bin:$HOME/bin:/opt/bin:${JAVA_HOME}/bin:${HOME}/.krew/bin:${HOME}/.local/bin
+export PATH="${HOME}/.krew/bin:${HOME}/.local/bin:$PATH"
 
 # Do not sighup background jobs
 setopt NO_HUP
@@ -67,15 +64,13 @@ antigen use oh-my-zsh
 antigen bundle kubectl
 antigen bundle helm
 antigen bundle docker
-antigen bundle fabric
 antigen bundle git
 antigen bundle git-extras
 antigen bundle git-flow
 antigen bundle pip
 antigen bundle common-aliases
-antigen bundle djui/alias-tips
+# antigen bundle djui/alias-tips
 antigen bundle sudo
-antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen theme romkatv/powerlevel10k
@@ -117,8 +112,6 @@ _gen_fzf_default_opts
 # Custom aliases
 alias test_term_colors="wget -O - https://raw.githubusercontent.com/robertknight/konsole/master/tests/color-spaces.pl | perl; \
   curl -s https://raw.githubusercontent.com/JohnMorales/dotfiles/master/colors/24-bit-color.sh | bash"
-
-export DOCKER_ID_USER=nmaupu
 alias vim="nvim"
 alias vi="nvim"
 alias s="nvim + ~/.scratchpad"
@@ -177,14 +170,13 @@ autocomplete_vault() {
 
 # Trying to fix problem with autocompletion commands
 # https://github.com/zsh-users/antigen/issues/583#issuecomment-336903466
-source $HOME/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh
+#source $HOME/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/nmaupu/downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/nmaupu/downloads/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/downloads/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/downloads/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/nmaupu/downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/nmaupu/downloads/google-cloud-sdk/completion.zsh.inc'; fi
-
+if [ -f "$HOME/downloads/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/downloads/google-cloud-sdk/completion.zsh.inc"; fi

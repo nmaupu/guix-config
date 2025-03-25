@@ -13,7 +13,8 @@
                 (append
                   base-packages
                   shells-packages)))
-    (services (append 
-        bash-service))))
+    (services (append
+               zsh-service
+               bash-service))))
 
 my-home
