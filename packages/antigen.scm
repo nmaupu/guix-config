@@ -1,4 +1,4 @@
-(define-module (config packages antigen)
+(define-module (packages antigen)
   #:use-module (guix build-system trivial)
   #:use-module (guix download)
   #:use-module (guix licenses)
