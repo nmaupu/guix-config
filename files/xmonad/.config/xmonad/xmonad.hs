@@ -258,7 +258,7 @@ manageScratchCentered = customFloating (W.RationalRect l t w h)
 myScratchpads =
   [
     NS "htop" spawnHtop findHtop manageHtop,
-    NS "vimScratchpad" spawnVimScratchpad findVimScratchpad manageVimScratchpad,
+    NS "vimScratchpad" spawnVimScratchpad findVimScratchpad manageVimScratchpad
   ]
   where
     -- htop
