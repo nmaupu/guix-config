@@ -2,10 +2,12 @@
 
 (define-public base-packages
   (list
-    "git"
-    "neovim"
-    "python"
-    "ripgrep"
-    "tig"
+   "alacritty"
+   "git"
+   "htop"
+   "neovim"
+   "python"
+   "ripgrep"
+   "tig"
   )
 )

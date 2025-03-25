@@ -8,10 +8,11 @@
 
 (define-public shells-packages
   (list
-    "zsh"
-    "bash"
-    "antigen"
-    "zsh-autosuggestions"))
+   "alacritty"
+   "zsh"
+   "bash"
+   "antigen"
+   "zsh-autosuggestions"))
 
 (define env-vars
   '(("TERM" . "xterm-256color")
