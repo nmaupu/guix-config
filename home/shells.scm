@@ -1,10 +1,8 @@
 (define-module (home shells)
+  #:use-module (gnu packages)
   #:use-module (gnu services)
-  #:use-module (gnu home-services)
-  #:use-module (gnu home-services shells)
-  #:use-module (gnu home-services shellutils)
-  #:use-module (gnu home-services-utils)
-  #:use-module (gnu home-services base)
+  #:use-module (gnu home services shells)
+  #:use-module (gnu home services shellutils)
   #:use-module (guix gexp)
   #:use-module (packages antigen))
 

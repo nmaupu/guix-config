@@ -2,7 +2,6 @@
  #:use-module (gnu home)
  #:use-module (gnu packages)
  #:use-module (gnu services)
- #:use-module (gnu home services shells)
  #:use-module (guix packages)
  #:use-module (guix gexp)
  #:use-module (home shells))
