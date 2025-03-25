@@ -11,17 +11,23 @@
     "bash"
     "antigen"))
 
+(define env-vars
+  '(("TEST" . "val")
+    ("DOCKER_ID" . "nmaupu")))
+
+(define aliases
+  '(("ls" . "ls --color=auto")
+    ("grep" . "rg")))
+
 (define-public bash-service
   (list
     (service home-bash-service-type
       (home-bash-configuration 
-        (aliases '(("ls" . "ls --color=auto")))
+        (aliases aliases)
+        (environment-variables env-vars)
         (bashrc (list (local-file
                         "../files/bashrc"
                         "bashrc")))
-        (environment-variables
-          '(("TEST" . "val")))
         (bash-logout (list (local-file
                              "../files/bash_logout"
-                             "bash_logout")))
-      ))))
+                             "bash_logout")))))))
