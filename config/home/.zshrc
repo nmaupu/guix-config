@@ -1,0 +1,190 @@
+# Powerlevel10k is configured using ~/.p10k.zsh
+
+###########
+# History #
+###########
+export HISTFILE=/home/nmaupu/.zsh_history
+export HISTSIZE=50000
+export SAVEHIST=50000
+setopt EXTENDED_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+
+#############
+# Some vars #
+#############
+export TERM=rxvt-unicode-256color
+#eval `/usr/bin/dircolors ~/.dircolors`
+export GIT_EDITOR=nvim
+export GOPATH=$HOME/go
+export ANSIBLE_NOCOWS=1
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
+export DOCKER_ID_USER=nmaupu
+#https://wiki.archlinux.org/index.php/Xmonad#LibreOffice_-_focus_flicking_between_main_window_and_dialog
+export SAL_USE_VCLPLUGIN=gen lowriter
+export JAVA_HOME=/opt/jdk
+export PATH=$PATH:$GOPATH/bin:$HOME/bin:/opt/bin:${JAVA_HOME}/bin:${HOME}/.krew/bin:${HOME}/.local/bin
+
+# Do not sighup background jobs
+setopt NO_HUP
+setopt NO_CHECK_JOBS
+
+# Enable bash comment style with dash character
+setopt interactivecomments
+
+#################
+# Misc bindings #
+#################
+bindkey "^[Oc" forward-word
+bindkey "^[Od" backward-word
+bindkey "\^U"  backward-kill-line
+bindkey "^[m"  copy-earlier-word
+
+if [ -f ~/.ssh/config ]; then
+  h=()
+  h=($h ${${${(@M)${(f)"$(cat ~/.ssh/config*)"}:#Host *}#Host }:#*[*? ]*})
+  if [[ $#h -gt 0 ]]; then
+    zstyle ':completion:*:ssh:*' hosts $h
+    zstyle ':completion:*:scp:*' hosts $h
+    zstyle ':completion:*:rsync:*' hosts $h
+    zstyle ':completion:*:slogin:*' hosts $h
+    zstyle ':completion:*:pssh:*' hosts $h
+    zstyle ':completion:*:cssh:*' hosts $h
+  fi
+fi
+
+#####################
+# plugins and theme #
+#####################
+source "$HOME/.guix-profile/share/zsh/site-functions/antigen.zsh"
+
+antigen use oh-my-zsh
+antigen bundle kubectl
+antigen bundle helm
+antigen bundle docker
+antigen bundle fabric
+antigen bundle git
+antigen bundle git-extras
+antigen bundle git-flow
+antigen bundle pip
+antigen bundle common-aliases
+antigen bundle djui/alias-tips
+antigen bundle sudo
+antigen bundle vagrant
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen theme romkatv/powerlevel10k
+antigen apply
+
+###############################
+# Misc at the end of the file #
+###############################
+# FZF
+_gen_fzf_default_opts() {
+  local base03="234"
+  local base02="235"
+  local base01="240"
+  local base00="241"
+  local base0="244"
+  local base1="245"
+  local base2="254"
+  local base3="230"
+  local yellow="136"
+  local orange="166"
+  local red="160"
+  local magenta="125"
+  local violet="61"
+  local blue="33"
+  local cyan="37"
+  local green="64"
+
+  # Solarized Dark color scheme for fzf
+  export FZF_DEFAULT_OPTS="
+    --no-height --border --exact
+    --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+    --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
+  "
+
+}
+_gen_fzf_default_opts
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Custom aliases
+alias test_term_colors="wget -O - https://raw.githubusercontent.com/robertknight/konsole/master/tests/color-spaces.pl | perl; \
+  curl -s https://raw.githubusercontent.com/JohnMorales/dotfiles/master/colors/24-bit-color.sh | bash"
+
+export DOCKER_ID_USER=nmaupu
+alias vim="nvim"
+alias vi="nvim"
+alias s="nvim + ~/.scratchpad"
+alias us="setxkbmap -layout us -variant altgr-intl"
+alias fr="setxkbmap -layout fr"
+
+alias history="fc -il 1"
+
+fpath=(~/.zsh-completions $fpath)
+
+# Kubernetes - change context
+kcs() {
+  local new_context
+  if [ "$1" = '-' ]; then
+    new_context = '-'
+  else
+    new_context=$(kubectl config get-contexts -o=name | fzf -0 -1 --tac -q "${1:-""}")
+  fi
+
+  kubectl config use-context "${new_context}"
+}
+
+# Kubernetes - change current namespace
+kns() {
+  local new_context
+  if [ "$1" = '-' ]; then
+    new_ns = '-'
+  else
+    new_ns=$(kubectl get ns | awk 'NR>2{print $1}'| fzf -0 -1 --tac)
+  fi
+
+  kubectl config set-context $(kubectl config current-context) --namespace="${new_ns}"
+}
+
+autocomplete_kubectl() {
+  source <(kubectl completion zsh)
+}
+
+# Helm completion
+autocomplete_helm() {
+  source <(helm completion zsh)
+}
+
+# Vault completion
+autocomplete_vault() {
+  autoload -U +X bashcompinit && bashcompinit
+  complete -o nospace -C /opt/bin/vault vault
+}
+
+# Custom and private configs
+#if [ -d "${HOME}/.zshrc.d" ]; then
+#  find "${HOME}/.zshrc.d" -type f | while read -r file; do
+#    source ${file}
+#  done
+#fi
+
+# Trying to fix problem with autocompletion commands
+# https://github.com/zsh-users/antigen/issues/583#issuecomment-336903466
+source $HOME/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/nmaupu/downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/nmaupu/downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/nmaupu/downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/nmaupu/downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
