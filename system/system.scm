@@ -45,18 +45,28 @@
   ;; Below is the list of system services.  To search for available
   ;; services, run 'guix system search KEYWORD' in a terminal.
   (services
-   (append (list (service xfce-desktop-service-type)
-
-                 ;; To configure OpenSSH, pass an 'openssh-configuration'
-                 ;; record as a second argument to 'service' below.
-                 (service openssh-service-type)
-                 (service cups-service-type)
-                 (set-xorg-configuration
-                  (xorg-configuration (keyboard-layout keyboard-layout))))
-
-           ;; This is the default list of services we
-           ;; are appending to.
-           %desktop-services))
+    (append
+     (list
+      (simple-service 'add-nonguix-substitutes
+                               guix-service-type
+                               (guix-extension
+                                (substitute-urls
+                                 (append (list "https://substitutes.nonguix.org")
+                                         %default-substitute-urls))
+                                (authorized-keys
+                                 (append (list (plain-file "nonguix.pub"
+                                                           "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
+                                         %default-authorized-guix-keys))))
+      (service xfce-desktop-service-type)
+      ;; To configure OpenSSH, pass an 'openssh-configuration'
+      ;; record as a second argument to 'service' below.
+      (service openssh-service-type)
+      (service cups-service-type)
+      (set-xorg-configuration
+       (xorg-configuration (keyboard-layout keyboard-layout))))
+      ;; This is the default list of services we
+      ;; are appending to.
+      %desktop-services))
   (bootloader (bootloader-configuration
                 (bootloader grub-bootloader)
                 (targets (list "/dev/sda"))

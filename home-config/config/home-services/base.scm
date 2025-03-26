@@ -14,6 +14,7 @@
    "qutebrowser"
    "ripgrep"
    "tig"
+   "ungoogled-chromium"
    "yq"
   )
 )
