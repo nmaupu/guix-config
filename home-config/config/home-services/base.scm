@@ -1,4 +1,4 @@
-(define-module (home base))
+(define-module (config home-services base))
 
 (define-public base-packages
   (list

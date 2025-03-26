@@ -1,12 +1,12 @@
-(define-module (users nmaupu)
+(define-module (config users nmaupu)
  #:use-module (gnu home)
  #:use-module (gnu packages)
  #:use-module (gnu services)
  #:use-module (guix packages)
  #:use-module (guix gexp)
- #:use-module (home shells)
- #:use-module (home base)
- #:use-module (home wm))
+ #:use-module (config home-services shells)
+ #:use-module (config home-services base)
+ #:use-module (config home-services wm))
 
 (define my-home
   (home-environment
@@ -15,7 +15,6 @@
                   base-packages
                   shells-packages
                   wm-packages)))
-                  ;; xmonad-packages)))
     (services (append
                zsh-service
                bash-service

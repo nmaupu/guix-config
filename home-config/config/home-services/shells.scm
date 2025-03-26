@@ -1,10 +1,10 @@
-(define-module (home shells)
+(define-module (config home-services shells)
   #:use-module (gnu packages)
   #:use-module (gnu services)
-  #:use-module (gnu home services) ; home-files-service-type
+  #:use-module (gnu home services)
   #:use-module (gnu home services shells)
   #:use-module (guix gexp)
-  #:use-module (packages antigen))
+  #:use-module (config packages antigen))
 
 (define-public shells-packages
   (list

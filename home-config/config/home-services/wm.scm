@@ -1,4 +1,4 @@
-(define-module (home wm)
+(define-module (config home-services wm)
   #:use-module (gnu packages)
   #:use-module (gnu services)
   #:use-module (gnu home services)
@@ -20,10 +20,13 @@
    "stalonetray"
    "xrandr"))
 
-(define-public xmonad-packages
-  (list
-   "xmonad"
-   "ghc-xmonad-contrib"))
+;; Installed system-wide because otherwise xmonad
+;; can't compile its configuration's file
+;; (define-public xmonad-packages
+;;   (list
+;;    "xmonad"
+;;    "ghc"
+;;    "ghc-xmonad-contrib"))
 
 (define-public xmonad-service
   (list
