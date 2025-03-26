@@ -89,11 +89,11 @@ scratchTerminal = myTerminal
 winKey = mod4Mask
 
 -- Wide screen
-topbarMainWidth = "3900"
-topbarRightWidth = "1020"
+--topbarMainWidth = "3900"
+--topbarRightWidth = "1020"
 -- Laptop screen
--- topbarMainWidth = "1000"
--- topbarRightWidth = "900"
+topbarMainWidth = "1000"
+topbarRightWidth = "900"
 
 colBG           = "#0f0f0f"
 colBorderFocus  = "#b700ff"
@@ -182,7 +182,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_a (sendMessage MirrorShrink) $
   addKeyBinding cModCtrl xK_z (sendMessage MirrorExpand) $
   -- Restart
-  addKeyBinding modMask xK_q (spawn "killall conky dzen2 && xmonad --recompile && xmonad --restart") $
+  addKeyBinding modMask xK_q (spawn "killall conky dzen2; xmonad --recompile && xmonad --restart") $
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   ([ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2] -- using ThreeCol with virtual screens, screens order are messed up
@@ -281,7 +281,8 @@ myManageHook = composeAll
       title =? "GIMP" --> doFloat,
       className =? "jetbrains-pycharm" --> doShift "6",
       className =? "jetbrains-idea" --> doShift "6",
-      className =? "Pavucontrol" --> doRectFloat (W.RationalRect 0.35 0.1 0.3 0.8)
+      -- className =? "Pavucontrol" --> doRectFloat (W.RationalRect 0.35 0.1 0.3 0.8)
+      className =? "Pavucontrol" --> manageScratchCentered
     ]
     <+> manageSpawn
     <+> namedScratchpadManageHook myScratchpads
