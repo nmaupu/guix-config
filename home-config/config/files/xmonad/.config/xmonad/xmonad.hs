@@ -112,7 +112,7 @@ rofiPass  = "gopass ls --flat | rofi -dmenu -p \"Password\" -matching fuzzy -the
 --dmenuProg = "prog=`" ++ dmenuCommandProg ++ "` && eval \"exec ${prog}\""
 rofiProg = "rofi -modi run -theme sidebar -show"
 rofiClipboard = "rofi -modi \"clipboard:greenclip print\" -theme solarized_alternate -show clipboard -run-command '{cmd}'"
-greenclipClear = "pkill greenclip && greenclip clear && greenclip daemon"
+greenclipClear = "greenclip clear"
 dmenuServ = "param=`" ++ scriptServer ++ " -l | " ++ dmenuCommandBasic ++ " -b` && eval \"" ++ scriptServer ++ " -e ${param}\""
 lxappearance = "lxappearance"
 screenshot = "flameshot"
