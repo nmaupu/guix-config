@@ -14,7 +14,8 @@
                 (append
                   base-packages
                   shells-packages
-                  wm-packages)))
+                  wm-base-packages
+                  xmonad-packages)))
     (services (append
                zsh-service
                bash-service

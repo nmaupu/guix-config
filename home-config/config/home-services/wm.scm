@@ -5,28 +5,28 @@
   #:use-module (gnu home services dotfiles)
   #:use-module (guix gexp))
 
-(define-public wm-packages
+(define-public wm-base-packages
   (list
    "acpi"
    "arandr"
+   "pavucontrol"
+   "xrandr"))
+
+(define-public xmonad-packages
+  (list
+   ;; Installed system-wide because otherwise xmonad
+   ;; can't compile its configuration's file
+   ;; "xmonad"
+   ;; "ghc"
+   ;; "ghc-xmonad-contrib"
    "conky"
    "dmenu"
    "dunst"
    "dzen"
    "flameshot"
    "greenclip"
-   "pavucontrol"
    "rofi"
-   "stalonetray"
-   "xrandr"))
-
-;; Installed system-wide because otherwise xmonad
-;; can't compile its configuration's file
-;; (define-public xmonad-packages
-;;   (list
-;;    "xmonad"
-;;    "ghc"
-;;    "ghc-xmonad-contrib"))
+   "stalonetray"))
 
 (define-public xmonad-service
   (list
