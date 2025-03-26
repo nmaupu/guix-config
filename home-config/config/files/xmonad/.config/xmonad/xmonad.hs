@@ -108,10 +108,10 @@ dmenuCommandBasic = "dmenu " ++ dmenuCommandOpts
 dmenuCommandOpts = "-p '>' -l 10 -nf '" ++ colNormal ++ "' -nb '" ++ colBG ++ "' -fn '" ++ dmenuFont ++ "' -sb '" ++ colFocus ++ "' -sf '" ++ colNormal ++ "'"
 dmenuCommandProg = "dmenu_run " ++ dmenuCommandOpts
 --dmenuPass = "param=`" ++ scriptPass ++ " -l | " ++ dmenuCommandBasic ++ " -b -l 10` && eval \"" ++ scriptPass ++ " -c ${param}\""
-rofiPass  = "~/.bin/gopass ls --flat | rofi -dmenu -p \"Password\" -matching fuzzy | xargs --no-run-if-empty gopass show -c"
+rofiPass  = "gopass ls --flat | rofi -dmenu -p \"Password\" -matching fuzzy -theme purple | xargs --no-run-if-empty gopass show -c"
 --dmenuProg = "prog=`" ++ dmenuCommandProg ++ "` && eval \"exec ${prog}\""
-rofiProg = "rofi -modi run -theme Pop-Dark -show"
-rofiClipboard = "rofi -modi \"clipboard:greenclip print\" -show clipboard -run-command '{cmd}'"
+rofiProg = "rofi -modi run -theme sidebar -show"
+rofiClipboard = "rofi -modi \"clipboard:greenclip print\" -theme solarized_alternate -show clipboard -run-command '{cmd}'"
 greenclipClear = "pkill greenclip && greenclip clear && greenclip daemon"
 dmenuServ = "param=`" ++ scriptServer ++ " -l | " ++ dmenuCommandBasic ++ " -b` && eval \"" ++ scriptServer ++ " -e ${param}\""
 lxappearance = "lxappearance"
