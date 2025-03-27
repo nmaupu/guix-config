@@ -7,12 +7,17 @@
  #:use-module (config home-services shells)
  #:use-module (config home-services base)
  #:use-module (config home-services tmux)
- #:use-module (config home-services wm))
+ #:use-module (config home-services wm)
+ #:use-module (config packages antigen)
+ #:use-module (config packages tmux-tpm))
 
 (define my-home
   (home-environment
-    (packages (specifications->packages
-                (append
+   (packages
+    (cons*
+      antigen
+      tmux-tpm
+      (map specification->packages
                   base-packages
                   shells-packages
                   wm-base-packages

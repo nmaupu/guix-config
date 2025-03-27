@@ -1,12 +1,13 @@
 (define-module (config home-services tmux)
   #:use-module (gnu packages)
   #:use-module (gnu home services)
-  #:use-module (gnu home services dotfiles))
+  #:use-module (gnu home services dotfiles)
+  #:use-module (config packages tmux-tpm))
 
 (define-public tmux-packages
   (list
    "tmux"
-   "tmux-plugin-resurrect"))
+   "tmux-tpm"))
 
 (define-public tmux-service
   (list
