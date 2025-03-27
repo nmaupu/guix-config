@@ -11,22 +11,21 @@
  #:use-module (config packages antigen)
  #:use-module (config packages tmux-tpm))
 
-(define my-home
+(define-public pkgs
+  (append base-packages
+          shells-packages
+          wm-base-packages
+          xmonad-packages
+          tmux-packages))
+(define-public svcs
+  (append zsh-service
+          bash-service
+          xmonad-service
+          tmux-service))
+
+(define-public my-home
   (home-environment
-   (packages
-    (cons*
-      antigen
-      tmux-tpm
-      (map specification->packages
-                  base-packages
-                  shells-packages
-                  wm-base-packages
-                  xmonad-packages
-                  tmux-packages)))
-    (services (append
-               zsh-service
-               bash-service
-               xmonad-service
-               tmux-service))))
+   (packages pkgs)
+   (services svcs)))
 
 my-home

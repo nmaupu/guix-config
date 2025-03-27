@@ -3,10 +3,9 @@
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix git-download)
-  #:use-module (guix utils)
-  #:export (tmux-tpm))
+  #:use-module (guix utils))
 
-(define tmux-tpm
+(define-public tmux-tpm
   (package
     (name "tmux-tpm")
     (version "3.1.0-99469c4a9b1ccf77fade25842dc7bafbc8ce9946")
@@ -25,10 +24,9 @@
        #:builder (begin
                    (use-modules (guix build utils))
                    (let* ((out (assoc-ref %outputs "out"))
-                          (source (assoc-ref %build-inputs "source"))
-                          (dest (string-append out "/.tmux/plugins/tpm")))
-                     (mkdir-p dest)
-                     (copy-recursively source dest)))))
+                          (source (assoc-ref %build-inputs "source")))
+                     (mkdir-p out)
+                     (copy-recursively source out)))))
     (home-page "https://github.com/tmux-plugins/tpm")
     (synopsis "Tmux Plugin Manager")
     (description "TPM manages tmux plugins from configuration.")
