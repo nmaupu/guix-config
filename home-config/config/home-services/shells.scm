@@ -37,9 +37,12 @@
 
 (define-public zsh-service
   (list
+   (simple-service 'zsh-antigen
+                   home-files-service-type
+                   `((".antigen.zsh" ,(file-append antigen "/antigen.zsh"))))
    (simple-service 'zsh-misc-configs
                    home-files-service-type
-                   `((".config/zsh/.p10k.zsh", (local-file "../files/zsh/p10k"))))
+                   `((".config/zsh/.p10k.zsh" ,(local-file "../files/zsh/p10k"))))
    (service home-zsh-service-type
             (home-zsh-configuration
              (environment-variables env-vars)

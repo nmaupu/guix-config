@@ -58,7 +58,7 @@ fi
 #####################
 # plugins and theme #
 #####################
-source "$HOME/.guix-profile/share/zsh/site-functions/antigen.zsh"
+source "$HOME/.antigen.zsh"
 
 antigen use oh-my-zsh
 antigen bundle kubectl
