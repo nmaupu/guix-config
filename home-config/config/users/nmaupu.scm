@@ -6,6 +6,7 @@
  #:use-module (guix gexp)
  #:use-module (config home-services shells)
  #:use-module (config home-services base)
+ #:use-module (config home-services tmux)
  #:use-module (config home-services wm))
 
 (define my-home
@@ -15,10 +16,12 @@
                   base-packages
                   shells-packages
                   wm-base-packages
-                  xmonad-packages)))
+                  xmonad-packages
+                  tmux-packages)))
     (services (append
                zsh-service
                bash-service
-               xmonad-service))))
+               xmonad-service
+               tmux-service))))
 
 my-home
