@@ -2,8 +2,7 @@
   #:use-module (guix build-system trivial)
   #:use-module (guix licenses)
   #:use-module (guix packages)
-  #:use-module (guix git-download)
-  #:use-module (guix utils))
+  #:use-module (guix git-download))
 
 (define-public tmux-tpm
   (package

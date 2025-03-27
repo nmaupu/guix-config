@@ -1,7 +1,6 @@
 (define-module (config home-services wm)
   #:use-module (gnu packages)
   #:use-module (gnu services)
-  #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
   #:use-module (gnu packages haskell-apps) ; greenclip package obj
@@ -15,7 +14,7 @@
          "xrandr"
          "xclip")))
 
-(define-public xmonad-packages
+(define-public wm-xmonad-packages
   (map specification->package
        ;; xmonad, ghc and ghc-xmonad-contrib packages are installed system-wid
        ;; because xmonad can't compile its configuration's file otherwise.
@@ -29,7 +28,7 @@
          "rofi"
          "stalonetray")))
 
-(define-public xmonad-service
+(define-public wm-xmonad-service
   (append
    (list
     (service home-dotfiles-service-type

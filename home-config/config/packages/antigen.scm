@@ -1,8 +1,8 @@
 (define-module (config packages antigen)
   #:use-module (guix build-system trivial)
-  #:use-module (guix download)
   #:use-module (guix licenses)
-  #:use-module (guix packages))
+  #:use-module (guix packages)
+  #:use-module (guix download))
 
 (define-public antigen
   (package
