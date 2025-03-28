@@ -19,6 +19,7 @@
         "dmenu"
         "dunst"
         "flameshot"
+        "fzf"
         "greenclip"
         "pinentry-rofi"
         "polybar"
