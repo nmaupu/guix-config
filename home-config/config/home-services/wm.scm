@@ -25,6 +25,7 @@
          "dzen"
          "flameshot"
          "greenclip"
+         "pinentry-rofi"
          "rofi"
          "stalonetray")))
 
