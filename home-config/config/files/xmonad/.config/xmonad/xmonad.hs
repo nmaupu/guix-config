@@ -33,11 +33,10 @@ import XMonad.Layout.Hidden
 import XMonad.Util.Cursor
 import XMonad.Hooks.ManageHelpers
 -- Virtual screens
-import XMonad.Layout.LayoutScreens
 import Data.IORef
 import Data.IORef (newIORef)
-import XMonad.Core
-
+-- startup
+import XMonad.Util.SpawnOnce
 
 ------------------------------------------------------------------------
 -- funcs
@@ -78,8 +77,6 @@ centerWebex win = do
 altKey = mod1Mask
 tabbedFont = "xft:DejaVu Sans Mono:pixelsize=13,style=Regular,xft:Inconsolata for Powerline:pixelsize=13"
 dmenuFont = "xft:DejaVu Sans Mono:pixelsize=15,style=Regular,xft:Inconsolata for Powerline:pixelsize=15"
-dzenFontBold = "-xos4-terminus-bold-r-normal-*-14-*-*-*-*-*-iso8859-15"
-dzenFontNormal = "-xos4-terminus-*-r-normal-*-14-*-*-*-*-*-iso8859-15"
 iconDir = ".config/xmonad/icons"
 iconSep = iconDir ++ "/separator.xbm"
 myBorderWidth = 3
@@ -183,7 +180,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_a (sendMessage MirrorShrink) $
   addKeyBinding cModCtrl xK_z (sendMessage MirrorExpand) $
   -- Restart
-  addKeyBinding modMask xK_s (spawn "xmonad --recompile && pgrep -f \"conky|dzen2\" | xargs kill -9 && xmonad --restart") $
+  addKeyBinding modMask xK_s (spawn "xmonad --recompile && xmonad --restart") $
   addKeyBinding cModShift xK_s (spawn "pgrep -f \"xmonad\" | xargs kill -9") $
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   ([ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
@@ -303,31 +300,15 @@ myManageHook = composeAll
 --     <+> setWMName "LG3D"
 --     <+> setDefaultCursor xC_pirate
 
-myStatusBar = "dzen2 -dock -xs 1 -m -x 0 -y 0 -h 20 -w " ++ topbarMainWidth ++ " -ta l -fg '" ++ colNormal ++ "' -bg '" ++ colBG ++ "' -fn '" ++ dzenFontBold ++ "'"
-
-myDzenRight = "conky -c " ++ scriptDir ++ "/conky-dzen | dzen2 -xs 1 -ta r -fn '" ++ dzenFontNormal ++ "' -x " ++ topbarMainWidth ++ " -y 0 -h 20 -w " ++ topbarRightWidth ++ " -ta r -bg '" ++ colBG ++ "' -fg '" ++ colNormal ++ "' -p -e ''"
-
--- dynamicLog pretty printer for dzen
-myDzenPP h = def {
-  ppCurrent = dzenColor colFocus colBG,
-  ppVisible = dzenColor colNormal colBG,
-  ppHiddenNoWindows = dzenColor colHidden "",
-  ppUrgent = dzenColor colUrgent "",
-  ppTitle = dzenColor colNormal "" . wrap "< " " >",
-  ppWsSep = "  ",
-  ppSep = " ^i(" ++ iconSep ++ ") ",
-  ppOutput = hPutStrLn h
-}
+myStartupHook = do
+  spawnOnce "polybar"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 --
 main = do
   refState <- newIORef False
-  dzen <- spawnPipe myStatusBar
-  dzenRight <- spawnPipe myDzenRight
   xmonad $
-      withUrgencyHook dzenUrgencyHook {args = ["-bg", "darkgreen", "-xs", "1"]} $
       docks $ ewmhFullscreen . ewmh $
       def {
         terminal = myTerminal,
@@ -341,7 +322,6 @@ main = do
         mouseBindings = myMouseBindings,
         layoutHook = myLayout,
         manageHook = myManageHook,
-        -- logHook = (dynamicLogWithPP $ myDzenPP dzen) >> dynamicLogXinerama >> updatePointer (0.5, 0.5) (0, 0),
-        logHook = (dynamicLogWithPP $ myDzenPP dzen) >> dynamicLogXinerama,
+        logHook = myStartupHook,
         handleEventHook = handleEventHook def
       }

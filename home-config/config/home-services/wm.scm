@@ -23,6 +23,7 @@
         "flameshot"
         "greenclip"
         "pinentry-rofi"
+        "polybar"
         "rofi"
         "stalonetray"))
 
