@@ -61,15 +61,16 @@ centerWebex win = do
 -- Using IORef to keep track of a boolean state
 -- We get the boolean and invert it then we toggle screen layout (1 <-> 3 virtual screens)
 -- Parameter ref is passed along the keybindings func
-toggleLayoutScreens :: IORef Bool -> X ()
-toggleLayoutScreens ref = do
-  val <- io $ readIORef ref
-  io $ writeIORef ref (not val)
-  if val
-    then
-      rescreen
-    else
-      layoutSplitScreen 3 $ ThreeColMid 1 0 (1/2)
+-- Deprecated, using xrandr directly instead
+-- toggleLayoutScreens :: IORef Bool -> X ()
+-- toggleLayoutScreens ref = do
+--   val <- io $ readIORef ref
+--   io $ writeIORef ref (not val)
+--   if val
+--     then
+--       rescreen
+--     else
+--       layoutSplitScreen 3 $ ThreeColMid 1 0 (1/2)
 
 ------------------------------------------------------------------------
 -- vars
@@ -131,7 +132,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   --addKeyBinding modMask xK_s (layoutScreens 3 $ ThreeColMid 1 0 (1/2)) $
   -- Revert to single screen
   --addKeyBinding cModShift xK_s rescreen $
-  addKeyBinding modMask xK_s (toggleLayoutScreens refState) $
+  --addKeyBinding modMask xK_s (toggleLayoutScreens refState) $
   --addKeyBinding cModCtrl xK_s (spawn $ "xmessage " ++ show width ) $
 
   addKeyBinding modMask xK_b (spawn dmenuBrightness) $
@@ -182,10 +183,12 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_a (sendMessage MirrorShrink) $
   addKeyBinding cModCtrl xK_z (sendMessage MirrorExpand) $
   -- Restart
-  addKeyBinding modMask xK_q (spawn "killall conky dzen2; xmonad --recompile && xmonad --restart") $
+  addKeyBinding modMask xK_s (spawn "xmonad --recompile && pgrep -f \"conky|dzen2\" | xargs kill -9 && xmonad --restart") $
+  addKeyBinding cModShift xK_s (spawn "pgrep -f \"xmonad\" | xargs kill -9") $
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   ([ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2] -- using ThreeCol with virtual screens, screens order are messed up
+        -- | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2] -- using ThreeCol with virtual screens, screens order are messed up
+        | (key, sc) <- zip [xK_q, xK_w, xK_e] [0,1,2]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
    ]
    ++
