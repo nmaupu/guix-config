@@ -17,9 +17,12 @@ xrandr --addmode HDMI-1 "4096x1440_30.00"
 # xrandr --listmonitors : list all the configure monitor
 # xrandr --delmonitor <monitor> : delete a configured monitor
 # xrandr --setmonitor <NAME> <WIDTH>/dpiX<HEIGHT>/dpiY+X_OFFSET+Y_OFFSET <OUTPUT>
-xrandr --setmonitor LeftMonitor 1900/345x1440/290+0+0 HDMI-1
-xrandr --setmonitor CenterMonitor 2200/345x1440/290+1900+0 none
-xrandr --setmonitor RightMonitor 1020/345x1440/290+4100+0 none
+LEFT_WIDTH=1800
+CENTER_WIDTH=2200
+RIGHT_WIDTH=$((5120-LEFT_WIDTH-CENTER_WIDTH))
+xrandr --setmonitor LeftMonitor $LEFT_WIDTH/345x1440/290+0+0 HDMI-1
+xrandr --setmonitor CenterMonitor $CENTER_WIDTH/345x1440/290+$LEFT_WIDTH+0 none
+xrandr --setmonitor RightMonitor $RIGHT_WIDTH/345x1440/290+$((LEFT_WIDTH+CENTER_WIDTH))+0 none
 
 # Set keyboard map
 setxkbmap us -variant qwerty-fr
