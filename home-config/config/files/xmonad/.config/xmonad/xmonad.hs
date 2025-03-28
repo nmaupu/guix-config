@@ -288,18 +288,6 @@ myManageHook = composeAll
     <+> namedScratchpadManageHook myScratchpads
     <+> manageDocks
 
-------------------------------------------------------------------------
--- Status bars and logging
--- large first is workspaces and window's title
--- next, conky (700px)
--- remaining 100px for trayer app (see .xprofile file)
---
--- myStartupHook = setWMName "LG3D"
--- myStartupHook =
---   docksStartupHook
---     <+> setWMName "LG3D"
---     <+> setDefaultCursor xC_pirate
-
 myStartupHook = do
   spawnOnce "polybar"
 

@@ -16,16 +16,13 @@
   ;; xmonad, ghc and ghc-xmonad-contrib packages are installed system-wid
   ;; because xmonad can't compile its configuration's file otherwise.
   (list "greenclip"
-        "conky"
         "dmenu"
         "dunst"
-        "dzen"
         "flameshot"
         "greenclip"
         "pinentry-rofi"
         "polybar"
-        "rofi"
-        "stalonetray"))
+        "rofi"))
 
 (define-public wm-xmonad-service
   (append
