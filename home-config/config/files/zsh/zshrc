@@ -118,8 +118,10 @@ alias vi="nvim"
 alias s="nvim + ~/.scratchpad"
 alias us="setxkbmap -layout us -variant altgr-intl"
 alias fr="setxkbmap -layout fr"
-
 alias history="fc -il 1"
+alias guix-system-reconfigure="sudo guix system reconfigure ~/src/guix-config/system/system.scm"
+alias guix-home-reconfigure="guix home reconfigure -L ~/src/guix-config/home-config ~/src/guix-config/home-config/config/users/${USER}.scm"
+alias emacs="emacsclient -r -t -c -e "(+workspace:delete)"
 
 fpath=(~/.zsh-completions $fpath)
 
