@@ -1,5 +1,4 @@
 (define-module (config home-services shells)
-  #:use-module (gnu packages)
   #:use-module (gnu services)
   #:use-module (gnu home services)
   #:use-module (gnu home services shells)
@@ -7,11 +6,10 @@
   #:use-module (config packages antigen))
 
 (define-public shells-packages
-  (map specification->package
-       '("alacritty"
-         "zsh"
-         "bash"
-         "zsh-autosuggestions")))
+  (list "alacritty"
+        "zsh"
+        "bash"
+        "zsh-autosuggestions"))
 
 (define env-vars
   '(("TERM" . "xterm-256color")
