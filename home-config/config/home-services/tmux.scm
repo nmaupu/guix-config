@@ -7,10 +7,8 @@
   #:use-module (config packages tmux-tpm))
 
 (define-public tmux-packages
-  (cons*
-   tmux-tpm
-   (map specification->package
-        '("tmux"))))
+  (map specification->package
+       '("tmux")))
 
 (define-public tmux-service
   (list

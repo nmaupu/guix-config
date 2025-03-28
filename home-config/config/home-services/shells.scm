@@ -7,13 +7,11 @@
   #:use-module (config packages antigen))
 
 (define-public shells-packages
-  (cons*
-   antigen
-   (map specification->package
-        '("alacritty"
-          "zsh"
-          "bash"
-          "zsh-autosuggestions"))))
+  (map specification->package
+       '("alacritty"
+         "zsh"
+         "bash"
+         "zsh-autosuggestions")))
 
 (define env-vars
   '(("TERM" . "xterm-256color")
