@@ -1,4 +1,4 @@
-(define-module (config home-services wm)
+(define-module (nmaupu home-services wm)
   #:use-module (gnu services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
@@ -10,7 +10,8 @@
         "arandr"
         "pavucontrol"
         "xrandr"
-        "xclip"))
+        "xclip"
+        "xmodmap"))
 
 (define-public wm-xmonad-packages
   ;; xmonad, ghc and ghc-xmonad-contrib packages are installed system-wid

@@ -1,4 +1,4 @@
-(define-module (config home-services base))
+(define-module (nmaupu home-services base))
 
 (define-public base-packages
   (list "alacritty"

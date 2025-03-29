@@ -1,4 +1,4 @@
-(define-module (config packages tmux-tpm)
+(define-module (nmaupu packages tmux-tpm)
   #:use-module (guix build-system trivial)
   #:use-module (guix licenses)
   #:use-module (guix packages)
