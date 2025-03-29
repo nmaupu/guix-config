@@ -1,4 +1,4 @@
-(define-module (config home-services wm)
+(define-module (nmaupu home-services wm)
   #:use-module (gnu services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)

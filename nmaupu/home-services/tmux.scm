@@ -1,9 +1,9 @@
-(define-module (config home-services tmux)
+(define-module (nmaupu home-services tmux)
   #:use-module (gnu services)
   #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (guix gexp)
-  #:use-module (config packages tmux-tpm))
+  #:use-module (nmaupu packages tmux-tpm))
 
 (define-public tmux-packages
   (list "tmux"))

@@ -1,9 +1,9 @@
-(define-module (config home-services shells)
+(define-module (nmaupu home-services shells)
   #:use-module (gnu services)
   #:use-module (gnu home services)
   #:use-module (gnu home services shells)
   #:use-module (guix gexp)
-  #:use-module (config packages antigen))
+  #:use-module (nmaupu packages antigen))
 
 (define-public shells-packages
   (list "alacritty"

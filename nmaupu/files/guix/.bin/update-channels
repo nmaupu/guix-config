@@ -1,0 +1,5 @@
+#!/bin/sh
+guix pull --channels=$HOME/.config/guix/base-channels.scm --allow-downgrades
+guix describe --format=channels > "$HOME/.config/guix/channels.scm"
+
+echo "Channels updated!"
