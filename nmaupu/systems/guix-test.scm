@@ -18,28 +18,14 @@
 
 (use-service-modules cups desktop docker virtualization mcron networking ssh xorg)
 
-;; gnu/packages/specification->package gets a Package object from a string
-;; Each module provides a list of packages as strings
-;; so we need to get the actual Package object to be able to install them effectively
-(define pkgs
-  (map specification->package
-       (append base-packages
-               shells-packages
-               wm-base-packages
-               wm-xmonad-packages
-               tmux-packages)))
-
-(define svcs
-  (append zsh-service
-          guix-service
-          bash-service
-          wm-xmonad-service
-          tmux-service))
-
 (define home
  (home-environment
-  (packages pkgs)
-  (services svcs)))
+  (services
+   (append home-base-services
+           home-shells-services
+           home-guix-services
+           home-xmonad-services
+           home-tmux-services))))
 
 (define system
  (operating-system

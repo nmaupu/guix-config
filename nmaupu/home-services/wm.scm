@@ -1,45 +1,58 @@
 (define-module (nmaupu home-services wm)
+  #:use-module (gnu)
   #:use-module (gnu services)
+  #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
-  #:use-module (gnu packages haskell-apps) ; greenclip package obj
   #:use-module (guix gexp))
 
-(define-public wm-base-packages
-  (list "acpi"
-        "arandr"
-        "pavucontrol"
-        "xrandr"
-        "xclip"
-        "xmodmap"))
+(use-package-modules linux xdisorg pulseaudio xorg haskell-apps
+                     suckless wm image terminals gnupg)
 
-(define-public wm-xmonad-packages
-  ;; xmonad, ghc and ghc-xmonad-contrib packages are installed system-wid
-  ;; because xmonad can't compile its configuration's file otherwise.
-  (list "greenclip"
-        "dmenu"
-        "dunst"
-        "flameshot"
-        "fzf"
-        "greenclip"
-        "pinentry-rofi"
-        "polybar"
-        "rofi"))
+(define (home-wm-base-profile-service config)
+  (list acpi
+        arandr
+        pavucontrol
+        xrandr
+        xclip
+        xmodmap))
 
-(define-public wm-xmonad-service
-  (append
-   (list
-    (service home-dotfiles-service-type
-             (home-dotfiles-configuration
-              (directories '("../files/xmonad"))))
-    (service home-shepherd-service-type
-             (home-shepherd-configuration
-              (auto-start? #t)
-              (services
-               (list
-                (shepherd-service
-                 (documentation "Run the Greenclip daemon.")
-                 (provision '(greenclip))
-                 (start #~(make-forkexec-constructor
-                           (list #$(file-append greenclip "/bin/greenclip") "daemon")))
-                 (stop #~(make-kill-destructor))))))))))
+(define (home-xmonad-profile-service config)
+  (list greenclip
+        dmenu
+        dunst
+        flameshot
+        fzf
+        pinentry-rofi
+        polybar
+        rofi))
+
+(define home-xmonad-service-type
+  (service-type (name 'xmonad)
+                (description "Packages and configuration related to xmonad wm.")
+                (extensions
+                 (list (service-extension
+                        home-profile-service-type
+                        home-wm-base-profile-service)
+                       (service-extension
+                        home-profile-service-type
+                        home-xmonad-profile-service)))
+                (default-value #f)))
+
+(define-public home-xmonad-services
+  (list
+   (service home-xmonad-service-type)
+   (service home-dotfiles-service-type
+            (home-dotfiles-configuration
+             (directories '("../files/xmonad"))))
+   (service home-shepherd-service-type
+            (home-shepherd-configuration
+             (auto-start? #t)
+             (services
+              (list
+               (shepherd-service
+                (documentation "Run the Greenclip daemon.")
+                (provision '(greenclip))
+                (start #~(make-forkexec-constructor
+                          (list #$(file-append greenclip "/bin/greenclip") "daemon")))
+                (stop #~(make-kill-destructor)))))))))

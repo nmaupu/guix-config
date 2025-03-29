@@ -4,7 +4,7 @@
   #:use-module (gnu home services dotfiles)
   #:use-module (guix gexp))
 
-(define-public guix-service
+(define-public home-guix-services
   (list
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
