@@ -1,6 +1,6 @@
 (define-module (nmaupu home-services base)
   #:use-module (gnu)
-  #:use-module (gnu packages)
+  #:use-module (gnu packages) ; defines specification->package
   #:use-module (gnu services)
   #:use-module (gnu home services)
   #:use-module (nongnu packages mozilla))

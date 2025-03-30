@@ -14,7 +14,7 @@
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome
                      networking wm fonts libusb cups freedesktop file-systems
-                     version-control package-management vim haskell xorg)
+                     version-control package-management vim)
 
 (define-public base-operating-system
   (operating-system
@@ -81,16 +81,12 @@
                     emacs-no-x-toolkit
                     exfat-utils
                     fuse-exfat
-                    ghc
-                    ghc-xmonad-contrib
                     git
                     gvfs    ;; Enable user mounts
                     intel-media-driver/nonfree
                     libva-utils
-                    libxft
                     ntfs-3g
                     vim
-                    xmonad
                     %base-packages))
 
    ;; Configure only the services necessary to run the system

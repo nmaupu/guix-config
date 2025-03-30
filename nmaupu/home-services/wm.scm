@@ -6,8 +6,8 @@
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp))
 
-(use-package-modules linux xdisorg pulseaudio xorg haskell-apps
-                     suckless wm image terminals gnupg)
+(use-package-modules linux xdisorg pulseaudio xorg haskell haskell-apps
+                     suckless wm image terminals gnupg xorg)
 
 (define (home-wm-base-profile-service config)
   (list acpi
@@ -23,9 +23,13 @@
         dunst
         flameshot
         fzf
+        ghc
+        ghc-xmonad-contrib
+        libxft
         pinentry-rofi
         polybar
-        rofi))
+        rofi
+        xmonad))
 
 (define home-xmonad-service-type
   (service-type (name 'xmonad)
