@@ -5,7 +5,7 @@
   #:use-module (gnu home services)
   #:use-module (nongnu packages mozilla))
 
-(use-package-modules curl version-control admin linux web
+(use-package-modules curl version-control admin linux web rsync commencement
                      vim python web-browsers rust-apps chromium)
 
 (define (home-base-profile-service config)
@@ -13,6 +13,7 @@
         lm-sensors
         firefox
         git
+        gcc-toolchain
         htop
         jq
         (specification->package "make")
@@ -21,6 +22,7 @@
         qutebrowser
         ripgrep
         fd
+        rsync
         tig
         ungoogled-chromium
         yq))
