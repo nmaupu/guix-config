@@ -182,3 +182,8 @@ if [ -f "$HOME/downloads/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/downloa
 
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/downloads/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/downloads/google-cloud-sdk/completion.zsh.inc"; fi
+
+if [ -d "$HOME/.guix-profile" ]; then
+  export GUIX_PROFILE="$HOME/.guix-profile"
+  . "$GUIX_PROFILE/etc/profile"
+fi
