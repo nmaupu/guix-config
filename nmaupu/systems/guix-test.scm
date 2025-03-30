@@ -48,6 +48,17 @@
                  (set-xorg-configuration
                   (xorg-configuration (keyboard-layout keyboard-layout)))
 
+		 (simple-service 'add-nonguix-substitutes
+                               guix-service-type
+                               (guix-extension
+                                (substitute-urls
+                                 (append (list "https://substitutes.nonguix.org")
+                                         %default-substitute-urls))
+                                (authorized-keys
+                                 (append (list (plain-file "nonguix.pub"
+                                                           "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
+                                         %default-authorized-guix-keys))))
+
                  ;; Docker
                  (service containerd-service-type)
                  (service docker-service-type)
@@ -69,19 +80,26 @@
            ;; are appending to.
            %desktop-services))
 
-  (swap-devices (list (swap-space
-                       (target (uuid "fc69de37-2cab-49e0-8068-e65a95b2146e")))))
+  (mapped-devices (list (mapped-device
+                          (source (uuid
+                                   "9c3384af-0a28-4201-b2d5-3dc113b73381"))
+                          (target "crypthome")
+                          (type luks-device-mapping))))
 
   ;; The list of file systems that get "mounted".  The unique
   ;; file system identifiers there ("UUIDs") can be obtained
   ;; by running 'blkid' in a terminal.
-  (file-systems
-   (cons* (file-system
-           (mount-point "/")
-           (device (uuid "71ea5623-9d4c-49a3-8127-f99ca335ef49"
-                         'ext4))
-           (type "ext4"))
-          %base-file-systems))))
+  (file-systems (cons* (file-system
+                         (mount-point "/home")
+                         (device "/dev/mapper/crypthome")
+                         (type "btrfs")
+                         (dependencies mapped-devices))
+                       (file-system
+                         (mount-point "/")
+                         (device (uuid
+                                  "ab622d91-15b4-4d86-a8fe-48283b5b4068"
+                                  'btrfs))
+                         (type "btrfs")) %base-file-systems))))
 
 ;; Return home or system config based on environment variable
 (if (getenv "RUNNING_GUIX_HOME") home system)

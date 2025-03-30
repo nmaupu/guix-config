@@ -31,20 +31,27 @@
         rofi
         xmonad))
 
+(define home-base-service-type
+  (service-type (name 'base)
+                (description "Packages and configuration related to base wm.")
+                (extensions
+                 (list (service-extension
+                        home-profile-service-type
+                        home-wm-base-profile-service)))
+                (default-value #f)))
+
 (define home-xmonad-service-type
   (service-type (name 'xmonad)
                 (description "Packages and configuration related to xmonad wm.")
                 (extensions
                  (list (service-extension
                         home-profile-service-type
-                        home-wm-base-profile-service)
-                       (service-extension
-                        home-profile-service-type
                         home-xmonad-profile-service)))
                 (default-value #f)))
 
 (define-public home-xmonad-services
   (list
+   (service home-base-service-type)
    (service home-xmonad-service-type)
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
