@@ -15,7 +15,9 @@
         pavucontrol
         xrandr
         xclip
-        xmodmap))
+        xmodmap
+        setxkbmap
+        xkbcomp))
 
 (define (home-xmonad-profile-service config)
   (list greenclip
