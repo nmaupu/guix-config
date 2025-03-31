@@ -1,4 +1,4 @@
-(define-module (nmaupu systems guix-test)
+(define-module (nmaupu systems nmaupu-laptop)
   #:use-module (gnu)
   #:use-module (gnu home)
   #:use-module (gnu packages) ;specification->package procedure
@@ -30,14 +30,10 @@
 (define system
  (operating-system
   (inherit base-operating-system)
-  (host-name "guix-test")
+  (host-name "nmaupu-laptop")
 
-  (keyboard-layout (keyboard-layout "us" "altgr-intl"))
-
-  (bootloader (bootloader-configuration
-               (bootloader grub-bootloader)
-               (targets (list "/dev/sda"))
-               (keyboard-layout keyboard-layout)))
+  ;; Redefining here as inherited doesn't seem to be picked off
+  (keyboard-layout (keyboard-layout "us" "altgr-intl" #:model "thinkpad"))
 
   (services
    (append (list (service xfce-desktop-service-type)
@@ -80,26 +76,40 @@
            ;; are appending to.
            %desktop-services))
 
-  (mapped-devices (list (mapped-device
-                          (source (uuid
-                                   "9c3384af-0a28-4201-b2d5-3dc113b73381"))
-                          (target "crypthome")
-                          (type luks-device-mapping))))
+  (mapped-devices (list
+                   (mapped-device (source "main")
+                                  (targets (list "main-home"
+                                                 "main-docker"))
+                                  (type lvm-device-mapping))
+                   (mapped-device (source "/dev/disk/by-label/crypt-home")
+                                  (target "crypt-home")
+                                  (type luks-device-mapping))))
 
   ;; The list of file systems that get "mounted".  The unique
   ;; file system identifiers there ("UUIDs") can be obtained
   ;; by running 'blkid' in a terminal.
-  (file-systems (cons* (file-system
-                         (mount-point "/home")
-                         (device "/dev/mapper/crypthome")
-                         (type "btrfs")
-                         (dependencies mapped-devices))
-                       (file-system
-                         (mount-point "/")
-                         (device (uuid
-                                  "ab622d91-15b4-4d86-a8fe-48283b5b4068"
-                                  'btrfs))
-                         (type "btrfs")) %base-file-systems))))
+  (file-systems (cons*
+                 (file-system (device "/dev/nvme0n1p1")
+                              (mount-point "/boot/efi")
+                              (type "vfat"))
+                 (file-system (mount-point "/")
+                              (device (file-system-label "root"))
+                              (type "xfs"))
+                 (file-system (mount-point "/home")
+                              (device "/dev/mapper/crypt-home")
+                              (type "xfs")
+                              (dependencies mapped-devices))
+                 (file-system (mount-point "/var/lib/docker")
+                              (device "/dev/mapper/main-docker")
+                              (type "xfs")
+                              (create-mount-point? #t)
+                              (dependencies mapped-devices))
+                 %base-file-systems))
+
+  ;; Swap file on /home which is an encrypted partition
+  (swap-devices (list (swap-space
+                       (target "/home/.swapfile")
+                       (dependencies (filter (file-system-mount-point-predicate "/home") file-systems)))))))
 
 ;; Return home or system config based on environment variable
 (if (getenv "RUNNING_GUIX_HOME") home system)
