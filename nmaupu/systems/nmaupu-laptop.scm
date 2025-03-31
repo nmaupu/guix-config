@@ -27,6 +27,8 @@
            home-xmonad-services
            home-tmux-services))))
 
+(define %btrfs-disk-uuid "79cff8266-4f35-4d45-af2f-cbb27f9669fc")
+
 (define system
  (operating-system
   (inherit base-operating-system)
@@ -76,40 +78,54 @@
            ;; are appending to.
            %desktop-services))
 
+  ;; (mapped-devices (list
+  ;;                  (mapped-device (source "main")
+  ;;                                 (targets (list "main-home"
+  ;;                                                "main-docker"))
+  ;;                                 (type lvm-device-mapping))
+  ;;                  (mapped-device (source "/dev/disk/by-label/crypt-home")
+  ;;                                 (target "crypt-home")
+  ;;                                 (type luks-device-mapping))))
+
+  ;; Creating a mapped luks device for all the btrfs partitions
   (mapped-devices (list
-                   (mapped-device (source "main")
-                                  (targets (list "main-home"
-                                                 "main-docker"))
-                                  (type lvm-device-mapping))
-                   (mapped-device (source "/dev/disk/by-label/crypt-home")
-                                  (target "crypt-home")
+                   (mapped-device (source (uuid %btrfs-disk-uuid))
+                                  (target "crypt-guix-pool")
                                   (type luks-device-mapping))))
 
   ;; The list of file systems that get "mounted".  The unique
   ;; file system identifiers there ("UUIDs") can be obtained
   ;; by running 'blkid' in a terminal.
   (file-systems (cons*
-                 (file-system (device "/dev/nvme0n1p1")
-                              (mount-point "/boot/efi")
-                              (type "vfat"))
                  (file-system (mount-point "/")
-                              (device (file-system-label "root"))
-                              (type "xfs"))
+                              (device "/dev/mapper/crypt-guix-pool")
+                              (type "btrfs")
+                              (options "subvol=root,compress-force=zstd"))
                  (file-system (mount-point "/home")
-                              (device "/dev/mapper/crypt-home")
-                              (type "xfs")
-                              (dependencies mapped-devices))
+                              (device "/dev/mapper/crypt-guix-pool")
+                              (type "btrfs")
+                              (options "subvol=home,compress-force=zstd"))
                  (file-system (mount-point "/var/lib/docker")
-                              (device "/dev/mapper/main-docker")
-                              (type "xfs")
-                              (create-mount-point? #t)
-                              (dependencies mapped-devices))
+                              (device "/dev/mapper/crypt-guix-pool")
+                              (type "btrfs")
+                              (options "subvol=docker,compress-force=zstd"))
+                 (file-system (mount-point "/gnu/store")
+                              (device "/dev/mapper/crypt-guix-pool")
+                              (type "btrfs")
+                              (options "subvol=gnustore,compress-force=zstd"))
+                 (file-system (mount-point "/swap")
+                              (device "/dev/mapper/crypt-guix-pool")
+                              (type "btrfs")
+                              (options "subvol=swap"))
+                 (file-system (mount-point "/boot/efi")
+                              (device "/dev/nvme0n1p1")
+                              (type "vfat"))
                  %base-file-systems))
 
   ;; Swap file on /home which is an encrypted partition
   (swap-devices (list (swap-space
-                       (target "/home/.swapfile")
-                       (dependencies (filter (file-system-mount-point-predicate "/home") file-systems)))))))
+                       (target "/swap/swapfile")
+                       (dependencies file-systems))))))
 
 ;; Return home or system config based on environment variable
 (if (getenv "RUNNING_GUIX_HOME") home system)
