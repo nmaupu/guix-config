@@ -27,7 +27,7 @@
            home-xmonad-services
            home-tmux-services))))
 
-(define %luks-root-partition-uuid "79cff8266-4f35-4d45-af2f-cbb27f9669fc")
+(define %luks-root-partition-uuid "1bddce67-af38-4486-9573-acf1bba9805d")
 
 (define system
  (operating-system
