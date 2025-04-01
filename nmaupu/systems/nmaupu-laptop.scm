@@ -10,8 +10,9 @@
   #:use-module (gnu system mapped-devices)
   #:use-module (nongnu packages linux)
   #:use-module (nmaupu systems base)
-  #:use-module (nmaupu home-services shells)
   #:use-module (nmaupu home-services base)
+  #:use-module (nmaupu home-services git)
+  #:use-module (nmaupu home-services shells)
   #:use-module (nmaupu home-services tmux)
   #:use-module (nmaupu home-services wm)
   #:use-module (nmaupu home-services guix))
@@ -22,6 +23,7 @@
  (home-environment
   (services
    (append home-base-services
+           home-git-services
            home-shells-services
            home-guix-services
            home-xmonad-services
