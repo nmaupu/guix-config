@@ -1,0 +1,23 @@
+# .zsh_plugins.txt
+rupa/z              # some bash plugins work too
+sindresorhus/pure   # enhance your prompt
+
+# you can even use Oh My Zsh plugins
+getantidote/use-omz
+ohmyzsh/ohmyzsh path:lib
+ohmyzsh/ohmyzsh path:plugins/extract
+ohmyzsh/ohmyzsh path:plugins/kubectl
+ohmyzsh/ohmyzsh path:plugins/helm
+ohmyzsh/ohmyzsh path:plugins/docker
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/git-extras
+ohmyzsh/ohmyzsh path:plugins/pip
+ohmyzsh/ohmyzsh path:plugins/common-aliases
+
+# add fish-like features
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-history-substring-search
+zsh-users/zsh-completions
+
+romkatv/powerlevel10k

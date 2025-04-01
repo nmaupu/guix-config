@@ -1,0 +1,72 @@
+general.import = ["~/.config/alacritty/themes/themes/solarized_dark.toml"]
+
+[colors.bright]
+black = "#002b36"
+blue = "#839496"
+cyan = "#93a1a1"
+green = "#586e75"
+magenta = "#6c71c4"
+red = "#cb4b16"
+white = "#fdf6e3"
+yellow = "#657b83"
+
+[colors.cursor]
+cursor = "#839496"
+text = "#002b36"
+
+[colors.normal]
+black = "#073642"
+blue = "#268bd2"
+cyan = "#2aa198"
+green = "#859900"
+magenta = "#d33682"
+red = "#dc322f"
+white = "#eee8d5"
+yellow = "#b58900"
+
+[colors.primary]
+background = "#002b36"
+foreground = "#839496"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 9
+
+# Font location ~/.local/share/fonts
+# Reload cache: fc-cache -f -v
+# Look up font: fc-list
+[font.bold]
+family = "CommitMono Nerd Font Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "CommitMono Nerd Font Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "CommitMono Nerd Font Mono"
+style = "Italic"
+
+[font.normal]
+family = "CommitMono Nerd Font Mono"
+style = "Regular"
+
+[cursor.style]
+blinking = "Never"
+
+[scrolling]
+history = 100000
+
+[window]
+dynamic_title = true
+
+[window.class]
+general = "Alacritty"
+instance = "Alacritty"
+
+[keyboard]
+bindings = [
+  # { key = ";", mods = "Control", chars = "\u001f" }
+]

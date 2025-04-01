@@ -5,9 +5,10 @@
   #:use-module (gnu home services)
   #:use-module (nongnu packages mozilla)
   #:use-module (nongnu packages compression)
-  #:use-module (nmaupu packages qwerty-fr))
+  #:use-module (nmaupu packages qwerty-fr)
+  #:use-module (nmaupu packages fonts))
 
-(use-package-modules curl version-control admin linux web rsync commencement
+(use-package-modules curl version-control admin linux web rsync commencement databases
                      compression vim python web-browsers rust-apps chromium admin)
 
 (define (home-base-profile-service config)
@@ -26,12 +27,14 @@
         ripgrep
         fd
         rsync
+	recutils
         tig
         tree
         ungoogled-chromium
         unrar
         unzip
-        yq))
+        yq
+	font-nerd-commitmono))
 
 (define home-base-service-type
   (service-type (name 'base)

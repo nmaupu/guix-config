@@ -2,15 +2,17 @@
   #:use-module (gnu)
   #:use-module (gnu services)
   #:use-module (gnu home services)
+  #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shells)
   #:use-module (guix gexp)
-  #:use-module (nmaupu packages antigen))
+  #:use-module (nmaupu packages antidote)
+  #:use-module (nmaupu packages alacritty-theme))
 
 (use-package-modules shells terminals bash)
 
 (define (home-shells-profile-service config)
   (list alacritty
-        zsh
+	zsh
         bash))
 
 (define (home-desktop-env-vars config)
@@ -32,12 +34,21 @@
 (define-public home-shells-services
   (list
    (service home-shells-service-type)
-   (simple-service 'zsh-antigen
+   (service home-dotfiles-service-type
+            (home-dotfiles-configuration
+             (directories '("../files/alacritty"))))
+   (simple-service 'extra-config-files-from-packages
                    home-files-service-type
-                   `((".antigen.zsh" ,(file-append antigen "/antigen.zsh"))))
+                   `((".config/zsh/.antidote"
+                      ,(directory-union "antidote"
+                                        (list antidote)))
+		     (".config/alacritty/themes"
+		      ,(directory-union "alacritty-theme"
+                                        (list alacritty-theme)))))
    (simple-service 'zsh-misc-configs
                    home-files-service-type
-                   `((".config/zsh/.p10k.zsh" ,(local-file "../files/zsh/p10k"))))
+                   `((".config/zsh/.p10k.zsh" ,(local-file "../files/zsh/p10k"))
+		     (".config/zsh/.zsh_plugins.txt" ,(local-file "../files/zsh/zsh_plugins.txt"))))
    (service home-zsh-service-type
             (home-zsh-configuration
              (zshrc (list (local-file
