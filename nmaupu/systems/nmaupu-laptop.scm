@@ -27,7 +27,7 @@
            home-xmonad-services
            home-tmux-services))))
 
-(define %btrfs-disk-uuid "79cff8266-4f35-4d45-af2f-cbb27f9669fc")
+(define %luks-root-partition-uuid "79cff8266-4f35-4d45-af2f-cbb27f9669fc")
 
 (define system
  (operating-system
@@ -78,54 +78,41 @@
            ;; are appending to.
            %desktop-services))
 
-  ;; (mapped-devices (list
-  ;;                  (mapped-device (source "main")
-  ;;                                 (targets (list "main-home"
-  ;;                                                "main-docker"))
-  ;;                                 (type lvm-device-mapping))
-  ;;                  (mapped-device (source "/dev/disk/by-label/crypt-home")
-  ;;                                 (target "crypt-home")
-  ;;                                 (type luks-device-mapping))))
-
-  ;; Creating a mapped luks device for all the btrfs partitions
+  ;; Creating a mapped luks device for all the LVM partitions
   (mapped-devices (list
-                   (mapped-device (source (uuid %btrfs-disk-uuid))
-                                  (target "crypt-guix-pool")
-                                  (type luks-device-mapping))))
+                   (mapped-device (source (uuid %luks-root-partition-uuid))
+                                  (target "crypt-root")
+                                  (type luks-device-mapping))
+                   (mapped-device (source "sys")
+                                  (targets (list "sys-swap"
+                                                 "sys-root"
+                                                 "sys-docker"
+                                                 "sys-gnustore"
+                                                 "sys-home"
+                                                 "sys-log"))
+                                  (type lvm-device-mapping))))
 
-  ;; The list of file systems that get "mounted".  The unique
-  ;; file system identifiers there ("UUIDs") can be obtained
-  ;; by running 'blkid' in a terminal.
-  (file-systems (cons*
-                 (file-system (mount-point "/")
-                              (device "/dev/mapper/crypt-guix-pool")
-                              (type "btrfs")
-                              (options "subvol=root,compress-force=zstd"))
-                 (file-system (mount-point "/home")
-                              (device "/dev/mapper/crypt-guix-pool")
-                              (type "btrfs")
-                              (options "subvol=home,compress-force=zstd"))
-                 (file-system (mount-point "/var/lib/docker")
-                              (device "/dev/mapper/crypt-guix-pool")
-                              (type "btrfs")
-                              (options "subvol=docker,compress-force=zstd"))
-                 (file-system (mount-point "/gnu/store")
-                              (device "/dev/mapper/crypt-guix-pool")
-                              (type "btrfs")
-                              (options "subvol=gnustore,compress-force=zstd"))
-                 (file-system (mount-point "/swap")
-                              (device "/dev/mapper/crypt-guix-pool")
-                              (type "btrfs")
-                              (options "subvol=swap"))
-                 (file-system (mount-point "/boot/efi")
-                              (device "/dev/nvme0n1p1")
-                              (type "vfat"))
-                 %base-file-systems))
+  ;; The list of file systems that get "mounted".
+  (file-systems (append (map (lambda (item)
+                               (file-system (device (car (cdr item)))
+                                            (mount-point (car item))
+                                            (type "xfs")
+                                            (needed-for-boot? (cdr (cdr item)))
+                                            (dependencies mapped-devices)))
+                             '(("/"               "/dev/mapper/sys-root"     #t)
+                               ("/gnu/store"      "/dev/mapper/sys-gnustore" #t)
+                               ("/home"           "/dev/mapper/sys-home"     #f)
+                               ("/var/lib/docker" "/dev/mapper/sys-docker"   #f)
+                               ("/var/log"        "/dev/mapper/sys-log"      #f)))
+                        (list (file-system (mount-point "/boot/efi")
+                                           (device "/dev/nvme0n1p1")
+                                           (type "vfat")))
+                        %base-file-systems))
 
-  ;; Swap file on /home which is an encrypted partition
+  ;; Swap file over encrypted LVM
   (swap-devices (list (swap-space
-                       (target "/swap/swapfile")
-                       (dependencies file-systems))))))
+                       (target "/dev/mapper/sys-swap")
+                       (dependencies mapped-devices))))))
 
 ;; Return home or system config based on environment variable
 (if (getenv "RUNNING_GUIX_HOME") home system)
