@@ -1,2 +1,9 @@
+[user]
+  name = Nicolas Maupu
+  email = nmaupu@gmail.com
+
 [includeIf "gitdir:~/work/perso/"]
+  path = ~/.gitconfig-perso
+
+[includeIf "gitdir:~/.dotfiles"]
   path = ~/.gitconfig-perso
