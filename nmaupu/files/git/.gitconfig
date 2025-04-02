@@ -7,3 +7,6 @@
 
 [includeIf "gitdir:~/.dotfiles"]
   path = ~/.gitconfig-perso
+
+[safe]
+  directory = ~/work/perso/guix
