@@ -14,7 +14,7 @@
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome
                      networking wm fonts libusb cups freedesktop file-systems
-                     version-control package-management vim)
+                     version-control package-management vim pulseaudio)
 
 (define-public base-operating-system
   (operating-system
@@ -75,10 +75,12 @@
                  %base-groups))
 
    ;; Install bare-minimum system packages
-   (packages (cons* bluez
+   (packages (cons* alsa-plugins
+                    alsa-lib
+                    bluez
                     bluez-alsa
                     brightnessctl
-                    emacs-no-x-toolkit
+                    dconf
                     exfat-utils
                     fuse-exfat
                     git
@@ -87,7 +89,9 @@
                     libva-utils
                     lvm2
                     ntfs-3g
+                    pulseaudio
                     vim
+                    pipewire
                     %base-packages))
 
    ;; Configure only the services necessary to run the system
