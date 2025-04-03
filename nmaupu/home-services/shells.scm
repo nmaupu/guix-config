@@ -59,8 +59,8 @@
    (service home-bash-service-type
             (home-bash-configuration
              (bashrc (list (local-file
-                            "../files/bashrc"
+                            "../files/bash/bashrc"
                             "bashrc")))
              (bash-logout (list (local-file
-                                 "../files/bash_logout"
+                                 "../files/bash/bash_logout"
                                  "bash_logout")))))))
