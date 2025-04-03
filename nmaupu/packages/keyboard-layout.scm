@@ -1,4 +1,5 @@
 (define-module (nmaupu packages keyboard-layout)
+  #:use-module (gnu packages compression)
   #:use-module (guix build-system trivial)
   #:use-module (guix licenses)
   #:use-module (guix packages)
