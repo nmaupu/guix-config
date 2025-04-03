@@ -22,8 +22,8 @@
   #:use-module (nmaupu home-services tmux)
   #:use-module (nmaupu home-services wm)
   #:use-module (nmaupu home-services guix)
-  #:use-module (nmaupu systems latest-sof-firmware)
-  #:use-module (nmaupu systems latest-linux-firmware))
+  #:use-module (nmaupu systems custom-sof-firmware)
+  #:use-module (nmaupu systems custom-linux-firmware))
 
 (use-service-modules dbus dns guix admin sysctl pm nix cups desktop linux avahi
                      mcron networking xorg ssh docker audio virtualization)
@@ -48,7 +48,7 @@
  (operating-system
   (inherit base-operating-system)
   (kernel linux)
-  (firmware (list latest-linux-firmware latest-sof-firmware))
+  (firmware (list custom-linux-firmware custom-sof-firmware))
   (initrd microcode-initrd)
   (host-name "nmaupu-laptop")
 
