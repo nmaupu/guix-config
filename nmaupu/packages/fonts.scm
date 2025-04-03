@@ -11,8 +11,9 @@
     (source
      (origin
        (method url-fetch)
-       (uri (string-append 
-	      "https://github.com/ryanoasis/nerd-fonts/releases/download/v" version "/CommitMono.zip"))
+       (uri (string-append "https://github.com/ryanoasis/nerd-fonts/releases/download/v"
+                           version
+                           "/CommitMono.zip"))
        (sha256
         (base32
          "0bxk8mqalg2sf8pnm85p083imcjcnzz4h5lg0920dljqbz95w1gj"))))
