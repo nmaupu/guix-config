@@ -12,7 +12,7 @@
 
 (define (home-shells-profile-service config)
   (list alacritty
-	zsh
+        zsh
         bash))
 
 (define (home-desktop-env-vars config)
@@ -42,18 +42,20 @@
                    `((".config/zsh/.antidote"
                       ,(directory-union "antidote"
                                         (list antidote)))
-		     (".config/alacritty/themes"
-		      ,(directory-union "alacritty-theme"
+                     (".config/alacritty/themes"
+                      ,(directory-union "alacritty-theme"
                                         (list alacritty-theme)))))
    (simple-service 'zsh-misc-configs
                    home-files-service-type
                    `((".config/zsh/.p10k.zsh" ,(local-file "../files/zsh/p10k"))
-		     (".config/zsh/.zsh_plugins.txt" ,(local-file "../files/zsh/zsh_plugins.txt"))))
+                     (".config/zsh/.zsh_plugins.txt" ,(local-file "../files/zsh/zsh_plugins.txt"))))
    (service home-zsh-service-type
             (home-zsh-configuration
              (zshrc (list (local-file
                            "../files/zsh/zshrc"
-                           "zshrc")))))
+                           "zshrc")))
+             (zprofile (list (local-file
+                              "../files/zsh/zprofile" "zprofile")))))
    (service home-bash-service-type
             (home-bash-configuration
              (bashrc (list (local-file
