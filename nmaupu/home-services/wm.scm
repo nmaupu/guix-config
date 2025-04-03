@@ -16,8 +16,8 @@
         xrandr
         xclip
         xmodmap
-        setxkbmap
-        xkbcomp))
+        xrdb
+        setxkbmap))
 
 (define (home-xmonad-profile-service config)
   (list greenclip

@@ -24,8 +24,9 @@ xrandr --addmode HDMI-1 "4096x1440_30.00"
 #xrandr --setmonitor CenterMonitor $CENTER_WIDTH/345x1440/290+$LEFT_WIDTH+0 none
 #xrandr --setmonitor RightMonitor $RIGHT_WIDTH/345x1440/290+$((LEFT_WIDTH+CENTER_WIDTH))+0 none
 
-# Set keyboard map
-setxkbmap us -variant qwerty-fr
+# Set keyboard map (no space after -I or it won't load)
+xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb "$DISPLAY"
+
 # Remap shift+esc to ~
 xmodmap -e 'keysym Escape = Escape asciitilde Escape'
 
