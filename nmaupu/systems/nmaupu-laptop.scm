@@ -56,14 +56,7 @@
   (keyboard-layout (keyboard-layout "us" "altgr-intl" #:model "thinkpad"))
 
   (services
-   (append (list (service xfce-desktop-service-type)
-                 ;; To configure OpenSSH, pass an 'openssh-configuration'
-                 ;; record as a second argument to 'service' below.
-                 (service openssh-service-type)
-                 (set-xorg-configuration
-                  (xorg-configuration (keyboard-layout keyboard-layout)))
-;;
-                 (simple-service 'add-nonguix-substitutes
+   (append (list (simple-service 'add-nonguix-substitutes
                                guix-service-type
                                (guix-extension
                                 (substitute-urls
@@ -74,6 +67,21 @@
                                                            "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
                                          %default-authorized-guix-keys))))
 
+                 ;; Set up Polkit to allow `wheel' users to run admin tasks
+                 polkit-wheel-service
+
+                 (set-xorg-configuration
+                  (xorg-configuration (keyboard-layout keyboard-layout)
+                                      (extra-config '("Section \"InputClass\""
+                                                      "  Identifier \"libinput touchpad catchall\""
+                                                      "  MatchIsTouchpad \"on\""
+                                                      "  MatchDevicePath \"/dev/input/event*\""
+                                                      "  Driver \"libinput\""
+                                                      "  Option \"Tapping\" \"on\""
+                                                      "EndSection" ))))
+
+                 (service openssh-service-type)
+
                  ;; Docker
                  (service containerd-service-type)
                  (service docker-service-type)
@@ -82,19 +90,10 @@
                            (unix-sock-group "libvirt")
                            (tls-port "16555")))
 
-                 ;; Schedule cron jobs for system tasks
-                 (simple-service 'system-cron-jobs
-                                 mcron-service-type
-                                 (list
-                                  ;; Run `guix gc' 5 minutes after midnight every day.
-                                  ;; ;; Clean up generations older than 2 months and free
-                                  ;; ;; at least 10G of space.
-                                  #~(job "5 0 * * *" "guix gc -d 2m -F 10G")))
-
-                 ;;;;
                  (service bluetooth-service-type
                           (bluetooth-configuration
                            (auto-enable? #t)))
+
                  (service usb-modeswitch-service-type)
 
                  ;; Power and thermal management services
@@ -104,14 +103,8 @@
                            (cpu-boost-on-ac? #t)
                            (wifi-pwr-on-bat? #t)))
 
-                 ;; Enable JACK to enter realtime mode
-                 (service pam-limits-service-type
-                          (list
-                           (pam-limits-entry "@realtime" 'both 'rtprio 99)
-                           (pam-limits-entry "@realtime" 'both 'nice -19)
-                           (pam-limits-entry "@realtime" 'both 'memlock 'unlimited)))
-
                  ;; Enable printing and scanning
+                 (service sane-service-type)
                  (service cups-service-type
                           (cups-configuration
                            (web-interface? #t)
@@ -122,12 +115,20 @@
                  (simple-service 'mtp udev-service-type (list libmtp))
 
                  ;; Add udev rules for a few packages
-                 ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
+                 (udev-rules-service 'pipewire-add-udev-rules pipewire)
                  (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                  ;; Enable the build service for Nix package manager
-                 (service nix-service-type))
-                 ;;;;
+                 (service nix-service-type)
+
+                 ;; Schedule cron jobs for system tasks
+                 (simple-service 'system-cron-jobs
+                                 mcron-service-type
+                                 (list
+                                  ;; Run `guix gc' 5 minutes after midnight every day.
+                                  ;; ;; Clean up generations older than 2 months and free
+                                  ;; ;; at least 10G of space.
+                                  #~(job "5 0 * * *" "guix gc -d 2m -F 10G"))))
 
            ;; This is the default list of services we
            ;; are appending to.
