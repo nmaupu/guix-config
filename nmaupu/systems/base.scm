@@ -14,7 +14,7 @@
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome
                      networking wm fonts libusb cups freedesktop file-systems
-                     version-control package-management vim)
+                     version-control package-management vim pulseaudio)
 
 (define-public base-operating-system
   (operating-system
@@ -78,15 +78,17 @@
    (packages (cons* bluez
                     bluez-alsa
                     brightnessctl
-                    emacs-no-x-toolkit
+                    dconf
                     exfat-utils
                     fuse-exfat
                     git
                     gvfs    ;; Enable user mounts
                     intel-media-driver/nonfree
+                    intel-microcode
                     libva-utils
                     lvm2
                     ntfs-3g
+                    pulseaudio
                     vim
                     %base-packages))
 
@@ -214,7 +216,7 @@
                (simple-service 'mtp udev-service-type (list libmtp))
 
                ;; Add udev rules for a few packages
-               (udev-rules-service 'pipewire-add-udev-rules pipewire)
+               ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
                (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                ;; Enable the build service for Nix package manager

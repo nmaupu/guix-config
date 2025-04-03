@@ -1,23 +1,36 @@
 (define-module (nmaupu systems nmaupu-laptop)
+  #:use-module (srfi srfi-1)
   #:use-module (gnu)
   #:use-module (gnu home)
   #:use-module (gnu packages) ;specification->package procedure
   #:use-module (gnu packages file-systems)
   #:use-module (gnu services)
   #:use-module (gnu system)
+  #:use-module (gnu system nss)
   #:use-module (gnu system uuid)
   #:use-module (gnu system file-systems)
+  #:use-module (gnu system setuid)
+  #:use-module (gnu system privilege)
   #:use-module (gnu system mapped-devices)
   #:use-module (nongnu packages linux)
+  #:use-module (nongnu packages video)
+  #:use-module (nongnu system linux-initrd)
   #:use-module (nmaupu systems base)
   #:use-module (nmaupu home-services base)
   #:use-module (nmaupu home-services git)
   #:use-module (nmaupu home-services shells)
   #:use-module (nmaupu home-services tmux)
   #:use-module (nmaupu home-services wm)
-  #:use-module (nmaupu home-services guix))
+  #:use-module (nmaupu home-services guix)
+  #:use-module (nmaupu systems custom-sof-firmware)
+  #:use-module (nmaupu systems custom-linux-firmware))
 
-(use-service-modules cups desktop docker virtualization mcron networking ssh xorg)
+(use-service-modules dbus dns guix admin sysctl pm nix cups desktop linux avahi
+                     mcron networking xorg ssh docker audio virtualization)
+
+(use-package-modules audio video nfs certs shells ssh linux bash emacs gnome avahi
+                     networking wm fonts libusb cups freedesktop file-systems
+                     version-control package-management vim pulseaudio)
 
 (define home
  (home-environment
@@ -34,6 +47,9 @@
 (define system
  (operating-system
   (inherit base-operating-system)
+  (kernel linux)
+  (firmware (list custom-linux-firmware custom-sof-firmware))
+  (initrd microcode-initrd)
   (host-name "nmaupu-laptop")
 
   ;; Redefining here as inherited doesn't seem to be picked off
@@ -44,10 +60,9 @@
                  ;; To configure OpenSSH, pass an 'openssh-configuration'
                  ;; record as a second argument to 'service' below.
                  (service openssh-service-type)
-                 (service cups-service-type)
                  (set-xorg-configuration
                   (xorg-configuration (keyboard-layout keyboard-layout)))
-
+;;
                  (simple-service 'add-nonguix-substitutes
                                guix-service-type
                                (guix-extension
@@ -67,14 +82,52 @@
                            (unix-sock-group "libvirt")
                            (tls-port "16555")))
 
-               ;; Schedule cron jobs for system tasks
-               (simple-service 'system-cron-jobs
-                               mcron-service-type
-                               (list
-                                ;; Run `guix gc' 5 minutes after midnight every day.
-                                ;; Clean up generations older than 2 months and free
-                                ;; at least 10G of space.
-                                #~(job "5 0 * * *" "guix gc -d 2m -F 10G"))))
+                 ;; Schedule cron jobs for system tasks
+                 (simple-service 'system-cron-jobs
+                                 mcron-service-type
+                                 (list
+                                  ;; Run `guix gc' 5 minutes after midnight every day.
+                                  ;; ;; Clean up generations older than 2 months and free
+                                  ;; ;; at least 10G of space.
+                                  #~(job "5 0 * * *" "guix gc -d 2m -F 10G")))
+
+                 ;;;;
+                 (service bluetooth-service-type
+                          (bluetooth-configuration
+                           (auto-enable? #t)))
+                 (service usb-modeswitch-service-type)
+
+                 ;; Power and thermal management services
+                 (service thermald-service-type)
+                 (service tlp-service-type
+                          (tlp-configuration
+                           (cpu-boost-on-ac? #t)
+                           (wifi-pwr-on-bat? #t)))
+
+                 ;; Enable JACK to enter realtime mode
+                 (service pam-limits-service-type
+                          (list
+                           (pam-limits-entry "@realtime" 'both 'rtprio 99)
+                           (pam-limits-entry "@realtime" 'both 'nice -19)
+                           (pam-limits-entry "@realtime" 'both 'memlock 'unlimited)))
+
+                 ;; Enable printing and scanning
+                 (service cups-service-type
+                          (cups-configuration
+                           (web-interface? #t)
+                           (extensions
+                            (list cups-filters))))
+
+                 ;; Add udev rules for MTP (mobile) devices for non-root user access
+                 (simple-service 'mtp udev-service-type (list libmtp))
+
+                 ;; Add udev rules for a few packages
+                 ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
+                 (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
+
+                 ;; Enable the build service for Nix package manager
+                 (service nix-service-type))
+                 ;;;;
 
            ;; This is the default list of services we
            ;; are appending to.
