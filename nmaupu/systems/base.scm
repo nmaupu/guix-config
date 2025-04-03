@@ -75,9 +75,7 @@
                  %base-groups))
 
    ;; Install bare-minimum system packages
-   (packages (cons* alsa-plugins
-                    alsa-lib
-                    bluez
+   (packages (cons* bluez
                     bluez-alsa
                     brightnessctl
                     dconf
@@ -86,12 +84,12 @@
                     git
                     gvfs    ;; Enable user mounts
                     intel-media-driver/nonfree
+                    intel-microcode
                     libva-utils
                     lvm2
                     ntfs-3g
                     pulseaudio
                     vim
-                    pipewire
                     %base-packages))
 
    ;; Configure only the services necessary to run the system
@@ -218,7 +216,7 @@
                (simple-service 'mtp udev-service-type (list libmtp))
 
                ;; Add udev rules for a few packages
-               (udev-rules-service 'pipewire-add-udev-rules pipewire)
+               ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
                (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                ;; Enable the build service for Nix package manager

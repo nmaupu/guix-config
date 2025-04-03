@@ -23,7 +23,7 @@
   #:use-module (nmaupu home-services wm)
   #:use-module (nmaupu home-services guix)
   #:use-module (nmaupu systems latest-sof-firmware)
-  #:use-module (nmaupu systems custom-kernel))
+  #:use-module (nmaupu systems latest-linux-firmware))
 
 (use-service-modules dbus dns guix admin sysctl pm nix cups desktop linux avahi
                      mcron networking xorg ssh docker audio virtualization)
@@ -47,8 +47,8 @@
 (define system
  (operating-system
   (inherit base-operating-system)
-  (kernel custom-linux-6.14)
-  (firmware (list linux-firmware latest-sof-firmware))
+  (kernel linux)
+  (firmware (list latest-linux-firmware latest-sof-firmware))
   (initrd microcode-initrd)
   (host-name "nmaupu-laptop")
 
@@ -98,11 +98,11 @@
                  (service usb-modeswitch-service-type)
 
                  ;; Power and thermal management services
-                 ;(service thermald-service-type)
-                 ;(service tlp-service-type
-                 ;         (tlp-configuration
-                 ;          (cpu-boost-on-ac? #t)
-                 ;          (wifi-pwr-on-bat? #t)))
+                 (service thermald-service-type)
+                 (service tlp-service-type
+                          (tlp-configuration
+                           (cpu-boost-on-ac? #t)
+                           (wifi-pwr-on-bat? #t)))
 
                  ;; Enable JACK to enter realtime mode
                  (service pam-limits-service-type
@@ -122,7 +122,7 @@
                  (simple-service 'mtp udev-service-type (list libmtp))
 
                  ;; Add udev rules for a few packages
-                 (udev-rules-service 'pipewire-add-udev-rules pipewire)
+                 ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
                  (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                  ;; Enable the build service for Nix package manager
