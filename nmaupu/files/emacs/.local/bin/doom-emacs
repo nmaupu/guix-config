@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+if [ ! -d "$HOME/.config/doom" ] || [ ! -d "$HOME/.config/emacs" ]; then
+  rm -rf $HOME/.config/{doom, emacs}
+
+  # Creating custom doom config first so that doom don't ask for default config generation
+  git clone https://github.com/nmaupu/emacs-config.git $HOME/.config/doom
+  cd $HOME/.config/doom
+  # Changing the remote to be able to push to the repo
+  git remote set-url origin git@github.com:nmaupu/emacs-config.git
+  cd -
+
+  # Cloning doom emacs file
+  git clone --depth 1 --single-branch https://github.com/doomemacs/doomemacs $HOME/.config/emacs
+
+  # Generating env to avoid doom install to interactively ask for it
+  $HOME/.config/emacs/bin/doom env
+
+  # Installing doom (~ 5 min)
+  $HOME/.config/emacs/bin/doom install
+
+  $HOME/.config/emacs/bin/doom sync
+  herd restart emacs-daemon
+
+fi
+
+exec -- emacsclient -r -t -c -e "(+workspace:delete)"

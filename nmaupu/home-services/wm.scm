@@ -66,15 +66,4 @@
                    home-files-service-type
                    `((".config/polybar"
                       ,(directory-union "polybar-themes"
-                                        (list polybar-themes)))))
-   (service home-shepherd-service-type
-            (home-shepherd-configuration
-             (auto-start? #t)
-             (services
-              (list
-               (shepherd-service
-                (documentation "Run the Greenclip daemon.")
-                (provision '(greenclip))
-                (start #~(make-forkexec-constructor
-                          (list #$(file-append greenclip "/bin/greenclip") "daemon")))
-                (stop #~(make-kill-destructor)))))))))
+                                        (list polybar-themes)))))))
