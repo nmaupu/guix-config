@@ -4,7 +4,9 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
-  #:use-module (guix gexp))
+  #:use-module (guix gexp)
+  #:use-module (nmaupu packages fonts)
+  #:use-module (nmaupu packages polybar-themes))
 
 (use-package-modules linux xdisorg pulseaudio xorg haskell haskell-apps
                      suckless wm image terminals gnupg xorg)
@@ -20,18 +22,20 @@
         setxkbmap))
 
 (define (home-xmonad-profile-service config)
-  (list greenclip
-        dmenu
-        dunst
-        flameshot
-        fzf
-        ghc
-        ghc-xmonad-contrib
-        libxft
-        pinentry-rofi
-        polybar
-        rofi
-        xmonad))
+  (append (list greenclip
+                dmenu
+                dunst
+                flameshot
+                fzf
+                ghc
+                ghc-xmonad-contrib
+                libxft
+                pinentry-rofi
+                polybar
+                rofi
+                xmonad
+                xss-lock)
+          fonts-all))
 
 (define home-base-service-type
   (service-type (name 'base)
@@ -58,6 +62,11 @@
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
              (directories '("../files/xmonad"))))
+   (simple-service 'polybar-themes
+                   home-files-service-type
+                   `((".config/polybar"
+                      ,(directory-union "polybar-themes"
+                                        (list polybar-themes)))))
    (service home-shepherd-service-type
             (home-shepherd-configuration
              (auto-start? #t)

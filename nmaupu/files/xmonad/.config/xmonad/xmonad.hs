@@ -32,8 +32,6 @@ import XMonad.Actions.SpawnOn
 import XMonad.Layout.Hidden
 import XMonad.Util.Cursor
 import XMonad.Hooks.ManageHelpers
--- Virtual screens
-import Data.IORef
 import Data.IORef (newIORef)
 -- startup
 import XMonad.Util.SpawnOnce
@@ -152,7 +150,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModShift xK_m (windows W.swapMaster) $
   addKeyBinding modMask xK_m (windows W.swapDown) $
   --addKeyBinding modMask xK_l (windows W.swapUp) $
-  addKeyBinding cCtrlAlt xK_l (mapM_ spawn ["gnome-screensaver-command --lock"]) $
+  addKeyBinding cCtrlAlt xK_l (mapM_ spawn ["xsecurelock"]) $
   addKeyBinding modMask xK_Down (sendMessage Shrink) $
   addKeyBinding modMask xK_Up (sendMessage Expand) $
   addKeyBinding modMask xK_f (sendMessage ToggleLayout) $
@@ -289,7 +287,7 @@ myManageHook = composeAll
     <+> manageDocks
 
 myStartupHook = do
-  spawnOnce "polybar"
+  spawnOnce "$HOME/.config/polybar/launch.sh --forest"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.

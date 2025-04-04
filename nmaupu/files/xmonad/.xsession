@@ -32,12 +32,8 @@ xmodmap -e 'keysym Escape = Escape asciitilde Escape'
 
 # [ -f .screenlayout/single-5k.sh ] && sudo xrandr --setprovideroutputsource 1 0 && .screenlayout/single-5k.sh
 xrdb -merge ~/.Xresources
-#autocutsel -f
-#autocutsel -f -s PRIMARY -buttonup
-#redshift-gtk &
 #ssh-agent &
-#pkill xscreensaver; xscreensaver -no-splash -no-capture-stderr &
-#blueman-applet &
+blueman-applet &
 #telegram -startintray &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
 

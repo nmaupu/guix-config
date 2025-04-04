@@ -77,6 +77,7 @@
    ;; Install bare-minimum system packages
    (packages (cons* bluez
                     bluez-alsa
+                    blueman
                     brightnessctl
                     dconf
                     exfat-utils

@@ -29,7 +29,7 @@
                      mcron networking xorg ssh docker audio virtualization)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome avahi
-                     networking wm fonts libusb cups freedesktop file-systems
+                     networking wm fonts libusb cups freedesktop file-systems xdisorg
                      version-control package-management vim pulseaudio)
 
 (define home
@@ -70,6 +70,21 @@
                  ;; Set up Polkit to allow `wheel' users to run admin tasks
                  polkit-wheel-service
 
+                 (service screen-locker-service-type
+                          (screen-locker-configuration (name "xsecurelock")
+                                                       (program (file-append xsecurelock "/bin/xsecurelock"))))
+
+                 ;; Give certain programs super-user access
+                 (simple-service 'mount-setuid-helpers
+                                 privileged-program-service-type
+                                 (map (lambda (program)
+                                        (privileged-program
+                                         (program program)
+                                         (setuid? #t)))
+                                      (list (file-append nfs-utils "/sbin/mount.nfs")
+                                            (file-append ntfs-3g "/sbin/mount.ntfs-3g")
+                                            (file-append xsecurelock "/libexec/xsecurelock/authproto_pam"))))
+
                  (set-xorg-configuration
                   (xorg-configuration (keyboard-layout keyboard-layout)
                                       (extra-config '("Section \"InputClass\""
@@ -93,6 +108,10 @@
                  (service bluetooth-service-type
                           (bluetooth-configuration
                            (auto-enable? #t)))
+
+                 (simple-service 'dbus-extras
+                                 dbus-root-service-type
+                                 (list blueman))
 
                  (service usb-modeswitch-service-type)
 

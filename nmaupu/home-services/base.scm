@@ -36,7 +36,7 @@
         unzip
         xkbcomp
         yq
-        font-nerd-commitmono))
+        nerd-font-commitmono))
 
 ;; Load this layout with the following command
 ;; xkbcomp -I~/.config/xkb ~/.config/xkb/qwertyfr.xkb $DISPLAY &>/dev/null
