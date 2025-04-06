@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 curl https://substitutes.nonguix.org/signing-key.pub > /tmp/key.pub
 guix archive --authorize < /tmp/key.pub
 

@@ -30,6 +30,7 @@
         fd
         rsync
         recutils
+        strace
         tig
         tree
         ungoogled-chromium

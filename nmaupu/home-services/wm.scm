@@ -33,13 +33,12 @@
                 pinentry-rofi
                 polybar
                 rofi
-                xmonad
-                xss-lock)
+                xmonad)
           fonts-all))
 
 (define home-base-service-type
   (service-type (name 'base)
-                (description "Packages and configuration related to base wm.")
+                (description "Packages and configuration related to base window manager.")
                 (extensions
                  (list (service-extension
                         home-profile-service-type
