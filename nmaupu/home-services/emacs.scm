@@ -12,10 +12,12 @@
 ;; If relevant directories are missing, the startup script install the needed files
 ;; and pull the needed repositories.
 
-(use-package-modules emacs)
+(use-package-modules emacs haskell-apps shellutils)
 
 (define (home-emacs-profile-service config)
-  (list emacs))
+  (list emacs
+        shellcheck
+        shfmt))
 
 (define home-emacs-service-type
   (service-type (name 'emacs)

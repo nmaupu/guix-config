@@ -8,8 +8,11 @@
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages keyboard-layout))
 
-(use-package-modules curl version-control admin linux web rsync commencement databases algebra
-                     compression vim python web-browsers rust-apps chromium admin ftp xorg)
+(use-package-modules curl version-control admin linux rsync
+                     web commencement databases algebra
+                     compression vim python web-browsers
+                     rust-apps chromium admin ftp xorg
+                     node)
 
 (define (home-base-profile-service config)
   (list bc
@@ -23,6 +26,7 @@
         lftp
         (specification->package "make")
         neovim
+        node ; provides npm needed for some packages installation (lsp, etc.)
         p7zip
         python
         qutebrowser
