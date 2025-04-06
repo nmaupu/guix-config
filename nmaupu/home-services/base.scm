@@ -8,11 +8,12 @@
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages keyboard-layout))
 
-(use-package-modules curl version-control admin linux web rsync commencement databases
+(use-package-modules curl version-control admin linux web rsync commencement databases algebra
                      compression vim python web-browsers rust-apps chromium admin ftp xorg)
 
 (define (home-base-profile-service config)
-  (list curl
+  (list bc
+        curl
         lm-sensors
         firefox
         git

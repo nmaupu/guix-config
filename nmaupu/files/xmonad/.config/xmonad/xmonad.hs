@@ -99,7 +99,7 @@ colHidden       = "#555555"
 colNormal       = "#ffffff"
 colUrgent       = "#ff0000"
 
-dmenuBrightness = "param=`/usr/bin/seq 0 5 100 | " ++ dmenuCommandBasic ++ " -b` && eval " ++ scriptBrightness ++ " ${param}"
+dmenuBrightness = "param=`seq 0 5 100 | " ++ dmenuCommandBasic ++ " -b` && eval " ++ scriptBrightness ++ " ${param}"
 dmenuCommandBasic = "dmenu " ++ dmenuCommandOpts
 dmenuCommandOpts = "-p '>' -l 10 -nf '" ++ colNormal ++ "' -nb '" ++ colBG ++ "' -fn '" ++ dmenuFont ++ "' -sb '" ++ colFocus ++ "' -sf '" ++ colNormal ++ "'"
 dmenuCommandProg = "dmenu_run " ++ dmenuCommandOpts
