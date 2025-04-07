@@ -18,7 +18,7 @@
                (shepherd-service (documentation "Run the Emacs daemon.")
                                  (provision '(emacs-daemon))
                                  (start #~(make-forkexec-constructor
-                                           (list #$(file-append emacs "/bin/emacs") "--daemon")))
+                                           (list #$(file-append emacs "/bin/emacs") "--fg-daemon")))
                                  (stop #~(make-kill-destructor)))
                (shepherd-service (documentation "Run the Greenclip daemon.")
                                  (provision '(greenclip))
