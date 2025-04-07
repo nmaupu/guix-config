@@ -102,31 +102,32 @@
                                             (file-append ntfs-3g "/sbin/mount.ntfs-3g")
                                             (file-append xsecurelock "/libexec/xsecurelock/authproto_pam"))))
 
-                 ;; This is a volatile read-write file system mounted at /var/lib/gdm,
-                 ;; to avoid GDM stale cache and permission issues.
-                 gdm-file-system-service
-
                  ;; The global fontconfig cache directory can sometimes contain
                  ;; stale entries, possibly referencing fonts that have been GC'd,
                  ;; so mount it read-only.
                  fontconfig-file-system-service
 
                  ;; NetworkManager and its applet.
-                 (service network-manager-service-type)
+                 (service network-manager-service-type
+                        (network-manager-configuration
+                         (vpn-plugins
+                          (list network-manager-openvpn))))
                  (service wpa-supplicant-service-type)    ;needed by NetworkManager
                  (simple-service 'network-manager-applet
                                  profile-service-type
                                  (list network-manager-applet))
-                 (service modem-manager-service-type)
+                 (service bluetooth-service-type
+                          (bluetooth-configuration
+                           (auto-enable? #t)))
                  (service usb-modeswitch-service-type)
 
                  ;; The D-Bus clique.
                  (service avahi-service-type)
                  (service udisks-service-type)
                  (service upower-service-type)
-                 (service accountsservice-service-type)
+                 ;; (service accountsservice-service-type)
                  (service cups-pk-helper-service-type)
-                 (service colord-service-type)
+                 ;; (service colord-service-type)
                  (service geoclue-service-type)
                  (service polkit-service-type)
                  (service elogind-service-type)
@@ -168,9 +169,6 @@
                            (unix-sock-group "libvirt")
                            (tls-port "16555")))
 
-                 (service bluetooth-service-type
-                          (bluetooth-configuration
-                           (auto-enable? #t)))
 
                  (simple-service 'dbus-extras
                                  dbus-root-service-type
@@ -217,14 +215,14 @@
   (file-systems (append (map (lambda (item)
                                (file-system (device (car (cdr item)))
                                             (mount-point (car item))
-                                            (type "xfs")
-                                            (needed-for-boot? (cdr (cdr item)))
+                                            (needed-for-boot? (cdr (cdr (cdr item))))
+                                            (type (car (cdr (cdr (cdr item)))))
                                             (dependencies mapped-devices)))
-                             '(("/"               "/dev/mapper/sys-root"     #t)
-                               ("/gnu/store"      "/dev/mapper/sys-gnustore" #t)
-                               ("/home"           "/dev/mapper/sys-home"     #f)
-                               ("/var/lib/docker" "/dev/mapper/sys-docker"   #f)
-                               ("/var/log"        "/dev/mapper/sys-log"      #f)))
+                             '(("/"               "/dev/mapper/sys-root"     #t "ext4")
+                               ("/gnu/store"      "/dev/mapper/sys-gnustore" #t "ext4")
+                               ("/home"           "/dev/mapper/sys-home"     #f "xfs")
+                               ("/var/lib/docker" "/dev/mapper/sys-docker"   #f "xfs")
+                               ("/var/log"        "/dev/mapper/sys-log"      #f "xfs")))
                         (list (file-system (mount-point "/boot/efi")
                                            (device "/dev/nvme0n1p1")
                                            (type "vfat")))

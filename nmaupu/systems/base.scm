@@ -12,7 +12,7 @@
 (use-service-modules dns guix admin sysctl pm nix avahi dbus cups desktop linux
                      mcron networking xorg ssh docker audio virtualization)
 
-(use-package-modules audio video nfs certs shells ssh linux bash emacs gnome
+(use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
                      networking wm fonts libusb cups freedesktop file-systems
                      version-control package-management vim pulseaudio freedesktop)
 
@@ -91,6 +91,7 @@
                     libva-utils
                     lvm2
                     ntfs-3g
+                    pamtester
                     pulseaudio
                     vim
                     %base-packages))
