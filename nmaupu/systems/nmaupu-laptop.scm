@@ -29,7 +29,7 @@
   #:use-module (nmaupu systems custom-sof-firmware)
   #:use-module (nmaupu systems custom-linux-firmware))
 
-(use-service-modules dbus dns guix admin sysctl pm nix cups desktop linux avahi
+(use-service-modules dbus dns guix admin sysctl pm nix cups desktop linux avahi sddm sound
                      mcron networking xorg ssh docker audio virtualization authentication)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome avahi
@@ -63,36 +63,90 @@
   (keyboard-layout (keyboard-layout "us" "altgr-intl" #:model "thinkpad"))
 
   (services
-   (append (list (simple-service 'add-nonguix-substitutes
-                               guix-service-type
-                               (guix-extension
-                                (substitute-urls
-                                 (append (list "https://substitutes.nonguix.org")
-                                         %default-substitute-urls))
-                                (authorized-keys
-                                 (append (list (plain-file "nonguix.pub"
-                                                           "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
-                                         %default-authorized-guix-keys))))
+   (append (modify-services %base-services)
+           (list (simple-service 'add-nonguix-substitutes
+                                 guix-service-type
+                                 (guix-extension
+                                  (substitute-urls
+                                   (append (list "https://substitutes.nonguix.org")
+                                           %default-substitute-urls))
+                                  (authorized-keys
+                                   (append (list (plain-file "nonguix.pub"
+                                                             "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
+                                           %default-authorized-guix-keys))))
 
-                 ;; Set up Polkit to allow `wheel' users to run admin tasks
+                 (service gdm-service-type)
+
+                 ;; Add udev rules for MTP devices so that non-root users can access
+                 ;; them.
+                 (simple-service 'mtp udev-service-type (list libmtp))
+
+                 ;; Add udev rules for scanners.
+                 (service sane-service-type)
+
+                 (service cups-service-type
+                          (cups-configuration
+                           (web-interface? #t)
+                           (extensions
+                            (list cups-filters))))
+
+                 ;; Add polkit rules, so that non-root users in the wheel group can
+                 ;; perform administrative tasks (similar to "sudo").
                  polkit-wheel-service
 
-                 (service fprintd-service-type)
+                 ;; Allow desktop users to also mount NTFS and NFS file systems
+                 ;; without root.
+                 (simple-service 'mount-setuid-helpers privileged-program-service-type
+                                 (map file-like->setuid-program
+                                      (list (file-append nfs-utils "/sbin/mount.nfs")
+                                            (file-append ntfs-3g "/sbin/mount.ntfs-3g")
+                                            (file-append xsecurelock "/libexec/xsecurelock/authproto_pam"))))
+
+                 ;; This is a volatile read-write file system mounted at /var/lib/gdm,
+                 ;; to avoid GDM stale cache and permission issues.
+                 gdm-file-system-service
+
+                 ;; The global fontconfig cache directory can sometimes contain
+                 ;; stale entries, possibly referencing fonts that have been GC'd,
+                 ;; so mount it read-only.
+                 fontconfig-file-system-service
+
+                 ;; NetworkManager and its applet.
+                 (service network-manager-service-type)
+                 (service wpa-supplicant-service-type)    ;needed by NetworkManager
+                 (simple-service 'network-manager-applet
+                                 profile-service-type
+                                 (list network-manager-applet))
+                 (service modem-manager-service-type)
+                 (service usb-modeswitch-service-type)
+
+                 ;; The D-Bus clique.
+                 (service avahi-service-type)
+                 (service udisks-service-type)
+                 (service upower-service-type)
+                 (service accountsservice-service-type)
+                 (service cups-pk-helper-service-type)
+                 (service colord-service-type)
+                 (service geoclue-service-type)
+                 (service polkit-service-type)
+                 (service elogind-service-type)
+                 (service dbus-root-service-type)
+
+                 (service ntp-service-type)
+
+                 (service x11-socket-directory-service-type)
+
+                 (service pulseaudio-service-type)
+                 (service alsa-service-type)
+
+                 ;;;;;
+                 ;;;;;
+
+                 ;; (service fprintd-service-type)
 
                  (service screen-locker-service-type
                           (screen-locker-configuration (name "xsecurelock")
                                                        (program (file-append xsecurelock "/bin/xsecurelock"))))
-
-                 ;; Give certain programs super-user access
-                 (simple-service 'mount-setuid-helpers
-                                 privileged-program-service-type
-                                 (map (lambda (program)
-                                        (privileged-program
-                                         (program program)
-                                         (setuid? #t)))
-                                      (list (file-append nfs-utils "/sbin/mount.nfs")
-                                            (file-append ntfs-3g "/sbin/mount.ntfs-3g")
-                                            (file-append xsecurelock "/libexec/xsecurelock/authproto_pam"))))
 
                  (set-xorg-configuration
                   (xorg-configuration (keyboard-layout keyboard-layout)
@@ -122,8 +176,6 @@
                                  dbus-root-service-type
                                  (list blueman))
 
-                 (service usb-modeswitch-service-type)
-
                  ;; Power and thermal management services
                  (service thermald-service-type)
                  (service tlp-service-type
@@ -131,19 +183,8 @@
                            (cpu-boost-on-ac? #t)
                            (wifi-pwr-on-bat? #t)))
 
-                 ;; Enable printing and scanning
-                 (service sane-service-type)
-                 (service cups-service-type
-                          (cups-configuration
-                           (web-interface? #t)
-                           (extensions
-                            (list cups-filters))))
-
-                 ;; Add udev rules for MTP (mobile) devices for non-root user access
-                 (simple-service 'mtp udev-service-type (list libmtp))
-
                  ;; Add udev rules for a few packages
-                 (udev-rules-service 'pipewire-add-udev-rules pipewire)
+                 ;;(udev-rules-service 'pipewire-add-udev-rules pipewire)
                  (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                  ;; Enable the build service for Nix package manager
@@ -156,11 +197,7 @@
                                   ;; Run `guix gc' 5 minutes after midnight every day.
                                   ;; ;; Clean up generations older than 2 months and free
                                   ;; ;; at least 10G of space.
-                                  #~(job "5 0 * * *" "guix gc -d 2m -F 10G"))))
-
-           ;; This is the default list of services we
-           ;; are appending to.
-           %desktop-services))
+                                  #~(job "5 0 * * *" "guix gc -d 2m -F 10G"))))))
 
   ;; Creating a mapped luks device for all the LVM partitions
   (mapped-devices (list
