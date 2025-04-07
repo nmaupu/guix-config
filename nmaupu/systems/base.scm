@@ -10,11 +10,11 @@
   #:use-module (nongnu system linux-initrd))
 
 (use-service-modules dns guix admin sysctl pm nix avahi dbus cups desktop linux
-                     mcron networking xorg ssh docker audio virtualization)
+                     mcron networking xorg ssh docker audio virtualization sound)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
                      networking wm fonts libusb cups freedesktop file-systems
-                     version-control package-management vim pulseaudio freedesktop)
+                     version-control package-management vim pulseaudio freedesktop xdisorg)
 
 (define-public base-operating-system
   (operating-system
@@ -97,143 +97,141 @@
                     %base-packages))
 
    ;; Configure only the services necessary to run the system
-   (services (append
-              (modify-services %base-services
-               (delete login-service-type)
-               (delete mingetty-service-type)
-               (delete console-font-service-type))
-              (list
-               ;; Seat management (can't use seatd because Wireplumber depends on elogind)
-               (service elogind-service-type)
+   (services (append (modify-services %base-services)
+                     (list (simple-service 'add-nonguix-substitutes
+                                           guix-service-type
+                                           (guix-extension
+                                            (substitute-urls
+                                             (append (list "https://substitutes.nonguix.org")
+                                                     %default-substitute-urls))
+                                            (authorized-keys
+                                             (append (list (plain-file "nonguix.pub"
+                                                                       "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
+                                                     %default-authorized-guix-keys))))
 
-               ;; Configure TTYs and graphical greeter
-               (service console-font-service-type
-                 (map (lambda (tty)
-                        ;; Use a larger font for HIDPI screens
-                        (cons tty (file-append
-                                   font-terminus
-                                   "/share/consolefonts/ter-132n")))
-                      '("tty1" "tty2" "tty3")))
+                           (service gdm-service-type)
 
-               (service greetd-service-type
-                        (greetd-configuration
-                         (greeter-supplementary-groups (list "video" "input"))
-                         (terminals
-                          (list
-                           ;; TTY1 is the graphical login screen
-                           (greetd-terminal-configuration
-                            (terminal-vt "1")
-                            (terminal-switch #t))
+                           ;; Add udev rules for MTP devices so that non-root users can access
+                           ;; them.
+                           (simple-service 'mtp udev-service-type (list libmtp))
 
-                           ;; Set up remaining TTYs for terminal use
-                           (greetd-terminal-configuration (terminal-vt "2"))
-                           (greetd-terminal-configuration (terminal-vt "3"))))))
+                           ;; Add udev rules for scanners.
+                           (service sane-service-type)
 
-               ;; Configure the Guix service and ensure we use Nonguix substitutes
-               (simple-service 'add-nonguix-substitutes
-                               guix-service-type (guix-extension
-                                                  (substitute-urls
-                                                   (append (list "https://substitutes.nonguix.org")
-                                                           %default-substitute-urls))
-                                                  (authorized-keys
-                                                   (append (list (plain-file "nonguix.pub"
-                                                                             "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
-                                                           %default-authorized-guix-keys))))
+                           (service cups-service-type
+                                    (cups-configuration
+                                     (web-interface? #t)
+                                     (extensions
+                                      (list cups-filters))))
 
-               ;; Set up Polkit to allow `wheel' users to run admin tasks
-               polkit-wheel-service
+                           ;; Add polkit rules, so that non-root users in the wheel group can
+                           ;; perform administrative tasks (similar to "sudo").
+                           polkit-wheel-service
 
-               ;; Give certain programs super-user access
-               (simple-service 'mount-setuid-helpers
-                               privileged-program-service-type
-                               (map (lambda (program)
-                                      (privileged-program
-                                       (program program)
-                                       (setuid? #t)))
-                                    (list (file-append nfs-utils "/sbin/mount.nfs")
-                                          (file-append ntfs-3g "/sbin/mount.ntfs-3g"))))
+                           ;; Allow desktop users to also mount NTFS and NFS file systems
+                           ;; without root.
+                           (simple-service 'mount-setuid-helpers privileged-program-service-type
+                                           (map file-like->setuid-program
+                                                (list (file-append nfs-utils "/sbin/mount.nfs")
+                                                      (file-append ntfs-3g "/sbin/mount.ntfs-3g")
+                                                      (file-append xsecurelock "/libexec/xsecurelock/authproto_pam"))))
 
-               ;; Networking services
-               (service network-manager-service-type
-                        (network-manager-configuration
-                         (vpn-plugins
-                          (list network-manager-openvpn))))
-               (service wpa-supplicant-service-type) ;; Needed by NetworkManager
-               (service bluetooth-service-type
-                        (bluetooth-configuration
-                         (auto-enable? #t)))
-               (service usb-modeswitch-service-type)
 
-               ;; Basic desktop system services (copied from %desktop-services)
-               (service avahi-service-type)
-               (service udisks-service-type)
-               (service upower-service-type)
-               (service cups-pk-helper-service-type)
-               (service geoclue-service-type)
-               (service polkit-service-type)
-               (service dbus-root-service-type)
-               fontconfig-file-system-service ;; Manage the fontconfig cache
+                           ;; The global fontconfig cache directory can sometimes contain
+                           ;; stale entries, possibly referencing fonts that have been GC'd,
+                           ;; so mount it read-only.
+                           fontconfig-file-system-service
 
-               ;; Power and thermal management services
-               (service thermald-service-type)
-               (service tlp-service-type
-                        (tlp-configuration
-                         (cpu-boost-on-ac? #t)
-                         (wifi-pwr-on-bat? #t)))
+                           ;; NetworkManager and its applet.
+                           (service network-manager-service-type
+                                    (network-manager-configuration
+                                     (vpn-plugins
+                                      (list network-manager-openvpn))))
+                           (service wpa-supplicant-service-type)    ;needed by NetworkManager
+                           (simple-service 'network-manager-applet
+                                           profile-service-type
+                                           (list network-manager-applet))
+                           (service bluetooth-service-type
+                                    (bluetooth-configuration
+                                     (auto-enable? #t)))
+                           (service usb-modeswitch-service-type)
 
-               ;; Enable JACK to enter realtime mode
-               (service pam-limits-service-type
-                        (list
-                         (pam-limits-entry "@realtime" 'both 'rtprio 99)
-                         (pam-limits-entry "@realtime" 'both 'nice -19)
-                         (pam-limits-entry "@realtime" 'both 'memlock 'unlimited)))
+                           ;; The D-Bus clique.
+                           (service avahi-service-type)
+                           (service udisks-service-type)
+                           (service upower-service-type)
+                           (service accountsservice-service-type)
+                           (service cups-pk-helper-service-type)
+                           (service colord-service-type)
+                           (service geoclue-service-type)
+                           (service polkit-service-type)
+                           (service elogind-service-type)
+                           (service dbus-root-service-type)
 
-               ;; Enable Docker containers and virtual machines
-               (service containerd-service-type)
-               (service docker-service-type)
-               (service libvirt-service-type
-                        (libvirt-configuration
-                         (unix-sock-group "libvirt")
-                         (tls-port "16555")))
+                           (service ntp-service-type)
 
-               ;; Enable SSH access
-               (service openssh-service-type
-                        (openssh-configuration
-                         (openssh openssh-sans-x)
-                         (port-number 22)))
+                           (service x11-socket-directory-service-type)
 
-               ;; Enable printing and scanning
-               (service sane-service-type)
-               (service cups-service-type
-                        (cups-configuration
-                         (web-interface? #t)
-                         (extensions
-                          (list cups-filters))))
+                           (service pulseaudio-service-type)
+                           (service alsa-service-type)
 
-               ;; Set up the X11 socket directory for XWayland
-               (service x11-socket-directory-service-type)
 
-               ;; Sync system clock with time servers
-               (service ntp-service-type)
+                           ;;;;;
+                           ;;;;;
 
-               ;; Add udev rules for MTP (mobile) devices for non-root user access
-               (simple-service 'mtp udev-service-type (list libmtp))
+                           ;; (service fprintd-service-type)
 
-               ;; Add udev rules for a few packages
-               ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
-               (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
+                           (service screen-locker-service-type
+                                    (screen-locker-configuration (name "xsecurelock")
+                                                                 (program (file-append xsecurelock "/bin/xsecurelock"))))
 
-               ;; Enable the build service for Nix package manager
-               (service nix-service-type)
+                           (set-xorg-configuration
+                            (xorg-configuration (keyboard-layout keyboard-layout)
+                                                (extra-config '("Section \"InputClass\""
+                                                                "  Identifier \"libinput touchpad catchall\""
+                                                                "  MatchIsTouchpad \"on\""
+                                                                "  MatchDevicePath \"/dev/input/event*\""
+                                                                "  Driver \"libinput\""
+                                                                "  Option \"Tapping\" \"on\""
+                                                                "EndSection" ))))
 
-               ;; Schedule cron jobs for system tasks
-               (simple-service 'system-cron-jobs
-                               mcron-service-type
-                               (list
-                                ;; Run `guix gc' 5 minutes after midnight every day.
-                                ;; Clean up generations older than 2 months and free
-                                ;; at least 10G of space.
-                                #~(job "5 0 * * *" "guix gc -d 2m -F 10G"))))))
+                           (service openssh-service-type)
+
+                           ;; Docker
+                           (service containerd-service-type)
+                           (service docker-service-type)
+                           (service libvirt-service-type
+                                    (libvirt-configuration
+                                     (unix-sock-group "libvirt")
+                                     (tls-port "16555")))
+
+
+                           (simple-service 'dbus-extras
+                                           dbus-root-service-type
+                                           (list blueman))
+
+                           ;; Power and thermal management services
+                           (service thermald-service-type)
+                           (service tlp-service-type
+                                    (tlp-configuration
+                                     (cpu-boost-on-ac? #t)
+                                     (wifi-pwr-on-bat? #t)))
+
+                           ;; Add udev rules for a few packages
+                           ;;(udev-rules-service 'pipewire-add-udev-rules pipewire)
+                           (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
+
+                           ;; Enable the build service for Nix package manager
+                           (service nix-service-type)
+
+                           ;; Schedule cron jobs for system tasks
+                           (simple-service 'system-cron-jobs
+                                           mcron-service-type
+                                           (list
+                                            ;; Run `guix gc' 5 minutes after midnight every day.
+                                            ;; ;; Clean up generations older than 2 months and free
+                                            ;; ;; at least 10G of space.
+                                            #~(job "5 0 * * *" "guix gc -d 2m -F 10G"))))))
 
    ;; Allow resolution of '.local' host names with mDNS
    (name-service-switch %mdns-host-lookup-nss)))
