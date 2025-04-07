@@ -30,7 +30,7 @@
   #:use-module (nmaupu systems custom-linux-firmware))
 
 (use-service-modules dbus dns guix admin sysctl pm nix cups desktop linux avahi
-                     mcron networking xorg ssh docker audio virtualization)
+                     mcron networking xorg ssh docker audio virtualization authentication)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome avahi
                      networking wm fonts libusb cups freedesktop file-systems xdisorg
@@ -76,6 +76,8 @@
 
                  ;; Set up Polkit to allow `wheel' users to run admin tasks
                  polkit-wheel-service
+
+                 (service fprintd-service-type)
 
                  (service screen-locker-service-type
                           (screen-locker-configuration (name "xsecurelock")

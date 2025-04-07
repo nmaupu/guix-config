@@ -14,7 +14,7 @@
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome
                      networking wm fonts libusb cups freedesktop file-systems
-                     version-control package-management vim pulseaudio)
+                     version-control package-management vim pulseaudio freedesktop)
 
 (define-public base-operating-system
   (operating-system
@@ -82,6 +82,8 @@
                     dconf
                     exfat-utils
                     fuse-exfat
+                    fprintd
+                    libfprint
                     git
                     gvfs    ;; Enable user mounts
                     intel-media-driver/nonfree
