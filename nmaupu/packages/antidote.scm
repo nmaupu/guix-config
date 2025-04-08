@@ -1,5 +1,5 @@
 (define-module (nmaupu packages antidote)
-  #:use-module (guix build-system trivial)
+  #:use-module (guix build-system copy)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix git-download))
@@ -17,15 +17,7 @@
               (sha256
                (base32
                 "1jn7w7jwn77snhqfz53q252vilqcmvslj3k0g8dxp2dqqvb47n6y"))))
-    (build-system trivial-build-system)
-    (arguments
-     `(#:modules ((guix build utils))
-       #:builder (begin
-                   (use-modules (guix build utils))
-                   (let* ((out (assoc-ref %outputs "out"))
-                          (source (assoc-ref %build-inputs "source")))
-                     (mkdir-p out)
-                     (copy-recursively source out)))))
+    (build-system copy-build-system)
     (home-page "https://antidote.sh")
     (synopsis "Antidote ZSH Plugin Manager")
     (description "Antidote is a Zsh plugin manager made from the ground up thinking about performance.")

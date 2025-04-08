@@ -1,5 +1,5 @@
 (define-module (nmaupu packages tmux-tpm)
-  #:use-module (guix build-system trivial)
+  #:use-module (guix build-system copy)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix git-download))
@@ -17,15 +17,7 @@
               (sha256
                (base32
                 "01ribl326n6n0qcq68a8pllbrz6mgw55kxhf9mjdc5vw01zjcvw5"))))
-    (build-system trivial-build-system)
-    (arguments
-     `(#:modules ((guix build utils))
-       #:builder (begin
-                   (use-modules (guix build utils))
-                   (let* ((out (assoc-ref %outputs "out"))
-                          (source (assoc-ref %build-inputs "source")))
-                     (mkdir-p out)
-                     (copy-recursively source out)))))
+    (build-system copy-build-system)
     (home-page "https://github.com/tmux-plugins/tpm")
     (synopsis "Tmux Plugin Manager")
     (description "TPM manages tmux plugins from configuration.")

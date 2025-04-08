@@ -1,5 +1,5 @@
 (define-module (nmaupu packages alacritty-theme)
-  #:use-module (guix build-system trivial)
+  #:use-module (guix build-system copy)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix git-download))
@@ -17,15 +17,7 @@
               (sha256
                (base32
                 "063899ssfl2hhsidqj73d8sjv1874yywh6fnjrrk4gl8hfsqi96l"))))
-    (build-system trivial-build-system)
-    (arguments
-     `(#:modules ((guix build utils))
-       #:builder (begin
-                   (use-modules (guix build utils))
-                   (let* ((out (assoc-ref %outputs "out"))
-                          (source (assoc-ref %build-inputs "source")))
-                     (mkdir-p out)
-                     (copy-recursively source out)))))
+    (build-system copy-build-system)
     (home-page "https://github.com/alacritty/alacritty-theme")
     (synopsis "Alacritty theme collection")
     (description "Collection of colorschemes for easy configuration of the Alacritty terminal emulator.")

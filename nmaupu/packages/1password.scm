@@ -20,17 +20,6 @@
     (native-inputs (list unzip))
     (arguments
      `(#:install-plan '(("op" "bin/op"))))
-     ;; `(#:phases
-     ;;   (modify-phases %standard-phases
-     ;;     (add-after 'unpack 'patch-script
-     ;;       (lambda* (#:key inputs #:allow-other-keys)
-     ;;           ;; This will be done at the operating system level
-     ;;           ;; ;; Change the group - not working
-     ;;           ;; (chown "op"
-     ;;           ;;        (passwd:uid (getpw "root"))
-     ;;           ;;        (passwd:gid (getpw "onepassword-cli")))
-     ;;           ;; ; Set SUID bit on binary as per the documentation
-     ;;           ;; (chmod "op" #o2555))))
     (home-page "https://1password.com/downloads/command-line")
     (synopsis "1password-cli")
     (description "1password-cli")
