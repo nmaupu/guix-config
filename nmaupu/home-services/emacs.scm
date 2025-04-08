@@ -15,14 +15,16 @@
 ;; and pull the needed repositories then launch emacs.
 ;; First launch is about 5 min though.
 
-(use-package-modules emacs haskell-apps shellutils golang-xyz debug)
+(use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz debug)
 
 (define (home-emacs-profile-service config)
   (append (list emacs
                 shellcheck
                 shfmt
                 gopls
-                delve)
+                delve
+                emacs-vterm
+                libvterm)
           (list terraform-ls
                 golangci-lint)))
 
