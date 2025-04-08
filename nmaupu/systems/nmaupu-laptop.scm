@@ -17,6 +17,7 @@
   #:use-module (nongnu system linux-initrd)
   #:use-module (nmaupu systems base)
   #:use-module (nmaupu home-services base)
+  ;; #:use-module (nmaupu home-services pipewire)
   #:use-module (nmaupu home-services git)
   #:use-module (nmaupu home-services shells)
   #:use-module (nmaupu home-services tmux)
@@ -26,7 +27,7 @@
   #:use-module (nmaupu home-services emacs)
   #:use-module (nmaupu home-services shepherd-services)
   #:use-module (nmaupu home-services dev)
-  #:use-module (nmaupu home-services kubernetes)
+  #:use-module (nmaupu home-services k8s)
   #:use-module (nmaupu systems custom-sof-firmware)
   #:use-module (nmaupu systems custom-linux-firmware))
 
@@ -34,6 +35,7 @@
  (home-environment
   (services
    (append home-base-services
+           ;; home-pipewire-services
            home-git-services
            home-shells-services
            home-guix-services
@@ -49,9 +51,14 @@
 (define system
  (operating-system
   (inherit base-operating-system)
+
   (kernel linux)
   (firmware (list custom-linux-firmware custom-sof-firmware))
   (initrd microcode-initrd)
+  ;; (kernel-arguments (append
+  ;;                    '("modprobe.blacklist=snd-hda-intel,snd-soc-skl")
+  ;;                    %default-kernel-arguments))
+
   (host-name "nmaupu-laptop")
 
   ;; Creating a mapped luks device for all the LVM partitions
