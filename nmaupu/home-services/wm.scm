@@ -9,12 +9,13 @@
   #:use-module (nmaupu packages polybar-themes))
 
 (use-package-modules linux xdisorg pulseaudio xorg haskell haskell-apps
-                     suckless wm image terminals gnupg xorg)
+                     suckless wm image terminals gnupg xorg telegram)
 
 (define (home-wm-base-profile-service config)
   (list acpi
         arandr
         pavucontrol
+        telegram-desktop
         xrandr
         xclip
         xmodmap
