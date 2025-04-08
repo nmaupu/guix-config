@@ -12,7 +12,7 @@
                      web commencement databases algebra
                      compression vim python web-browsers
                      rust-apps chromium admin ftp xorg
-                     node)
+                     node cmake)
 
 (define (home-base-profile-service config)
   (list bc
@@ -24,6 +24,7 @@
         htop
         jq
         lftp
+        cmake
         (specification->package "make")
         neovim
         node ; provides npm needed for some packages installation (lsp, etc.)

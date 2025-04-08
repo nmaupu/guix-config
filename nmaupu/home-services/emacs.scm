@@ -12,7 +12,8 @@
 ;; To achieve that, we are using a custom shell script
 ;; to run doom-emacs.
 ;; If relevant directories are missing, the startup script install the needed files
-;; and pull the needed repositories.
+;; and pull the needed repositories then launch emacs.
+;; First launch is about 5 min though.
 
 (use-package-modules emacs haskell-apps shellutils golang-xyz debug)
 
