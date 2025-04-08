@@ -7,7 +7,8 @@
   #:use-module (gnu system privilege)
   #:use-module (nongnu packages linux)
   #:use-module (nongnu packages video)
-  #:use-module (nongnu system linux-initrd))
+  #:use-module (nongnu system linux-initrd)
+  #:use-module (nmaupu packages 1password))
 
 (use-service-modules dns guix admin sysctl pm nix avahi dbus cups desktop linux
                      mcron networking xorg ssh docker audio virtualization sound)
@@ -15,6 +16,8 @@
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
                      networking wm fonts libusb cups freedesktop file-systems
                      version-control package-management vim pulseaudio freedesktop xdisorg)
+
+(define onepassword-cli-group-name "onepassword-cli")
 
 (define-public base-operating-system
   (operating-system
@@ -63,6 +66,7 @@
                                          "tty"
                                          "input"
                                          "docker"
+                                         "onepassword-cli"
                                          "realtime" ;; Enable realtime scheduling
                                          "lp"       ;; control bluetooth devices
                                          "audio"    ;; control audio devices
@@ -71,11 +75,15 @@
                 %base-user-accounts))
 
    ;; Add the 'realtime' group
-   (groups (cons (user-group (system? #t) (name "realtime"))
-                 %base-groups))
+   (groups (cons*
+            (user-group (system? #t) (name "realtime"))
+            (user-group (system? #t) (name onepassword-cli-group-name))
+            %base-groups))
 
    ;; Install bare-minimum system packages
-   (packages (cons* bluez
+   (packages (cons* alsa-utils
+                    alsa-plugins
+                    bluez
                     bluez-alsa
                     blueman
                     brightnessctl
@@ -132,9 +140,15 @@
                            ;; without root.
                            (simple-service 'mount-setuid-helpers privileged-program-service-type
                                            (map file-like->setuid-program
-                                                (list (file-append nfs-utils "/sbin/mount.nfs")
-                                                      (file-append ntfs-3g "/sbin/mount.ntfs-3g")
-                                                      (file-append xsecurelock "/libexec/xsecurelock/authproto_pam"))))
+                                                        (list (file-append nfs-utils "/sbin/mount.nfs")
+                                                              (file-append ntfs-3g "/sbin/mount.ntfs-3g")
+                                                              (file-append xsecurelock "/libexec/xsecurelock/authproto_pam"))))
+
+                           (simple-service 'onepassword-setgid-helper privileged-program-service-type
+                                           (list (privileged-program
+                                                 (program  (file-append 1password-cli "/bin/op"))
+                                                 (group onepassword-cli-group-name)
+                                                 (setgid? #t))))
 
 
                            ;; The global fontconfig cache directory can sometimes contain
@@ -172,8 +186,8 @@
 
                            (service x11-socket-directory-service-type)
 
-                           (service pulseaudio-service-type)
-                           (service alsa-service-type)
+                           ;; (service pulseaudio-service-type)
+                           ;; (service alsa-service-type)
 
 
                            ;;;;;
@@ -218,7 +232,7 @@
                                      (wifi-pwr-on-bat? #t)))
 
                            ;; Add udev rules for a few packages
-                           ;;(udev-rules-service 'pipewire-add-udev-rules pipewire)
+                           ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
                            (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                            ;; Enable the build service for Nix package manager
