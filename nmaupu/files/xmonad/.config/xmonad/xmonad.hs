@@ -179,7 +179,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_z (sendMessage MirrorExpand) $
   -- Restart
   addKeyBinding modMask xK_s (spawn "xmonad --recompile && xmonad --restart") $
-  addKeyBinding cModShift xK_s (spawn "pgrep -f \"xmonad\" | xargs kill -9") $
+  addKeyBinding cModShift xK_s (spawn "herd stop emacs-daemon; pgrep -f \"xmonad\" | xargs kill -15") $
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   ([ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
         -- | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2] -- using ThreeCol with virtual screens, screens order are messed up
