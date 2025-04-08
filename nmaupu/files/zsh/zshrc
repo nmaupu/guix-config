@@ -77,11 +77,10 @@ alias test_term_colors="wget -O - https://raw.githubusercontent.com/robertknight
 alias vim="nvim"
 alias vi="nvim"
 alias s="nvim + ~/.scratchpad"
-alias us="setxkbmap -layout us -variant altgr-intl"
-alias fr="setxkbmap -layout fr"
 alias history="fc -il 1"
 alias emacs="$HOME/.local/bin/doom-emacs"
 alias doom="$HOME/.config/emacs/bin/doom"
+alias k="kubectl"
 
 fpath=(~/.zsh-completions $fpath)
 
@@ -110,11 +109,11 @@ kns() {
 }
 
 # Custom and private configs
-#if [ -d "${HOME}/.zshrc.d" ]; then
-#  find "${HOME}/.zshrc.d" -type f | while read -r file; do
-#    source ${file}
-#  done
-#fi
+if [ -d "${ZDOTDIR:-$HOME}/.zshrc.d" ]; then
+  find "${ZDOTDIR:-$HOME}/.zshrc.d" -type f | while read -r file; do
+    source "${file}"
+  done
+fi
 
 # Autosuggestions default color is the same as the background color...
 # Changing it to dark gray
