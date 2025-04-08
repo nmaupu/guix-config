@@ -26,6 +26,7 @@
   #:use-module (nmaupu home-services emacs)
   #:use-module (nmaupu home-services shepherd-services)
   #:use-module (nmaupu home-services dev)
+  #:use-module (nmaupu home-services kubernetes)
   #:use-module (nmaupu systems custom-sof-firmware)
   #:use-module (nmaupu systems custom-linux-firmware))
 
@@ -40,7 +41,8 @@
            home-tmux-services
            home-emacs-services
            home-shepherd-services
-           home-dev-services))))
+           home-dev-services
+           home-kubernetes-services))))
 
 (define %luks-root-partition-uuid "1bddce67-af38-4486-9573-acf1bba9805d")
 
