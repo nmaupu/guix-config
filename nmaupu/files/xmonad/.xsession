@@ -39,4 +39,4 @@ blueman-applet &
 
 export SSH_AUTH_SOCK
 
-exec xmonad
+exec dbus-launch --exit-with-session xmonad
