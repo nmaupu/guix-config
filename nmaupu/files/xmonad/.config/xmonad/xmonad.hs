@@ -137,7 +137,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_space (setLayout $ XMonad.layoutHook conf) $
   addKeyBinding modMask xK_p (spawn rofiProg) $
   addKeyBinding cModCtrl xK_p (spawn "pavucontrol") $
-  addKeyBinding cCtrl xK_period (spawn rofiPass) $
+  addKeyBinding cCtrl xK_comma (spawn rofiPass) $
   addKeyBinding modMask xK_v (spawn rofiClipboard) $
   addKeyBinding cModShift xK_v (spawn greenclipClear) $
   -- Resize viewed windows to the correct size
