@@ -32,7 +32,7 @@ foreground = "#839496"
 TERM = "xterm-256color"
 
 [font]
-size = 9
+size = 11
 
 # Font location ~/.local/share/fonts
 # Reload cache: fc-cache -f -v
