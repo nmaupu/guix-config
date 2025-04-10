@@ -3,6 +3,7 @@
   #:use-module (gnu packages) ; defines specification->package
   #:use-module (gnu services)
   #:use-module (gnu home services)
+  #:use-module (gnu home services dotfiles)
   #:use-module (nongnu packages mozilla)
   #:use-module (nongnu packages compression)
   #:use-module (nmaupu packages fonts)
@@ -65,4 +66,7 @@
 (define-public home-base-services
   (list
    keyboard-layout-qwerty-fr-service
-   (service home-base-service-type)))
+   (service home-base-service-type)
+   (service home-dotfiles-service-type
+            (home-dotfiles-configuration
+             (directories '("../files/firefox-no-libva"))))))

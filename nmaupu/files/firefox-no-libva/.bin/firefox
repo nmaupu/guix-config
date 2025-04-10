@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+# For a not so obvious reason, firefox doesn't play YT videos with the current package build (137.0)
+# The solution is to remove the libva from the LD_LIBRARY_PATH.
+
+# Getting the realpath for the firefox package
+FF_SCRIPT=$(realpath "$HOME/.guix-profile/bin/firefox")
+
+# Getting rid of the libva path in the LD_LIBRARY_PATH and eval (export LD_LIBRARY_PATH)
+eval "$(grep LD_LIBRARY_PATH "$FF_SCRIPT" | sed -e 's_:[^:]*libva[^:]*:_:_g')"
+# Eval the rest of the script which will run firefox without libva
+eval "$(grep -v LD_LIBRARY_PATH "$FF_SCRIPT")"
