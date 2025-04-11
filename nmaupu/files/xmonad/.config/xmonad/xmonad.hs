@@ -74,7 +74,8 @@ centerWebex win = do
 -- vars
 --
 altKey = mod1Mask
-tabbedFont = "xft:DejaVu Sans Mono:pixelsize=13,style=Regular,xft:Inconsolata for Powerline:pixelsize=13"
+--tabbedFont = "xft:DejaVu Sans Mono:pixelsize=13,style=Regular,xft:Inconsolata for Powerline:pixelsize=13"
+tabbedFont = "xft:Noto Sans:pixelsize=15,style=Regular"
 dmenuFont = "xft:DejaVu Sans Mono:pixelsize=15,style=Regular,xft:Inconsolata for Powerline:pixelsize=15"
 iconDir = ".config/xmonad/icons"
 iconSep = iconDir ++ "/separator.xbm"
@@ -234,7 +235,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 full = noBorders Full
 winDecoTabbed = tabbed shrinkText def {
   fontName = tabbedFont,
-  decoHeight = 23
+  decoHeight = 30
 }
 stdLayouts = hiddenWindows $ avoidStruts (smartBorders (threeCols ||| Grid ||| tiled ||| Mirror tiled)) ||| full
   where
