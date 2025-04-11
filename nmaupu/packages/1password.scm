@@ -109,9 +109,20 @@
                                   "1Password-LastPass-Exporter"))))
                   (add-after 'unpack 'delete-useless-files
                     (lambda _
+                      (substitute* "com.1password.1Password.policy.tpl"
+                        (("[$]{1}[{]{1}POLICY_OWNERS[}]{1}") "unix-group:onepassword"))
+                      (copy-recursively "com.1password.1Password.policy.tpl" "com.1password.1Password.policy")
                       (for-each delete-file-recursively
                                 '("after-install.sh"
-                                  "after-remove.sh")))))
+                                  "after-remove.sh"
+                                  "com.1password.1Password.policy.tpl"))))
+                  (add-after 'install 'symlink
+                    (lambda* (#:key outputs #:allow-other-keys)
+                      (let ((out (assoc-ref outputs "out")))
+                        (mkdir-p (string-append out "/bin"))
+                        (symlink (string-append out "/opt/1Password/1password")
+                                 (string-append out "/bin/1password")))
+                      #t)))
        #:patchelf-plan `(("1password" ("alsa-lib"
                                        "at-spi2-core"
                                        "cairo"
@@ -138,7 +149,9 @@
                                        ("nss" "/lib/nss")))
                          ("1Password-BrowserSupport" ("gcc-toolchain" "eudev"))
                          ("1Password-Crash-Handler" ("gcc-toolchain", "eudev"))
-                         ("1Password-LastPass-Exporter" ("gcc-toolchain")))))
+                         ("1Password-LastPass-Exporter" ("gcc-toolchain")))
+       #:install-plan `(("./" "/opt/1Password/")
+                        ("com.1password.1Password.policy" "share/polkit-1/actions/"))))
     (inputs (list alsa-lib
                   at-spi2-core
                   cairo

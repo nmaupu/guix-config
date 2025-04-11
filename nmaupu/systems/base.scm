@@ -18,6 +18,7 @@
                      version-control package-management vim pulseaudio freedesktop xdisorg)
 
 (define onepassword-cli-group-name "onepassword-cli")
+(define onepassword-gui-group-name "onepassword")
 
 (define-public base-operating-system
   (operating-system
@@ -60,13 +61,14 @@
                  (group "users")
                  (home-directory "/home/nmaupu")
                  (shell (file-append zsh "/bin/zsh"))
-                 (supplementary-groups '("wheel"  ;; sudo
+                 (supplementary-groups `("wheel"  ;; sudo
                                          "netdev" ;; network devices
                                          "kvm"
                                          "tty"
                                          "input"
                                          "docker"
-                                         "onepassword-cli"
+                                         ,onepassword-cli-group-name
+                                         ,onepassword-gui-group-name
                                          "realtime" ;; Enable realtime scheduling
                                          "lp"       ;; control bluetooth devices
                                          "audio"    ;; control audio devices
@@ -78,6 +80,7 @@
    (groups (cons*
             (user-group (system? #t) (name "realtime"))
             (user-group (system? #t) (name onepassword-cli-group-name))
+            (user-group (system? #t) (name onepassword-gui-group-name))
             %base-groups))
 
    ;; Install bare-minimum system packages
