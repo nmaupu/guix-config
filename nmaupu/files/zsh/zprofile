@@ -8,6 +8,9 @@ export QT_IM_MODULE=ibus
 #https://wiki.archlinux.org/index.php/Xmonad#LibreOffice_-_focus_flicking_between_main_window_and_dialog
 export SAL_USE_VCLPLUGIN=gen lowriter
 
+# Avoid alacritty to scale font on DPI
+export WINIT_X11_SCALE_FACTOR=1
+
 export PATH="$HOME/.bin:$HOME/.krew/bin:$HOME/.local/bin:$HOME/.local/tfenv/bin:$HOME/.local/goenv/bin:$HOME/.local/goenv-data/shims:$PATH"
 
 # The next line updates PATH for the Google Cloud SDK.
