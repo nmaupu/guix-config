@@ -8,6 +8,9 @@ export QT_IM_MODULE=ibus
 #https://wiki.archlinux.org/index.php/Xmonad#LibreOffice_-_focus_flicking_between_main_window_and_dialog
 export SAL_USE_VCLPLUGIN=gen lowriter
 
+# Lock screen only on one screen
+export XSECURELOCK_SINGLE_AUTH_WINDOW=1
+
 # Avoid alacritty to scale font on DPI
 export WINIT_X11_SCALE_FACTOR=1
 

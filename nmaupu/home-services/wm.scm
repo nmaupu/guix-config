@@ -16,9 +16,10 @@
         arandr
         pavucontrol
         telegram-desktop
-        xrandr
+        xautolock
         xclip
         xmodmap
+        xrandr
         xrdb
         setxkbmap))
 

@@ -120,6 +120,7 @@ scriptPass = scriptDir ++ "/xmonad-pass.sh"
 scriptServer = scriptDir ++ "/xmonad-kube-switch-ctx.sh"
 scriptSwitchToScreen = scriptDir ++ "/switch-to-screen.sh" ++ " screen"
 scriptSwitchToLaptop = scriptDir ++ "/switch-to-screen.sh" ++ " laptop"
+screenLocker = "xsecurelock"
 
 toggleScreen :: IORef Bool -> X()
 toggleScreen ref = do
@@ -164,7 +165,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModShift xK_m (windows W.swapMaster) $
   addKeyBinding modMask xK_m (windows W.swapDown) $
   --addKeyBinding modMask xK_l (windows W.swapUp) $
-  addKeyBinding cCtrlAlt xK_l (mapM_ spawn ["xsecurelock"]) $
+  addKeyBinding cCtrlAlt xK_l (mapM_ spawn [screenLocker]) $
   addKeyBinding cCtrlAlt xK_e (toggleScreen refState) $
   addKeyBinding modMask xK_Down (sendMessage Shrink) $
   addKeyBinding modMask xK_Up (sendMessage Expand) $

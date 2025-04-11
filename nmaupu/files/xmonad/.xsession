@@ -39,4 +39,6 @@ blueman-applet &
 
 export SSH_AUTH_SOCK
 
+xautolock -locker xsecurelock -detectsleep -time 2 -bell 0 &
+
 exec dbus-launch --exit-with-session xmonad
