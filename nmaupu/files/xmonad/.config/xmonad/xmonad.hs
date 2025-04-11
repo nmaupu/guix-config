@@ -293,6 +293,7 @@ myManageHook = composeAll
       title =? "GIMP" --> doFloat,
       className =? "jetbrains-pycharm" --> doShift "6",
       className =? "jetbrains-idea" --> doShift "6",
+      className =? "Firefox" --> doShift "1",
       -- className =? "Pavucontrol" --> doRectFloat (W.RationalRect 0.35 0.1 0.3 0.8)
       className =? "Pavucontrol" --> manageScratchCentered
     ]
