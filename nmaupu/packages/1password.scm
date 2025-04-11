@@ -135,7 +135,10 @@
                                        "nspr"
                                        "pango"
                                        "prebuilt-libffmpeg"
-                                       ("nss" "/lib/nss"))))))
+                                       ("nss" "/lib/nss")))
+                         ("1Password-BrowserSupport" ("gcc-toolchain" "eudev"))
+                         ("1Password-Crash-Handler" ("gcc-toolchain", "eudev"))
+                         ("1Password-LastPass-Exporter" ("gcc-toolchain")))))
     (inputs (list alsa-lib
                   at-spi2-core
                   cairo
