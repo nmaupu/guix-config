@@ -32,7 +32,7 @@ import XMonad.Actions.SpawnOn
 import XMonad.Layout.Hidden
 import XMonad.Util.Cursor
 import XMonad.Hooks.ManageHelpers
-import Data.IORef (newIORef)
+import Data.IORef
 -- startup
 import XMonad.Util.SpawnOnce
 
@@ -68,6 +68,7 @@ centerWebex win = do
 --       rescreen
 --     else
 --       layoutSplitScreen 3 $ ThreeColMid 1 0 (1/2)
+
 
 ------------------------------------------------------------------------
 -- vars
@@ -116,6 +117,18 @@ scriptDir = "/home/nmaupu/.config/xmonad/scripts"
 scriptBrightness = scriptDir ++ "/brightness.sh"
 scriptPass = scriptDir ++ "/xmonad-pass.sh"
 scriptServer = scriptDir ++ "/xmonad-kube-switch-ctx.sh"
+scriptSwitchToScreen = scriptDir ++ "/switch-to-screen.sh" ++ " screen"
+scriptSwitchToLaptop = scriptDir ++ "/switch-to-screen.sh" ++ " laptop"
+
+toggleScreen :: IORef Bool -> X()
+toggleScreen ref = do
+  val <- io $ readIORef ref
+  io $ writeIORef ref (not val)
+  if val
+    then
+      spawn scriptSwitchToLaptop
+    else
+      spawn scriptSwitchToScreen
 
 ------------------------------------------------------------------------
 -- Key bindings
@@ -151,6 +164,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding modMask xK_m (windows W.swapDown) $
   --addKeyBinding modMask xK_l (windows W.swapUp) $
   addKeyBinding cCtrlAlt xK_l (mapM_ spawn ["xsecurelock"]) $
+  addKeyBinding cCtrlAlt xK_e (toggleScreen refState) $
   addKeyBinding modMask xK_Down (sendMessage Shrink) $
   addKeyBinding modMask xK_Up (sendMessage Expand) $
   addKeyBinding modMask xK_f (sendMessage ToggleLayout) $
