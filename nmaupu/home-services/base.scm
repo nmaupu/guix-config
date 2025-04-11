@@ -69,4 +69,5 @@
    (service home-base-service-type)
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
-             (directories '("../files/firefox-no-libva"))))))
+             (directories '("../files/firefox-no-libva"
+                            "../files/nvim"))))))
