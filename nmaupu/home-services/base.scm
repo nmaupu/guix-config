@@ -31,6 +31,8 @@
         node ; provides npm needed for some packages installation (lsp, etc.)
         p7zip
         python
+        qemu
+        virt-manager
         qutebrowser
         ripgrep
         fd

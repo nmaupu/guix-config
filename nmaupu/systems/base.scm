@@ -63,6 +63,7 @@
                  (supplementary-groups '("wheel"  ;; sudo
                                          "netdev" ;; network devices
                                          "kvm"
+                                         "libvirt"
                                          "tty"
                                          "input"
                                          "docker"
@@ -218,6 +219,7 @@
                                     (libvirt-configuration
                                      (unix-sock-group "libvirt")
                                      (tls-port "16555")))
+                           (service virtlog-service-type)
 
 
                            (simple-service 'dbus-extras
