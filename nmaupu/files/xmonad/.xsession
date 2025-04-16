@@ -34,11 +34,13 @@ xmodmap -e 'keysym Escape = Escape asciitilde Escape'
 xrdb -merge ~/.Xresources
 #ssh-agent &
 blueman-applet &
-#telegram -startintray &
+telegram -startintray &
+1password --silent &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
 
 export SSH_AUTH_SOCK
 
-xautolock -locker xsecurelock -detectsleep -time 2 -bell 0 &
+
+xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
 
 exec dbus-launch --exit-with-session xmonad
