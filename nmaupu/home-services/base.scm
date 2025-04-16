@@ -7,16 +7,18 @@
   #:use-module (nongnu packages mozilla)
   #:use-module (nongnu packages compression)
   #:use-module (nmaupu packages fonts)
+  #:use-module (nmaupu packages 1password)
   #:use-module (nmaupu packages keyboard-layout))
 
 (use-package-modules curl version-control admin linux rsync
                      web commencement databases algebra
                      compression vim python web-browsers
                      rust-apps chromium admin ftp xorg
-                     node cmake)
+                     node cmake virtualization)
 
 (define (home-base-profile-service config)
-  (list bc
+  (list 1password-gui
+        bc
         curl
         lm-sensors
         firefox

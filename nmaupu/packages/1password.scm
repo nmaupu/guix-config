@@ -17,6 +17,8 @@
   #:use-module (gnu packages xml)
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages linux)
+  #:use-module (gnu packages polkit)
+  #:use-module (gnu packages mate)
   #:use-module (gnu packages commencement)
   #:use-module (gnu packages nss))
 
@@ -99,7 +101,9 @@
     ;; Where things get hairy
     ;; Based on https://zie87.github.io/posts/guix-foreign-binaries
     (arguments
-     `(#:phases (modify-phases %standard-phases
+     `(#:strip-directories '()
+       #:validate-runpath? #f
+       #:phases (modify-phases %standard-phases
                   (add-before 'patchelf 'patchelf-writable
                     (lambda _
                       (for-each make-file-writable
@@ -115,14 +119,14 @@
                       (for-each delete-file-recursively
                                 '("after-install.sh"
                                   "after-remove.sh"
-                                  "com.1password.1Password.policy.tpl"))))
-                  (add-after 'install 'symlink
-                    (lambda* (#:key outputs #:allow-other-keys)
-                      (let ((out (assoc-ref outputs "out")))
-                        (mkdir-p (string-append out "/bin"))
-                        (symlink (string-append out "/opt/1Password/1password")
-                                 (string-append out "/bin/1password")))
-                      #t)))
+                                  "com.1password.1Password.policy.tpl")))))
+                  ;; (add-after 'install 'symlink
+                  ;;   (lambda* (#:key outputs #:allow-other-keys)
+                  ;;     (let ((out (assoc-ref outputs "out")))
+                  ;;       (mkdir-p (string-append out "/bin"))
+                  ;;       (symlink (string-append out "/opt/1Password/1password")
+                  ;;                (string-append out "/bin/1password")))
+                  ;;     #t)))
        #:patchelf-plan `(("1password" ("alsa-lib"
                                        "at-spi2-core"
                                        "cairo"
@@ -150,8 +154,8 @@
                          ("1Password-BrowserSupport" ("gcc-toolchain" "eudev"))
                          ("1Password-Crash-Handler" ("gcc-toolchain", "eudev"))
                          ("1Password-LastPass-Exporter" ("gcc-toolchain")))
-       #:install-plan `(("./" "/opt/1Password/")
-                        ("com.1password.1Password.policy" "share/polkit-1/actions/"))))
+       #:install-plan `(("./" "/bin/")
+                        ("com.1password.1Password.policy" "/etc/polkit-1/actions/"))))
     (inputs (list alsa-lib
                   at-spi2-core
                   cairo
@@ -176,6 +180,8 @@
                   nss
                   pango
                   prebuilt-libffmpeg))
+    (propagated-inputs (list polkit
+                             mate-polkit))
     (supported-systems '("x86_64-linux"))
     (home-page "https://support.1password.com/install-linux")
     (synopsis "1password GUI")

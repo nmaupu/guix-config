@@ -80,8 +80,8 @@
    ;; Add the 'realtime' group
    (groups (cons*
             (user-group (system? #t) (name "realtime"))
-            (user-group (system? #t) (name onepassword-cli-group-name))
-            (user-group (system? #t) (name onepassword-gui-group-name))
+            (user-group (name onepassword-cli-group-name) (id 1003))
+            (user-group (name onepassword-gui-group-name) (id 1004))
             %base-groups))
 
    ;; Install bare-minimum system packages
@@ -97,6 +97,8 @@
                     fprintd
                     libfprint
                     git
+                    gnome-keyring
+                    libgnome-keyring
                     gvfs    ;; Enable user mounts
                     intel-media-driver/nonfree
                     intel-microcode
@@ -122,6 +124,7 @@
                                                      %default-authorized-guix-keys))))
 
                            (service gdm-service-type)
+                           (service gnome-keyring-service-type)
 
                            ;; Add udev rules for MTP devices so that non-root users can access
                            ;; them.
