@@ -5,6 +5,7 @@
   #:use-module (gnu system nss)
   #:use-module (gnu system setuid)
   #:use-module (gnu system privilege)
+  #:use-module (gnu services authentication)
   #:use-module (nongnu packages linux)
   #:use-module (nongnu packages video)
   #:use-module (nongnu system linux-initrd)
@@ -19,6 +20,23 @@
 
 (define onepassword-cli-group-name "onepassword-cli")
 (define onepassword-gui-group-name "onepassword")
+
+(define fprintd-polkit-rule
+  (file-union
+   "fprintd-polkit-rule"
+   `(("share/polkit-1/rules.d/00-fprintd.rules"
+      ,(plain-file
+        "00-fprintd.rules"
+        "polkit.addRule(function(action, subject) {
+   if (action.id.indexOf(\"net.reactivated.fprint.\") == 0 || action.id.indexOf(\"net.reactivated.Fprint.\") == 0) {
+      polkit.log(\"action=\" + action);
+      polkit.log(\"subject=\" + subject);
+      return polkit.Result.YES;
+   }
+});
+")))))
+(define fprintd-polkit-rule-service
+  (simple-service 'fprintd-polkit-rule polkit-service-type (list fprintd-polkit-rule)))
 
 (define-public base-operating-system
   (operating-system
@@ -200,7 +218,10 @@
                            ;;;;;
                            ;;;;;
 
-                           ;; (service fprintd-service-type)
+                           (service fprintd-service-type)
+
+                           fprintd-polkit-rule-service
+
 
                            (service screen-locker-service-type
                                     (screen-locker-configuration (name "xsecurelock")
