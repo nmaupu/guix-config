@@ -30,16 +30,19 @@ xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb "$DISPLAY"
 # Remap shift+esc to ~
 xmodmap -e 'keysym Escape = Escape asciitilde Escape'
 
+
 # [ -f .screenlayout/single-5k.sh ] && sudo xrandr --setprovideroutputsource 1 0 && .screenlayout/single-5k.sh
 xrdb -merge ~/.Xresources
+
+mkdir -p ~/.logs
+
 #ssh-agent &
-blueman-applet &
-telegram-desktop -startintray &
-1password --silent &
+#export SSH_AUTH_SOCK
+
+blueman-applet &>~/.logs/blueman-applet.log &
+telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
+1password --silent &>~/.logs/1password.log &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
-
-export SSH_AUTH_SOCK
-
 
 xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
 
