@@ -34,7 +34,7 @@ xmodmap -e 'keysym Escape = Escape asciitilde Escape'
 xrdb -merge ~/.Xresources
 #ssh-agent &
 blueman-applet &
-telegram -startintray &
+telegram-desktop -startintray &
 1password --silent &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
 
