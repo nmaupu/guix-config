@@ -10,7 +10,8 @@
   #:use-module (nongnu packages video)
   #:use-module (nongnu system linux-initrd)
   #:use-module (nmaupu packages 1password)
-  #:use-module (nmaupu systems misc polkit))
+  #:use-module (nmaupu systems misc polkit)
+  #:use-module (nmaupu systems misc pam))
 
 (use-service-modules dns guix admin sysctl pm nix avahi dbus cups desktop linux
                      mcron networking xorg ssh docker audio virtualization sound)
@@ -202,14 +203,14 @@
                            ;;;;;
                            ;;;;;
 
-                           (service fprintd-service-type)
-
-                           fprintd-polkit-rule-service
-
-
                            (service screen-locker-service-type
                                     (screen-locker-configuration (name "xsecurelock")
                                                                  (program (file-append xsecurelock "/bin/xsecurelock"))))
+
+                           (service fprintd-service-type)
+                           ;; Added custom pam config and polkit rules
+                           fprintd-pam-service
+                           fprintd-polkit-rule-service
 
                            (set-xorg-configuration
                             (xorg-configuration (keyboard-layout keyboard-layout)
