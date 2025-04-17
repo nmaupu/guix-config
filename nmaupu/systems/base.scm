@@ -160,6 +160,8 @@
                                                  (group onepassword-cli-group-name)
                                                  (setgid? #t))))
 
+                           1password-polkit-action-service
+
 
                            ;; The global fontconfig cache directory can sometimes contain
                            ;; stale entries, possibly referencing fonts that have been GC'd,
