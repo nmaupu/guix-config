@@ -9,7 +9,8 @@
   #:use-module (nongnu packages linux)
   #:use-module (nongnu packages video)
   #:use-module (nongnu system linux-initrd)
-  #:use-module (nmaupu packages 1password))
+  #:use-module (nmaupu packages 1password)
+  #:use-module (nmaupu systems misc polkit))
 
 (use-service-modules dns guix admin sysctl pm nix avahi dbus cups desktop linux
                      mcron networking xorg ssh docker audio virtualization sound)
@@ -20,23 +21,6 @@
 
 (define onepassword-cli-group-name "onepassword-cli")
 (define onepassword-gui-group-name "onepassword")
-
-(define fprintd-polkit-rule
-  (file-union
-   "fprintd-polkit-rule"
-   `(("share/polkit-1/rules.d/00-fprintd.rules"
-      ,(plain-file
-        "00-fprintd.rules"
-        "polkit.addRule(function(action, subject) {
-   if (action.id.indexOf(\"net.reactivated.fprint.\") == 0 || action.id.indexOf(\"net.reactivated.Fprint.\") == 0) {
-      polkit.log(\"action=\" + action);
-      polkit.log(\"subject=\" + subject);
-      return polkit.Result.YES;
-   }
-});
-")))))
-(define fprintd-polkit-rule-service
-  (simple-service 'fprintd-polkit-rule polkit-service-type (list fprintd-polkit-rule)))
 
 (define-public base-operating-system
   (operating-system

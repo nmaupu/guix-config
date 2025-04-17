@@ -28,8 +28,7 @@
   #:use-module (nmaupu home-services shepherd-services)
   #:use-module (nmaupu home-services dev)
   #:use-module (nmaupu home-services k8s)
-  #:use-module (nmaupu systems custom-sof-firmware)
-  #:use-module (nmaupu systems custom-linux-firmware))
+  #:use-module (nmaupu packages custom-linux))
 
 (define home
  (home-environment

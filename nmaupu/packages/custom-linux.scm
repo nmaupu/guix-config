@@ -1,7 +1,8 @@
-(define-module (nmaupu systems custom-linux-firmware)
+(define-module (nmaupu packages custom-linux)
   #:use-module (nongnu packages linux)
   #:use-module (guix build-system copy)
   #:use-module (guix git-download)
+  #:use-module (guix download)
   #:use-module (guix licenses)
   #:use-module (guix packages))
 
@@ -22,3 +23,17 @@
        (sha256
         (base32
          "026bdiwz05x4330w21wgza3bqsd4sr8b3jgnv4kqary9pzgnn0cm"))))))
+
+(define-public custom-sof-firmware
+  (package
+   (inherit sof-firmware)
+   (name "custom-sof-firmware")
+   (version "2025.01.1")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (string-append "https://github.com/thesofproject/sof-bin/releases/download/v"
+                         version "/sof-bin-" version ".tar.gz"))
+     (sha256
+      (base32
+       "08w3z183cva8bg2yynljrxl2j4nl3xyv5mkljq6ips25qbci0qm3"))))))
