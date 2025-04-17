@@ -224,7 +224,7 @@
 
                            (service openssh-service-type)
 
-                           ;; Docker
+                           ;; Docker and qemu
                            (service containerd-service-type)
                            (service docker-service-type)
                            (service libvirt-service-type
