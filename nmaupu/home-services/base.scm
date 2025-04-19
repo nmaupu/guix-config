@@ -18,7 +18,7 @@
                      node cmake virtualization)
 
 (define (home-base-profile-service config)
-  (list 1password-gui
+  (list 1password-gui-beta
         bc
         curl
         lm-sensors

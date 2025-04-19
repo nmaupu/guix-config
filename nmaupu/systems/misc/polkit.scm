@@ -28,7 +28,7 @@
   (file-union
    "1password-polkit-action"
    `(("share/polkit-1/actions/com.1password.1Password.policy"
-      ,(file-append 1password-gui "/etc/polkit-1/actions/com.1password.1Password.policy")))))
+      ,(file-append 1password-gui-beta "/etc/polkit-1/actions/com.1password.1Password.policy")))))
 
 (define-public 1password-polkit-action-service
   (simple-service '1password-polkit-config polkit-service-type (list 1password-polkit-action)))

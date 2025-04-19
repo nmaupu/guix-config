@@ -187,3 +187,16 @@
     (synopsis "1password GUI")
     (description "1password GUI")
     (license (licensenon:nonfree "https://1password.com/pricing"))))
+
+(define-public 1password-gui-beta
+  (package
+    (inherit 1password-gui)
+    (name "1password-gui-beta")
+    (version "8.10.70-24.BETA")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://downloads.1password.com/linux/tar/beta"
+                           "/x86_64/1password-" version ".x64.tar.gz"))
+       (sha256
+        (base32 "11wa5sczlmfl78d85rfysw850590z9wd1882b7v03nd187m9pnsw"))))))
