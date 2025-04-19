@@ -42,6 +42,7 @@ mkdir -p ~/.logs
 blueman-applet &>~/.logs/blueman-applet.log &
 telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
 1password --silent &>~/.logs/1password.log &
+slack --startup &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
 
 xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
