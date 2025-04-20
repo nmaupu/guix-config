@@ -20,7 +20,8 @@
 (define (home-base-profile-service config)
   (list 1password-gui-beta
         bc
-        (specification->package "bind")
+        ;; bind is the name of guile procedure, so bind package has been renamed to isc-bind
+        isc-bind
         curl
         lm-sensors
         firefox
