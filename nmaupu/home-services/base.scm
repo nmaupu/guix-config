@@ -15,11 +15,12 @@
                      web commencement databases algebra
                      compression vim python web-browsers
                      rust-apps chromium admin ftp xorg
-                     node cmake virtualization)
+                     node cmake virtualization dns)
 
 (define (home-base-profile-service config)
   (list 1password-gui-beta
         bc
+        (specification->package "bind")
         curl
         lm-sensors
         firefox
