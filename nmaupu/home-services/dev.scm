@@ -6,24 +6,24 @@
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp)
   #:use-module (nmaupu packages tfenv)
-  #:use-module (nmaupu packages goenv))
+  #:use-module (nmaupu packages goenv)
+  #:use-module (nmaupu packages google-cloud-sdk))
+
+(define (home-dev-profile-service config)
+  ;; goenv is linked to ~/.local/goenv
+  (list tfenv
+        google-cloud-sdk))
 
 (define (with-home p)
   (string-append "$HOME/" p))
 
-;; tfenv
-(define %tfenv-root ".local/tfenv")
 (define %tfenv-data-dir ".local/tfenv-data")
-
-;; goenv
-;; goenv-root is the directory where downloaded versions reside
 (define %goenv-root ".local/goenv")
 (define %goenv-data-dir ".local/goenv-data")
 
 (define (home-dev-env-vars config)
-  `(("TFENV_ROOT" . ,(with-home %tfenv-root)) ; root dir for tfenv files
-    ("TFENV_CONFIG_DIR" . ,(with-home %tfenv-data-dir)) ; data dir where tf versions are downloaded
-    ("GOENV_ROOT" . ,(with-home %goenv-data-dir)))) ; data dir where go versions are downloaded
+  `(("TFENV_CONFIG_DIR" . ,(with-home %tfenv-data-dir)) ; data dir where tf versions are actually downloaded
+    ("GOENV_ROOT" . ,(with-home %goenv-data-dir))))
 
 (define home-dev-service-type
   (service-type (name 'dev-tools)
@@ -31,17 +31,19 @@
                 (extensions
                  (list (service-extension
                         home-environment-variables-service-type
-                        home-dev-env-vars)))
+                        home-dev-env-vars)
+                       (service-extension
+                        home-profile-service-type
+                        home-dev-profile-service)))
                 (default-value #f)))
 
 (define-public home-dev-services
   (list
-   (simple-service 'dev-configs-from-packages
+   ;; goenv is a piece of crap and needs that the directory with goenv script is named without
+   ;; the version in it. Hence, it's not possible to use the directory from /gnu/store directly...
+   ;; As a result, we link it to the home directory under GOENV_ROOT
+   (simple-service 'link-from-packages
                    home-files-service-type
-                   `((,%tfenv-root
-                      ,(directory-union "tfenv"
-                                        (list tfenv)))
-                     (,%goenv-root
-                      ,(directory-union "goenv"
-                                        (list goenv)))))
+                   `((,%goenv-root
+                      ,(directory-union "goenv" (list goenv)))))
    (service home-dev-service-type)))
