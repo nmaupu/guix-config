@@ -10,6 +10,10 @@
   #:use-module (gnu packages nss)
   #:use-module (gnu packages wget))
 
+;; Slack will start and ask to login via the browser.
+;; To do that, it uses xdg-open which has to be installed (see propagated-inputs)
+;; The redirection might not work but in that case, copy the "try again" link
+;; and focus the slack window. After 2 seconds, a redirection occurs.
 (define-public slack
   (package
     (name "slack")
