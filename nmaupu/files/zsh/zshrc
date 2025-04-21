@@ -122,3 +122,10 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 [[ ! -f "${ZDOTDIR:-$HOME}/.p10k.zsh" ]] || . "${ZDOTDIR:-$HOME}/.p10k.zsh"
+
+# Google Cloud gnu store install path
+GCLOUD_DIR=$(dirname $(dirname $(realpath /home/nmaupu/.guix-home/profile/bin/gcloud)))
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f "$GCLOUD_DIR/path.zsh.inc" ]; then . "$GCLOUD_DIR/path.zsh.inc"; fi
+# The next line enables shell command completion for gcloud.
+if [ -f "$GCLOUD_DIR/completion.zsh.inc" ]; then . "$GCLOUD_DIR/completion.zsh.inc"; fi

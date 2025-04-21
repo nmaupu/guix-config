@@ -12,7 +12,9 @@
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
   (list tfenv
-        google-cloud-sdk))
+        google-cloud-sdk
+        google-cloud-sdk-gke-gcloud-auth-plugin
+        google-cloud-sdk-minikube))
 
 (define (with-home p)
   (string-append "$HOME/" p))
