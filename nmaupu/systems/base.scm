@@ -218,7 +218,11 @@
 
                            (service fprintd-service-type)
                            ;; Added custom pam config and polkit rules
-                           fprintd-pam-service
+                           ;; Deactivating for now as fprintd is tried first but it's kind of slow with everything
+                           ;; for gdm: seems to timeout the password, then try fingerprint -> 10 secs to login
+                           ;; for others: fprintd is tried first, if we want to be using the password, we need to fail the fingerprint which is slow
+                           ;; + doesn't work with xsecurelock
+                           ;; fprintd-pam-service
                            fprintd-polkit-rule-service
 
                            (set-xorg-configuration
