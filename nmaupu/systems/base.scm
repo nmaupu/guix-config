@@ -6,6 +6,7 @@
   #:use-module (gnu system setuid)
   #:use-module (gnu system privilege)
   #:use-module (gnu services authentication)
+  #:use-module (gnu services syncthing)
   #:use-module (nongnu packages linux)
   #:use-module (nongnu packages video)
   #:use-module (nongnu system linux-initrd)
@@ -156,9 +157,13 @@
 
                            (simple-service 'onepassword-setgid-helper privileged-program-service-type
                                            (list (privileged-program
-                                                 (program  (file-append 1password-cli "/bin/op"))
-                                                 (group onepassword-cli-group-name)
-                                                 (setgid? #t))))
+                                                  (program (file-append 1password-cli "/bin/op"))
+                                                  (group onepassword-cli-group-name)
+                                                  (setgid? #t))
+                                                 (privileged-program
+                                                  (program (file-append 1password-gui "/bin/1Password-BrowserSupport"))
+                                                  (group onepassword-gui-group-name)
+                                                  (setgid? #t))))
 
                            1password-polkit-action-service
 
@@ -253,6 +258,10 @@
 
                            ;; Enable the build service for Nix package manager
                            (service nix-service-type)
+
+                           ;; Syncthing service
+                           (service syncthing-service-type
+                                    (syncthing-configuration (user "nmaupu")))
 
                            ;; Schedule cron jobs for system tasks
                            (simple-service 'system-cron-jobs

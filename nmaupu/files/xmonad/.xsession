@@ -47,4 +47,5 @@ slack --startup &
 
 xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
 
-exec dbus-launch --exit-with-session xmonad
+# exec dbus-launch --exit-with-session xmonad
+exec xmonad
