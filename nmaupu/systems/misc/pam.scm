@@ -15,7 +15,8 @@
                             (lambda (pam)
                               (if (or (string=? "gdm-password" (pam-service-name pam))
                                       ;; (string=? "sudo" (pam-service-name pam))
-                                      (string=? "xsecurelock" (pam-service-name pam))) ;; not working for now
+                                      ;; (string=? "xsecurelock" (pam-service-name pam)) ;; not working for now
+                                  )
                                   (pam-service
                                    (inherit pam)
                                    (auth

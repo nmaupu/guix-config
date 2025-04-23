@@ -45,7 +45,9 @@ telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
 slack --startup &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
 
-xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
+# xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
+xset s 180 10
+xss-lock -n ~/.guix-profile/libexec/xsecurelock/dimmer -l -- xsecurelock &
 
 # exec dbus-launch --exit-with-session xmonad
 exec xmonad

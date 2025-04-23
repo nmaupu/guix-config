@@ -15,7 +15,7 @@
                      web commencement databases algebra
                      compression vim python web-browsers
                      rust-apps chromium admin ftp xorg
-                     node cmake virtualization dns)
+                     node cmake virtualization dns xdisorg)
 
 (define (home-base-profile-service config)
   (list 1password-gui-beta
@@ -52,6 +52,7 @@
         unzip
         xkbcomp
         yq
+        xsecurelock ;; needed to have 'dimmer' binary in our own profile
         nerd-font-commitmono))
 
 ;; Load this layout with the following command

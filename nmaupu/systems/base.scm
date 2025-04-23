@@ -18,7 +18,7 @@
                      mcron networking xorg ssh docker audio virtualization sound)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
-                     networking wm fonts libusb cups freedesktop file-systems
+                     networking wm fonts libusb cups freedesktop file-systems xorg
                      version-control package-management vim pulseaudio freedesktop xdisorg)
 
 (define onepassword-cli-group-name "onepassword-cli")
@@ -112,6 +112,8 @@
                     pamtester
                     pulseaudio
                     vim
+                    xset
+                    xss-lock
                     %base-packages))
 
    ;; Configure only the services necessary to run the system

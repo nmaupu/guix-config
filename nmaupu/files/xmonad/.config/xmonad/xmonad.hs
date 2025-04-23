@@ -120,7 +120,7 @@ scriptPass = scriptDir ++ "/xmonad-pass.sh"
 scriptServer = scriptDir ++ "/xmonad-kube-switch-ctx.sh"
 scriptSwitchToScreen = scriptDir ++ "/switch-to-screen.sh" ++ " screen"
 scriptSwitchToLaptop = scriptDir ++ "/switch-to-screen.sh" ++ " laptop"
-screenLocker = "xsecurelock"
+screenLocker = "xset s activate"
 
 toggleScreen :: IORef Bool -> X()
 toggleScreen ref = do
