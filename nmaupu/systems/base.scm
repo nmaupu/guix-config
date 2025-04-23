@@ -18,7 +18,7 @@
                      mcron networking xorg ssh docker audio virtualization sound)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
-                     networking wm fonts libusb cups freedesktop file-systems
+                     networking wm fonts libusb cups freedesktop file-systems xorg
                      version-control package-management vim pulseaudio freedesktop xdisorg)
 
 (define onepassword-cli-group-name "onepassword-cli")
@@ -112,6 +112,8 @@
                     pamtester
                     pulseaudio
                     vim
+                    xset
+                    xss-lock
                     %base-packages))
 
    ;; Configure only the services necessary to run the system
@@ -210,9 +212,13 @@
                            ;;;;;
                            ;;;;;
 
+                           ;; (service screen-locker-service-type
+                           ;;          (screen-locker-configuration (name "xsecurelock")
+                           ;;                                       (program (file-append xsecurelock "/bin/xsecurelock"))))
                            (service screen-locker-service-type
-                                    (screen-locker-configuration (name "xsecurelock")
-                                                                 (program (file-append xsecurelock "/bin/xsecurelock"))))
+                                    (screen-locker-configuration
+                                     (name "i3lock")
+                                     (program (file-append i3lock "/bin/i3lock"))))
 
                            (service fprintd-service-type)
                            ;; Added custom pam config and polkit rules
