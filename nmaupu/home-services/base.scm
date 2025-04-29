@@ -14,7 +14,7 @@
 (use-package-modules curl version-control admin linux rsync
                      web commencement databases algebra
                      compression vim python web-browsers
-                     rust-apps chromium admin ftp xorg
+                     rust-apps chromium admin ftp xorg fonts
                      node cmake virtualization dns xdisorg)
 
 (define (home-base-profile-service config)
@@ -53,7 +53,8 @@
         xkbcomp
         yq
         xsecurelock ;; needed to have 'dimmer' binary in our own profile
-        nerd-font-commitmono))
+        nerd-font-commitmono
+        font-adobe-source-han-serif))
 
 ;; Load this layout with the following command
 ;; xkbcomp -I~/.config/xkb ~/.config/xkb/qwertyfr.xkb $DISPLAY &>/dev/null
