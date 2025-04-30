@@ -17,7 +17,7 @@
   #:use-module (nongnu system linux-initrd)
   #:use-module (nmaupu systems base)
   #:use-module (nmaupu home-services base)
-  ;; #:use-module (nmaupu home-services pipewire)
+  #:use-module (nmaupu home-services audio)
   #:use-module (nmaupu home-services git)
   #:use-module (nmaupu home-services shells)
   #:use-module (nmaupu home-services tmux)
@@ -34,7 +34,7 @@
  (home-environment
   (services
    (append home-base-services
-           ;; home-pipewire-services
+           home-audio-services
            home-git-services
            home-shells-services
            home-guix-services
@@ -51,11 +51,12 @@
  (operating-system
   (inherit base-operating-system)
 
-  (kernel linux)
-  (firmware (list custom-linux-firmware custom-sof-firmware))
+  ;; (kernel custom-linux-kernel)
+  (kernel custom-linux-kernel-6.14)
+  (firmware (list linux-firmware custom-sof-firmware))
   (initrd microcode-initrd)
   ;; (kernel-arguments (append
-  ;;                    '("modprobe.blacklist=snd-hda-intel,snd-soc-skl")
+  ;;                    '("snd-intel-dspcfg.dsp_driver=3")
   ;;                    %default-kernel-arguments))
 
   (host-name "nmaupu-laptop")

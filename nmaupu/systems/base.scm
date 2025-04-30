@@ -6,11 +6,13 @@
   #:use-module (gnu system setuid)
   #:use-module (gnu system privilege)
   #:use-module (gnu services authentication)
+  #:use-module (gnu services sound)
   #:use-module (gnu services syncthing)
   #:use-module (nongnu packages linux)
   #:use-module (nongnu packages video)
   #:use-module (nongnu system linux-initrd)
   #:use-module (nmaupu packages 1password)
+  #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu systems misc polkit)
   #:use-module (nmaupu systems misc pam))
 
@@ -19,10 +21,32 @@
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
                      networking wm fonts libusb cups freedesktop file-systems xorg
-                     version-control package-management vim pulseaudio freedesktop xdisorg)
+                     version-control package-management vim freedesktop xdisorg)
 
 (define onepassword-cli-group-name "onepassword-cli")
 (define onepassword-gui-group-name "onepassword")
+
+(define-public %custom-base-packages
+  (append (list bluez
+                bluez-alsa
+                brightnessctl
+                dconf
+                exfat-utils
+                fuse-exfat
+                git
+                gnome-keyring
+                libgnome-keyring
+                gvfs    ;; Enable user mounts
+                intel-media-driver/nonfree
+                ;; intel-microcode
+                libva-utils
+                lvm2
+                ntfs-3g
+                pamtester
+                vim
+                xset
+                xss-lock)
+          %base-packages))
 
 (define-public base-operating-system
   (operating-system
@@ -89,32 +113,7 @@
             %base-groups))
 
    ;; Install bare-minimum system packages
-   (packages (cons* alsa-utils
-                    alsa-plugins
-                    bluez
-                    bluez-alsa
-                    blueman
-                    brightnessctl
-                    dconf
-                    exfat-utils
-                    fuse-exfat
-                    fprintd
-                    libfprint
-                    git
-                    gnome-keyring
-                    libgnome-keyring
-                    gvfs    ;; Enable user mounts
-                    intel-media-driver/nonfree
-                    intel-microcode
-                    libva-utils
-                    lvm2
-                    ntfs-3g
-                    pamtester
-                    pulseaudio
-                    vim
-                    xset
-                    xss-lock
-                    %base-packages))
+   (packages %custom-base-packages)
 
    ;; Configure only the services necessary to run the system
    (services (append (modify-services %base-services)
@@ -205,9 +204,8 @@
 
                            (service x11-socket-directory-service-type)
 
-                           ;; (service pulseaudio-service-type)
-                           ;; (service alsa-service-type)
-
+                           (service alsa-service-type
+                                    (alsa-configuration (pulseaudio? #f)))
 
                            ;;;;;
                            ;;;;;
@@ -249,7 +247,8 @@
 
                            (simple-service 'dbus-extras
                                            dbus-root-service-type
-                                           (list blueman))
+                                           (list blueman
+                                                 wireplumber))
 
                            ;; Power and thermal management services
                            (service thermald-service-type)
@@ -259,7 +258,7 @@
                                      (wifi-pwr-on-bat? #t)))
 
                            ;; Add udev rules for a few packages
-                           ;; (udev-rules-service 'pipewire-add-udev-rules pipewire)
+                           (udev-rules-service 'pipewire-add-udev-rules custom-pipewire) ;; Not sure it's needed
                            (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                            ;; Enable the build service for Nix package manager
@@ -268,6 +267,7 @@
                            ;; Syncthing service
                            (service syncthing-service-type
                                     (syncthing-configuration (user "nmaupu")))
+
 
                            ;; Schedule cron jobs for system tasks
                            (simple-service 'system-cron-jobs
