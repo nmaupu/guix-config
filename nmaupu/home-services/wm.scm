@@ -2,20 +2,22 @@
   #:use-module (gnu)
   #:use-module (gnu services)
   #:use-module (gnu home services)
+  #:use-module (gnu home services desktop)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages polybar-themes))
 
-(use-package-modules linux xdisorg pulseaudio xorg haskell haskell-apps
+(use-package-modules linux xdisorg xorg haskell haskell-apps
+                     pulseaudio ;; for pavucontrol
                      suckless wm image terminals gnupg xorg telegram)
 
 (define (home-wm-base-profile-service config)
   (list acpi
         arandr
         pavucontrol
-        telegram-desktop
+        ;; telegram-desktop
         xautolock
         xclip
         xmodmap
@@ -44,7 +46,10 @@
                 (extensions
                  (list (service-extension
                         home-profile-service-type
-                        home-wm-base-profile-service)))
+                        home-wm-base-profile-service)
+                       (service-extension
+                        home-profile-service-type
+                        home-dbus-service-type)))
                 (default-value #f)))
 
 (define home-xmonad-service-type
