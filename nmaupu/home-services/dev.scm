@@ -4,6 +4,7 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
+  #:use-module (gnu packages patchutils)
   #:use-module (guix gexp)
   #:use-module (nmaupu packages tfenv)
   #:use-module (nmaupu packages goenv)
@@ -12,6 +13,7 @@
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
   (list tfenv
+        meld
         google-cloud-sdk
         google-cloud-sdk-gke-gcloud-auth-plugin
         google-cloud-sdk-minikube))
