@@ -39,6 +39,8 @@ mkdir -p ~/.logs
 #ssh-agent &
 #export SSH_AUTH_SOCK
 
+## systray programs
+pasystray &>~/.logs/pasystray.log &
 blueman-applet &>~/.logs/blueman-applet.log &
 telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
 1password --silent &>~/.logs/1password.log &
@@ -49,5 +51,5 @@ telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
 xset s 180 10
 xss-lock -n ~/.guix-profile/libexec/xsecurelock/dimmer -l -- xsecurelock &
 
-# exec dbus-launch --exit-with-session xmonad
-exec xmonad
+exec dbus-launch --exit-with-session xmonad
+#exec xmonad

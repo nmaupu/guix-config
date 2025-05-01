@@ -35,12 +35,12 @@ import XMonad.Hooks.ManageHelpers
 import Data.IORef
 -- startup
 import XMonad.Util.SpawnOnce
+-- Keysyms (fn keys)
+import Graphics.X11.ExtraTypes.XF86
 
 ------------------------------------------------------------------------
 -- funcs
 --
-addKeyBinding shortcutLeft shortcutRight action xs = ((shortcutLeft, shortcutRight), action) : xs
-
 centerWindow :: Window -> X ()
 centerWindow win = do
   (_, W.RationalRect x y w h) <- floatLocation win
@@ -120,6 +120,7 @@ scriptPass = scriptDir ++ "/xmonad-pass.sh"
 scriptServer = scriptDir ++ "/xmonad-kube-switch-ctx.sh"
 scriptSwitchToScreen = scriptDir ++ "/switch-to-screen.sh" ++ " screen"
 scriptSwitchToLaptop = scriptDir ++ "/switch-to-screen.sh" ++ " laptop"
+scriptChangeVolume = scriptDir ++ "/changeVolume.sh"
 screenLocker = "xset s activate"
 
 toggleScreen :: IORef Bool -> X()
@@ -136,7 +137,10 @@ toggleScreen ref = do
 -- Key bindings
 --
 
+addKeyBinding shortcutLeft shortcutRight action xs = ((shortcutLeft, shortcutRight), action) : xs
+
 newKeyBindings refState x = M.union (M.fromList (keyBindings refState x)) (keys def x)
+
 keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   -- Divide physical screen in 3 panes
   --addKeyBinding modMask xK_s (layoutScreens 3 $ ThreeColMid 1 0 (1/2)) $
@@ -144,6 +148,13 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   --addKeyBinding cModShift xK_s rescreen $
   --addKeyBinding modMask xK_s (toggleLayoutScreens refState) $
   --addKeyBinding cModCtrl xK_s (spawn $ "xmessage " ++ show width ) $
+
+  -- Fn keys
+  addKeyBinding 0 xF86XK_MonBrightnessUp   (spawn "brightnessctl set +10%") $
+  addKeyBinding 0 xF86XK_MonBrightnessDown (spawn "brightnessctl set 10%-") $
+  addKeyBinding 0 xF86XK_AudioMute         (spawn $ scriptChangeVolume ++ " toggle") $
+  addKeyBinding 0 xF86XK_AudioRaiseVolume  (spawn $ scriptChangeVolume ++ " 5%+") $
+  addKeyBinding 0 xF86XK_AudioLowerVolume  (spawn $ scriptChangeVolume ++ " 5%-") $
 
   addKeyBinding modMask xK_b (spawn dmenuBrightness) $
   addKeyBinding cModShift xK_p (sendMessage (IncMasterN 1)) $
@@ -195,7 +206,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_z (sendMessage MirrorExpand) $
   -- Restart
   addKeyBinding modMask xK_s (spawn "xmonad --recompile && xmonad --restart") $
-  addKeyBinding cModShift xK_s (spawn "herd stop emacs-daemon; pgrep -f \"xmonad\" | xargs kill -15") $
+  addKeyBinding cModShift xK_s (spawn "pgrep -f \"xmonad\" | xargs kill -15") $
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   ([ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
         -- | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2] -- using ThreeCol with virtual screens, screens order are messed up

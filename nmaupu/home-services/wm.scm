@@ -6,17 +6,17 @@
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp)
+  #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages polybar-themes))
 
-(use-package-modules linux xdisorg xorg haskell haskell-apps
-                     pulseaudio ;; for pavucontrol
+(use-package-modules linux xdisorg xorg haskell haskell-apps networking
                      suckless wm image terminals gnupg xorg telegram)
 
 (define (home-wm-base-profile-service config)
   (list acpi
         arandr
-        pavucontrol
+        blueman
         ;; telegram-desktop
         xautolock
         xclip
@@ -26,7 +26,9 @@
         setxkbmap))
 
 (define (home-xmonad-profile-service config)
-  (append (list greenclip
+  (append (list custom-alsa-utils
+                brightnessctl
+                greenclip
                 dmenu
                 dunst
                 flameshot
@@ -67,7 +69,8 @@
    (service home-xmonad-service-type)
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
-             (directories '("../files/xmonad"))))
+             (directories '("../files/xmonad"
+                            "../files/dunst"))))
    (simple-service 'polybar-themes
                    home-files-service-type
                    `((".config/polybar"

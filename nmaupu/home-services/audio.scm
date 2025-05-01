@@ -13,6 +13,8 @@
 
 (define (home-pipewire-profile-service config)
   (list xdg-desktop-portal
+        (@ (gnu packages pulseaudio) pasystray)
+        (@ (gnu packages pulseaudio) pavucontrol)
         custom-pipewire
         custom-wireplumber))
 
