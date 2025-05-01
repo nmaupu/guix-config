@@ -29,6 +29,8 @@ xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb "$DISPLAY"
 
 # Remap shift+esc to ~
 xmodmap -e 'keysym Escape = Escape asciitilde Escape'
+# Caps lock = Escape
+setxkbmap -option caps:escape
 
 
 # [ -f .screenlayout/single-5k.sh ] && sudo xrandr --setprovideroutputsource 1 0 && .screenlayout/single-5k.sh
