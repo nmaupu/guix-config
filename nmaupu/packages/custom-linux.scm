@@ -194,7 +194,7 @@
 (define-public custom-wireplumber
   (package
     (inherit wireplumber)
-    (name "wireplumber")
+    (name "custom-wireplumber")
     (version "0.5.8")
     (source
      (origin
