@@ -8,7 +8,8 @@
   #:use-module (guix gexp)
   #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu packages fonts)
-  #:use-module (nmaupu packages polybar-themes))
+  #:use-module (nmaupu packages polybar-themes)
+  #:use-module (nmaupu packages custom-telegram))
 
 (use-package-modules linux xdisorg xorg haskell haskell-apps networking
                      suckless wm image terminals gnupg xorg telegram)
@@ -17,7 +18,7 @@
   (list acpi
         arandr
         blueman
-        ;; telegram-desktop
+        custom-telegram-desktop-fixed ;; Using a custom build as of 2025-04-23, guix broke it.
         xautolock
         xclip
         xmodmap
