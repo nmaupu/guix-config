@@ -51,7 +51,6 @@
  (operating-system
   (inherit base-operating-system)
 
-  ;; (kernel custom-linux-kernel)
   (kernel custom-linux-kernel-6.14)
   (firmware (list linux-firmware custom-sof-firmware))
   (initrd microcode-initrd)

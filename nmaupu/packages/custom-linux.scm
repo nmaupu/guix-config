@@ -26,27 +26,12 @@
   #:use-module (guix packages))
 
 ;; An experimental option needs to be enabled for the sound to work properly
-;; Here is the options to enable in the kernel configuration
-;; Device Drivers > Sound card support > Advanced Linux Sound Architecture > ALSA for SoC audio support > Intel Machine drivers > SoundWire generic machine driver
-;; To access this module, we need to also enable "Use more user friendly long card names" at the top
-;; This will ensure snd_soc_sof_sdw module is built and loaded with sof-firmware
-;; Here I use the 6.14 kernel because it's the latest available but it should work with 6.12+ kernel
-;; Making a defconfig is easy:
-;;   - download kernel: wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.14.1.tar.xz
-;;   - uncompress and cd to the directory
-;;   - copy old configuration: zcat /proc/config.gz > .config
-;;   - edit current config with: make menuconfig
-;;   - save the defconfig file: make savedefconfig
-;; This can also help to get make menuconfig work or compile a kernel:
-;; guix shell --container --emulate-fhs -L ~/.dotfiles flex bison gmp mpfr mpc make cmake gcc-toolchain coreutils sed findutils ncurses grep
-;; or
-;; guix environment -L ~/.dotfiles --ad-hoc perl bc openssl elfutils flex bison util-linux gmp mpfr mpc dwarves python-wrapper zlib zstd ncurses cpio
+;; under Lunar Lake platforms (RT1318/RT713 chipset)
 (define-public custom-linux-kernel-6.14
-  (package
-   (inherit (customize-linux
-             #:linux linux-6.14
-             #:defconfig (local-file "aux-files/kernel-intel-lunar-lake-defconfig-6.14")))
-   (name "custom-linux-kernel-6.14")))
+  (corrupt-linux linux-libre-6.14
+                 #:configs (cons* "CONFIG_SND_SOC_INTEL_USER_FRIENDLY_LONG_NAMES=y"
+                                  "CONFIG_SND_SOC_INTEL_SOUNDWIRE_SOF_MACH=m"
+                                  (nonguix-extra-linux-options linux-libre-6.14))))
 
 ;; As of 2025-04-03, nonguix linux-firmware package doesn't have the BT drivers included
 ;; so we are using a more recent commit to make BT work
