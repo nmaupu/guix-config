@@ -121,6 +121,7 @@ scriptServer = scriptDir ++ "/xmonad-kube-switch-ctx.sh"
 scriptSwitchToScreen = scriptDir ++ "/switch-to-screen.sh" ++ " screen"
 scriptSwitchToLaptop = scriptDir ++ "/switch-to-screen.sh" ++ " laptop"
 scriptChangeVolume = scriptDir ++ "/changeVolume.sh"
+scriptChangeBrightness = scriptDir ++ "/changeBrightness.sh"
 screenLocker = "xset s activate"
 
 toggleScreen :: IORef Bool -> X()
@@ -150,8 +151,8 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   --addKeyBinding cModCtrl xK_s (spawn $ "xmessage " ++ show width ) $
 
   -- Fn keys
-  addKeyBinding 0 xF86XK_MonBrightnessUp   (spawn "brightnessctl set +10%") $
-  addKeyBinding 0 xF86XK_MonBrightnessDown (spawn "brightnessctl set 10%-") $
+  addKeyBinding 0 xF86XK_MonBrightnessUp   (spawn $ scriptChangeBrightness ++ " +5%") $
+  addKeyBinding 0 xF86XK_MonBrightnessDown (spawn $ scriptChangeBrightness ++ " 5%-") $
   addKeyBinding 0 xF86XK_AudioMute         (spawn $ scriptChangeVolume ++ " toggle") $
   addKeyBinding 0 xF86XK_AudioRaiseVolume  (spawn $ scriptChangeVolume ++ " 5%+") $
   addKeyBinding 0 xF86XK_AudioLowerVolume  (spawn $ scriptChangeVolume ++ " 5%-") $
@@ -206,7 +207,8 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_z (sendMessage MirrorExpand) $
   -- Restart
   addKeyBinding modMask xK_s (spawn "xmonad --recompile && xmonad --restart") $
-  addKeyBinding cModShift xK_s (spawn "pgrep -f \"xmonad\" | xargs kill -15") $
+  -- emacs-daemon needs to be stop otherwise, multiple daemons can be started...
+  addKeyBinding cModShift xK_s (spawn "herd stop emacs-daemon; pgrep -f \"xmonad\" | xargs kill -15") $
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   ([ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
         -- | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2] -- using ThreeCol with virtual screens, screens order are messed up

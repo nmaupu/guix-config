@@ -53,5 +53,5 @@ telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
 xset s 180 10
 xss-lock -n ~/.guix-profile/libexec/xsecurelock/dimmer -l -- xsecurelock &
 
-exec dbus-launch --exit-with-session xmonad
-#exec xmonad
+#exec dbus-launch --exit-with-session xmonad
+exec xmonad
