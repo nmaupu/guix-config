@@ -7,7 +7,7 @@
 (define-public polybar-themes
   (package
     (name "polybar-themes")
-    (version "f54d12cd6ca004491a980274a99108cf0e2bd996")
+    (version "b8bd8c5fb3a70df7fabbb3500d8021f784743e01")
     (source
      (origin
        (method git-fetch)
@@ -16,7 +16,7 @@
               (commit version)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "1inmhc1xjbcny07licbs2m250rh36hmqlin42vwhc5vw37nnhl6l"))))
+        (base32 "05q6yc553zpigi68xjv5hjly3b8a499n443j5l24nphkzjvjp3qq"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils))
