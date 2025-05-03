@@ -198,7 +198,7 @@
                            (service geoclue-service-type)
                            (service polkit-service-type)
                            (service elogind-service-type)
-                           (service dbus-root-service-type)
+                           ;; (service dbus-root-service-type)
 
                            (service ntp-service-type)
 
@@ -248,7 +248,8 @@
                            (simple-service 'dbus-extras
                                            dbus-root-service-type
                                            (list blueman
-                                                 wireplumber))
+                                                 wireplumber
+                                                 bluez-alsa))
 
                            ;; Power and thermal management services
                            (service thermald-service-type)

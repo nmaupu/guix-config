@@ -71,7 +71,8 @@
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
              (directories '("../files/xmonad"
-                            "../files/dunst"))))
+                            "../files/dunst"
+                            "../files/flameshot"))))
    (simple-service 'polybar-themes
                    home-files-service-type
                    `((".config/polybar"

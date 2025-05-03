@@ -113,7 +113,7 @@ rofiClipboard = "rofi -modi \"clipboard:greenclip print\" -theme solarized_alter
 greenclipClear = "greenclip clear"
 dmenuServ = "param=`" ++ scriptServer ++ " -l | " ++ dmenuCommandBasic ++ " -b` && eval \"" ++ scriptServer ++ " -e ${param}\""
 lxappearance = "lxappearance"
-screenshot = "flameshot"
+screenshot = "flameshot gui"
 scriptDir = "/home/nmaupu/.config/xmonad/scripts"
 scriptBrightness = scriptDir ++ "/brightness.sh"
 scriptPass = scriptDir ++ "/xmonad-pass.sh"
@@ -122,7 +122,9 @@ scriptSwitchToScreen = scriptDir ++ "/switch-to-screen.sh" ++ " screen"
 scriptSwitchToLaptop = scriptDir ++ "/switch-to-screen.sh" ++ " laptop"
 scriptChangeVolume = scriptDir ++ "/changeVolume.sh"
 scriptChangeBrightness = scriptDir ++ "/changeBrightness.sh"
+sendNotification = "dunstify -t 5000 -r 1000 -u normal "
 screenLocker = "xset s activate"
+vucontrol = "flatpak run com.saivert.pwvucontrol"
 
 toggleScreen :: IORef Bool -> X()
 toggleScreen ref = do
@@ -151,11 +153,13 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   --addKeyBinding cModCtrl xK_s (spawn $ "xmessage " ++ show width ) $
 
   -- Fn keys
+  -- See https://hackage.haskell.org/package/X11-1.4.5/docs/Graphics-X11-ExtraTypes-XF86.html
   addKeyBinding 0 xF86XK_MonBrightnessUp   (spawn $ scriptChangeBrightness ++ " +5%") $
   addKeyBinding 0 xF86XK_MonBrightnessDown (spawn $ scriptChangeBrightness ++ " 5%-") $
   addKeyBinding 0 xF86XK_AudioMute         (spawn $ scriptChangeVolume ++ " toggle") $
   addKeyBinding 0 xF86XK_AudioRaiseVolume  (spawn $ scriptChangeVolume ++ " 5%+") $
   addKeyBinding 0 xF86XK_AudioLowerVolume  (spawn $ scriptChangeVolume ++ " 5%-") $
+  addKeyBinding 0 xF86XK_Display           (spawn $ sendNotification ++ "xF86XK_Display") $
 
   addKeyBinding modMask xK_b (spawn dmenuBrightness) $
   addKeyBinding cModShift xK_p (sendMessage (IncMasterN 1)) $
@@ -163,10 +167,10 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding modMask xK_Return (spawn $ XMonad.terminal conf) $
   addKeyBinding cModCtrl xK_space (setLayout $ XMonad.layoutHook conf) $
   addKeyBinding modMask xK_p (spawn rofiProg) $
-  addKeyBinding cModCtrl xK_p (spawn "pavucontrol") $
   addKeyBinding cCtrl xK_comma (spawn rofiPass) $
   addKeyBinding modMask xK_v (spawn rofiClipboard) $
   addKeyBinding cModShift xK_v (spawn greenclipClear) $
+  addKeyBinding cCtrlAlt xK_p (spawn vucontrol) $
   -- Resize viewed windows to the correct size
   addKeyBinding cModShift xK_n refresh $
   addKeyBinding modMask xK_Right (windows W.focusDown) $
@@ -309,8 +313,8 @@ myManageHook = composeAll
       className =? "jetbrains-pycharm" --> doShift "6",
       className =? "jetbrains-idea" --> doShift "6",
       className =? "Firefox" --> doShift "1",
-      -- className =? "Pavucontrol" --> doRectFloat (W.RationalRect 0.35 0.1 0.3 0.8)
-      className =? "Pavucontrol" --> manageScratchCentered
+      className =? "Pavucontrol" --> manageScratchCentered,
+      className =? "pwvucontrol" --> manageScratchCentered
     ]
     <+> manageSpawn
     <+> namedScratchpadManageHook myScratchpads
