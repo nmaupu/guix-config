@@ -9,7 +9,8 @@
   #:use-module (nmaupu packages tfenv)
   #:use-module (nmaupu packages goenv)
   #:use-module (nmaupu packages google-cloud-sdk)
-  #:use-module (nmaupu packages talosctl))
+  #:use-module (nmaupu packages talosctl)
+  #:use-module (nmaupu packages vault))
 
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
@@ -18,7 +19,8 @@
         google-cloud-sdk
         google-cloud-sdk-gke-gcloud-auth-plugin
         google-cloud-sdk-minikube
-        talosctl))
+        talosctl
+        vault))
 
 (define (with-home p)
   (string-append "$HOME/" p))
