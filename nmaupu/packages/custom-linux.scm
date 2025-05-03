@@ -32,6 +32,11 @@
                  #:configs (cons* "CONFIG_SND_SOC_INTEL_USER_FRIENDLY_LONG_NAMES=y"
                                   "CONFIG_SND_SOC_INTEL_SOUNDWIRE_SOF_MACH=m"
                                   (nonguix-extra-linux-options linux-libre-6.14))))
+(define-public custom-linux-kernel-6.13
+  (corrupt-linux linux-libre-6.13
+                 #:configs (cons* "CONFIG_SND_SOC_INTEL_USER_FRIENDLY_LONG_NAMES=y"
+                                  "CONFIG_SND_SOC_INTEL_SOUNDWIRE_SOF_MACH=m"
+                                  (nonguix-extra-linux-options linux-libre-6.13))))
 
 ;; As of 2025-04-03, nonguix linux-firmware package doesn't have the BT drivers included
 ;; so we are using a more recent commit to make BT work

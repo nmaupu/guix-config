@@ -50,7 +50,9 @@
  (operating-system
   (inherit base-operating-system)
 
-  (kernel custom-linux-kernel-6.14)
+  ;; Using 6.13 despite 6.14 being available because of a bug when closing laptop lid.
+  ;; When opening it, screen stays off, hard reboot required...
+  (kernel custom-linux-kernel-6.13)
   (firmware (list linux-firmware custom-sof-firmware))
   ;; (kernel linux-6.11)
   ;; (firmware (list linux-firmware sof-firmware))
