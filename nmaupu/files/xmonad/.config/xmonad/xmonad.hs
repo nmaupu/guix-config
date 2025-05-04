@@ -43,6 +43,8 @@ import Graphics.X11.ExtraTypes.XF86
 --
 import Text.RawString.QQ
 import Text.Regex.TDFA
+--
+import System.Posix.User (getEffectiveUserID)
 
 
 ------------------------------------------------------------------------
@@ -130,7 +132,6 @@ scriptSwitchToLaptop = scriptDir ++ "/switch-to-screen.sh" ++ " laptop"
 scriptChangeVolume = scriptDir ++ "/changeVolume.sh"
 scriptChangeBrightness = scriptDir ++ "/changeBrightness.sh"
 sendNotification = "dunstify -t 5000 -r 1000 -u normal "
-screenLocker = "xset s activate"
 vucontrol = "flatpak run com.saivert.pwvucontrol"
 
 toggleScreen :: IORef Bool -> X()
@@ -149,9 +150,9 @@ toggleScreen ref = do
 
 addKeyBinding shortcutLeft shortcutRight action xs = ((shortcutLeft, shortcutRight), action) : xs
 
-newKeyBindings refState x = M.union (M.fromList (keyBindings refState x)) (keys def x)
+newKeyBindings lockCmd refState x = M.union (M.fromList (keyBindings lockCmd refState x)) (keys def x)
 
-keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
+keyBindings lockCmd refState conf@(XConfig {XMonad.modMask = modMask}) =
   -- Divide physical screen in 3 panes
   --addKeyBinding modMask xK_s (layoutScreens 3 $ ThreeColMid 1 0 (1/2)) $
   -- Revert to single screen
@@ -188,7 +189,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModShift xK_m (windows W.swapMaster) $
   addKeyBinding modMask xK_m (windows W.swapDown) $
   --addKeyBinding modMask xK_l (windows W.swapUp) $
-  addKeyBinding cCtrlAlt xK_l (mapM_ spawn [screenLocker]) $
+  addKeyBinding cCtrlAlt xK_l (mapM_ spawn [lockCmd]) $
   addKeyBinding cCtrlAlt xK_e (toggleScreen refState) $
   addKeyBinding modMask xK_Down (sendMessage Shrink) $
   addKeyBinding modMask xK_Up (sendMessage Expand) $
@@ -346,6 +347,8 @@ myStartupHook = do
 --
 main = do
   refState <- newIORef False
+  uid <- getEffectiveUserID
+  let lockCommand = "xidlehook-client --socket /run/user/" ++ show uid ++ "/xidlehook.sock control --action trigger"
   xmonad $
       docks $ ewmhFullscreen . ewmh $
       def {
@@ -356,7 +359,7 @@ main = do
         workspaces = myWorkspaces,
         normalBorderColor = colBorderNormal,
         focusedBorderColor = colBorderFocus,
-        keys = newKeyBindings refState,
+        keys = newKeyBindings lockCommand refState,
         mouseBindings = myMouseBindings,
         layoutHook = myLayout,
         manageHook = myManageHook,

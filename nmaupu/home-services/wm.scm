@@ -9,7 +9,8 @@
   #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages polybar-themes)
-  #:use-module (nmaupu packages custom-telegram))
+  #:use-module (nmaupu packages custom-telegram)
+  #:use-module (nmaupu packages xidlehook))
 
 (use-package-modules linux xdisorg xorg haskell haskell-apps networking compton
                      suckless wm image terminals gnupg xorg haskell-xyz)
@@ -20,7 +21,7 @@
         blueman
         custom-telegram-desktop-fixed ;; Using a custom build as of 2025-04-23, guix broke it.
         picom
-        xautolock
+        xidlehook ;; custom package to replace xautolock or xss-lock
         xclip
         xmodmap
         xrandr

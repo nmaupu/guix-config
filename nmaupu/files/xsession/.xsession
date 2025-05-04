@@ -24,15 +24,11 @@ xrandr --addmode HDMI-1 "4096x1440_30.00"
 #xrandr --setmonitor CenterMonitor $CENTER_WIDTH/345x1440/290+$LEFT_WIDTH+0 none
 #xrandr --setmonitor RightMonitor $RIGHT_WIDTH/345x1440/290+$((LEFT_WIDTH+CENTER_WIDTH))+0 none
 
+# [ -f .screenlayout/single-5k.sh ] && sudo xrandr --setprovideroutputsource 1 0 && .screenlayout/single-5k.sh
+#xrdb -merge ~/.Xresources
 
 # Remap shift+esc to ~
 xmodmap -e 'keysym Escape = Escape asciitilde Escape'
-# Caps lock = Escape
-setxkbmap -option caps:escape
-
-
-# [ -f .screenlayout/single-5k.sh ] && sudo xrandr --setprovideroutputsource 1 0 && .screenlayout/single-5k.sh
-xrdb -merge ~/.Xresources
 
 mkdir -p ~/.logs
 
@@ -48,11 +44,17 @@ telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
 
 # xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
-xset s 180 10
-xss-lock -n ~/.guix-profile/libexec/xsecurelock/dimmer -l -- xsecurelock &
+# xset s 180 10
+# xss-lock -n ~/.guix-profile/libexec/xsecurelock/dimmer -l -- xsecurelock &
+XSECURELOCK_COMPOSITE_OBSCURER=0 xidlehook \
+    --socket "/run/user/${UID}/xidlehook.sock" \
+    --not-when-fullscreen \
+    --timer 180 xsecurelock '' &
 
 # Set keyboard map (no space after -I or it won't load)
 xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb "$DISPLAY"
+# Caps lock = Escape (setting it AFTER loading keyboard)
+setxkbmap -option caps:escape
 
 #exec dbus-launch --exit-with-session xmonad
 exec xmonad
