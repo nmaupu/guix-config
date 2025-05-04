@@ -177,7 +177,7 @@ keyBindings refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cCtrl xK_comma (spawn rofiPass) $
   addKeyBinding modMask xK_v (spawn rofiClipboard) $
   addKeyBinding cModShift xK_v (spawn greenclipClear) $
-  addKeyBinding cCtrlAlt xK_p (spawn vucontrol) $
+  addKeyBinding cModCtrl xK_p (spawn vucontrol) $
   -- Resize viewed windows to the correct size
   addKeyBinding cModShift xK_n refresh $
   addKeyBinding modMask xK_Right (windows W.focusDown) $
@@ -330,7 +330,7 @@ myManageHook = composeAll
       fmap (=~ [r|^(x|X)message$|]) className --> manageScratchCentered,
       fmap (=~ [r|^(Pavucontrol|pwvucontrol)$|]) className --> manageScratchCentered,
       fmap (=~ [r|^(telegram-desktop|TelegramDesktop)$|]) className --> manageScratchCentered,
-      fmap (=~ [r|^blueman$|]) className --> manageScratchCentered,
+      fmap (=~ [r|blueman|]) className --> manageScratchCentered,
       fmap (=~ [r|^1(P|p)assword$|]) className --> manageScratchCentered
     ]
     <+> manageSpawn
