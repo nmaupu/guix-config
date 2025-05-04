@@ -347,8 +347,9 @@ myStartupHook = do
 --
 main = do
   refState <- newIORef False
-  uid <- getEffectiveUserID
-  let lockCommand = "xidlehook-client --socket /run/user/" ++ show uid ++ "/xidlehook.sock control --action trigger"
+  -- uid <- getEffectiveUserID
+  -- let lockCommand = "xidlehook-client --socket /run/user/" ++ show uid ++ "/xidlehook.sock control --action trigger"
+  let lockCommand = "xset s activate"
   xmonad $
       docks $ ewmhFullscreen . ewmh $
       def {

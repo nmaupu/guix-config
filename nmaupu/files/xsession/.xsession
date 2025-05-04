@@ -44,12 +44,18 @@ telegram-desktop -startintray &>~/.logs/telegram-desktop.log &
 #feh --bg-scale /usr/share/wallpapers/debian.png &
 
 # xautolock -locker xsecurelock -detectsleep -time 3 -bell 0 &
-# xset s 180 10
-# xss-lock -n ~/.guix-profile/libexec/xsecurelock/dimmer -l -- xsecurelock &
-XSECURELOCK_COMPOSITE_OBSCURER=0 xidlehook \
-    --socket "/run/user/${UID}/xidlehook.sock" \
-    --not-when-fullscreen \
-    --timer 180 xsecurelock '' &
+xset s 180 10
+XSECURELOCK_COMPOSITE_OBSCURER=0 \
+    XSECURELOCK_SHOW_HOSTNAME=0 \
+    XSECURELOCK_SHOW_USERNAME=0 \
+    XSECURELOCK_PASSWORD_PROMPT=cursor \
+    XSECURELOCK_SHOW_DATETIME=1 \
+    xss-lock -n "$HOME/.guix-home/profile/libexec/xsecurelock/dimmer" -l -- xsecurelock &
+
+# XSECURELOCK_COMPOSITE_OBSCURER=0 xidlehook \
+#     --socket "/run/user/${UID}/xidlehook.sock" \
+#     --not-when-fullscreen \
+#     --timer 180 xsecurelock '' &
 
 # Set keyboard map (no space after -I or it won't load)
 xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb "$DISPLAY"

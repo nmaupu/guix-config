@@ -21,7 +21,8 @@
         blueman
         custom-telegram-desktop-fixed ;; Using a custom build as of 2025-04-23, guix broke it.
         picom
-        xidlehook ;; custom package to replace xautolock or xss-lock
+        ;; xidlehook ;; custom package to replace xautolock or xss-lock
+        xsecurelock
         xclip
         xmodmap
         xrandr
