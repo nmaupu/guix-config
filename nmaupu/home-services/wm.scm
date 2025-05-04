@@ -11,7 +11,7 @@
   #:use-module (nmaupu packages polybar-themes)
   #:use-module (nmaupu packages custom-telegram))
 
-(use-package-modules linux xdisorg xorg haskell haskell-apps networking
+(use-package-modules linux xdisorg xorg haskell haskell-apps networking compton
                      suckless wm image terminals gnupg xorg haskell-xyz)
 
 (define (home-wm-base-profile-service config)
@@ -19,6 +19,7 @@
         arandr
         blueman
         custom-telegram-desktop-fixed ;; Using a custom build as of 2025-04-23, guix broke it.
+        picom
         xautolock
         xclip
         xmodmap
@@ -74,8 +75,10 @@
    (service home-xmonad-service-type)
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
-             (directories '("../files/xmonad"
+             (directories '("../files/xsession"
+                            "../files/xmonad"
                             "../files/dunst"
+                            "../files/picom"
                             "../files/flameshot"))))
    (simple-service 'polybar-themes
                    home-files-service-type
