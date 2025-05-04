@@ -23,8 +23,7 @@
                 shfmt
                 gopls
                 delve
-                emacs-vterm
-                libvterm)
+                emacs-vterm)
           (list terraform-ls
                 golangci-lint)))
 
