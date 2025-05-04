@@ -1,3 +1,6 @@
+-- Allow use of [r|...|] for regex with Text.RawString.QQ
+{-# LANGUAGE QuasiQuotes #-}
+
 import qualified XMonad.Actions.FlexibleManipulate as Flex
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -37,6 +40,10 @@ import Data.IORef
 import XMonad.Util.SpawnOnce
 -- Keysyms (fn keys)
 import Graphics.X11.ExtraTypes.XF86
+--
+import Text.RawString.QQ
+import Text.Regex.TDFA
+
 
 ------------------------------------------------------------------------
 -- funcs
@@ -305,16 +312,26 @@ myScratchpads =
     findVimScratchpad = resource =? "vimScratchpad"
     manageVimScratchpad = manageScratchCentered
 
-
--- Get windows info with 'xprop' command
+-- Custom regex match on className, title or resource
+-- fmap is a function that applies another function to a value inside a context — that context is called a Functor.
+-- fmap :: Functor f => (a -> b) -> f a -> f b
+-- className, title, resource are (Query string) monads
+-- To apply to the string directly, we need to "extract" the string from the monad either
+-- with a do:
+-- regexClassMatch :: String -> Query Bool
+-- regexClassMatch pat = do
+--     cls <- className
+--     return (cls =~ pat)
+-- or using fmap to apply a function to the "inside" of the monad.
 myManageHook = composeAll
     [ title =? "GNU Image Manipulation Program" --> doFloat,
       title =? "GIMP" --> doFloat,
-      className =? "jetbrains-pycharm" --> doShift "6",
-      className =? "jetbrains-idea" --> doShift "6",
       className =? "Firefox" --> doShift "1",
-      className =? "Pavucontrol" --> manageScratchCentered,
-      className =? "pwvucontrol" --> manageScratchCentered
+      fmap (=~ [r|^(x|X)message$|]) className --> manageScratchCentered,
+      fmap (=~ [r|^(Pavucontrol|pwvucontrol)$|]) className --> manageScratchCentered,
+      fmap (=~ [r|^(telegram-desktop|TelegramDesktop)$|]) className --> manageScratchCentered,
+      fmap (=~ [r|^blueman$|]) className --> manageScratchCentered,
+      fmap (=~ [r|^1(P|p)assword$|]) className --> manageScratchCentered
     ]
     <+> manageSpawn
     <+> namedScratchpadManageHook myScratchpads

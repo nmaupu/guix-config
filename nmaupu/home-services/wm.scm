@@ -12,7 +12,7 @@
   #:use-module (nmaupu packages custom-telegram))
 
 (use-package-modules linux xdisorg xorg haskell haskell-apps networking
-                     suckless wm image terminals gnupg xorg telegram)
+                     suckless wm image terminals gnupg xorg haskell-xyz)
 
 (define (home-wm-base-profile-service config)
   (list acpi
@@ -34,8 +34,12 @@
                 dunst
                 flameshot
                 fzf
+                xmessage ; useful when recompiling xmonad in case of errors
                 ghc
                 ghc-xmonad-contrib
+                ghc-raw-strings-qq
+                ghc-regex-base
+                ghc-regex-tdfa
                 libxft
                 pinentry-rofi
                 polybar
