@@ -9,10 +9,10 @@
 
 (define (home-kubernetes-profile-service config)
   (list
-   helm-kubernetes-3.17.2
-   k9s-0.40.10
-   kind-0.27.0
-   kubectl-1.32.3))
+   helm-kubernetes-3.17
+   k9s-0.40
+   kind-0.27
+   kubectl-1.32))
 
 (define home-kubernetes-service-type
   (service-type (name 'kubernetes-tools)
