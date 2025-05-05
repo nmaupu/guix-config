@@ -44,7 +44,6 @@
                 ghc-regex-base
                 ghc-regex-tdfa
                 libxft
-                pinentry-rofi
                 polybar
                 rofi
                 xmonad)

@@ -4,13 +4,20 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
+  #:use-module (gnu home services gnupg)
   #:use-module (gnu packages patchutils)
+  #:use-module (gnu packages gnupg)
   #:use-module (guix gexp)
   #:use-module (nmaupu packages tfenv)
   #:use-module (nmaupu packages goenv)
   #:use-module (nmaupu packages google-cloud-sdk)
   #:use-module (nmaupu packages talosctl)
-  #:use-module (nmaupu packages vault))
+  #:use-module (nmaupu packages vault)
+  ;; TODO Create a specific home-service for pro tools
+  #:use-module (nmaupu packages terragrunt)
+  #:use-module (nmaupu packages git-secret)
+  #:use-module (nmaupu packages skaffold)
+  #:use-module (nmaupu packages sops))
 
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
@@ -20,7 +27,14 @@
         google-cloud-sdk-gke-gcloud-auth-plugin
         google-cloud-sdk-minikube
         talosctl
-        vault))
+        vault
+        pinentry-rofi
+        ;; TODO Create a specific home-service for pro tools
+        gnupg
+        terragrunt
+        git-secret
+        skaffold
+        sops))
 
 (define (with-home p)
   (string-append "$HOME/" p))
@@ -54,4 +68,9 @@
                    home-files-service-type
                    `((,%goenv-root
                       ,(directory-union "goenv" (list goenv)))))
+   (service home-gpg-agent-service-type
+         (home-gpg-agent-configuration
+          (pinentry-program
+           (file-append pinentry-rofi "/bin/pinentry"))
+          (ssh-support? #t)))
    (service home-dev-service-type)))
