@@ -7,11 +7,11 @@
   #:use-module (ice-9 optargs))
 
 (define*-public (make-docker-compose #:optional
-                             (system (or (%current-target-system)
-                                         (%current-system)))
-                             #:key
-                             version
-                             amd64-hash)
+                                     (system (or (%current-target-system)
+                                                 (%current-system)))
+                                     #:key
+                                     version
+                                     amd64-hash)
   (let* ((arch+hash
           (cond
            ((target-x86-64? system)
