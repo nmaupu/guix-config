@@ -15,3 +15,11 @@ export XSECURELOCK_SINGLE_AUTH_WINDOW=1
 export WINIT_X11_SCALE_FACTOR=1
 
 export PATH="$HOME/.bin:$HOME/.krew/bin:$HOME/.local/bin:$HOME/.local/goenv/bin:$HOME/.local/goenv-data/shims:$PATH"
+
+# kube configs
+if [ -d "$HOME/.kube/conf.d" ]; then
+  find "$HOME/.kube/conf.d" -type f | while read -r file; do
+    KUBECONFIG="${KUBECONFIG}:${file}"
+  done
+  export KUBECONFIG
+fi

@@ -13,7 +13,7 @@
 
 (use-package-modules curl version-control admin linux rsync
                      web commencement databases algebra
-                     compression vim python web-browsers
+                     compression vim python python-build python-web python-xyz web-browsers
                      rust-apps chromium admin ftp xorg fonts fontutils
                      node cmake virtualization dns xdisorg)
 
@@ -36,6 +36,8 @@
         node ; provides npm needed for some packages installation (lsp, etc.)
         p7zip
         python
+        python-pip
+        python-requests
         qemu
         virt-manager
         qutebrowser

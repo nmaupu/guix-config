@@ -17,7 +17,8 @@
   #:use-module (nmaupu packages terragrunt)
   #:use-module (nmaupu packages git-secret)
   #:use-module (nmaupu packages skaffold)
-  #:use-module (nmaupu packages sops))
+  #:use-module (nmaupu packages sops)
+  #:use-module (nmaupu packages docker))
 
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
@@ -34,7 +35,8 @@
         terragrunt
         git-secret
         skaffold
-        sops))
+        sops
+        docker-compose))
 
 (define (with-home p)
   (string-append "$HOME/" p))
