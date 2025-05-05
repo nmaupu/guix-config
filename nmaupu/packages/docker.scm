@@ -47,7 +47,7 @@
 (define-public docker-compose-2.35
   (package
     (inherit (make-docker-compose #:version "2.35.1"
-                            #:amd64-hash (base32 "0c62nhfi6ghpp5lyv3mbm6qwvzcnpy99h4jx9qsx0pbfj7i2rnvv")))
+                                  #:amd64-hash (base32 "0c62nhfi6ghpp5lyv3mbm6qwvzcnpy99h4jx9qsx0pbfj7i2rnvv")))
     (name "docker-compose-2.35")))
 
 (define-public docker-compose
