@@ -81,6 +81,7 @@ alias history="fc -il 1"
 alias emacs="$HOME/.local/bin/doom-emacs"
 alias doom="$HOME/.config/emacs/bin/doom"
 alias k="kubectl"
+alias us="xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb $DISPLAY 2>/dev/null"
 
 fpath=(~/.zsh-completions $fpath)
 
