@@ -116,6 +116,14 @@ if [ -d "${ZDOTDIR:-$HOME}/.zshrc.d" ]; then
   done
 fi
 
+# kube configs
+if [ -d "$HOME/.kube/conf.d" ]; then
+  find "$HOME/.kube/conf.d" -type f | while read -r file; do
+    KUBECONFIG="${KUBECONFIG}:${file}"
+  done
+  export KUBECONFIG
+fi
+
 # Autosuggestions default color is the same as the background color...
 # Changing it to dark gray
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
