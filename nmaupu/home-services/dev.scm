@@ -18,7 +18,8 @@
   #:use-module (nmaupu packages git-secret)
   #:use-module (nmaupu packages skaffold)
   #:use-module (nmaupu packages sops)
-  #:use-module (nmaupu packages docker))
+  #:use-module (nmaupu packages docker)
+  #:use-module (nmaupu packages argocd))
 
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
@@ -36,7 +37,8 @@
         git-secret
         skaffold
         sops
-        docker-compose))
+        docker-compose
+        argocd))
 
 (define (with-home p)
   (string-append "$HOME/" p))
