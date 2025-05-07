@@ -339,7 +339,7 @@ myManageHook = composeAll
     <+> manageDocks
 
 myStartupHook = do
-  spawnOnce "picom"
+  -- spawnOnce "picom"
   spawnOnce "$HOME/.config/polybar/launch.sh --forest"
 
 ------------------------------------------------------------------------
