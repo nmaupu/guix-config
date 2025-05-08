@@ -20,7 +20,8 @@
   #:use-module (gnu packages polkit)
   #:use-module (gnu packages mate)
   #:use-module (gnu packages commencement)
-  #:use-module (gnu packages nss))
+  #:use-module (gnu packages nss)
+  #:use-module (nmaupu packages libffmpeg))
 
 
 ;; This package requires some rights to be changed on "op" binary (as per the readme)
@@ -57,46 +58,17 @@
 
 ;;
 ;; 1password-gui is a bit more tricky...
-(define-public prebuilt-libffmpeg
-  (package
-    (name "prebuilt-libffmpeg")
-    (version "0.98.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append "https://github.com/nwjs-ffmpeg-prebuilt"
-                           "/nwjs-ffmpeg-prebuilt/releases/download/"
-                           version "/" version "-linux-x64.zip"))
-       (sha256
-        (base32 "1nqdpnpbvp5fzyqlj6dwfgf2hprmhkd499pjn4npl75rs8lmj9cg"))))
-    (build-system binary-build-system)
-    (arguments
-     `(#:phases (modify-phases %standard-phases
-                  (add-before 'patchelf 'patchelf-writable
-                    (lambda _
-                      (make-file-writable "libffmpeg.so"))))
-       #:patchelf-plan `(("libffmpeg.so" ("glibc" "gcc-toolchain")))
-       #:install-plan `(("libffmpeg.so", "lib/"))))
-    (inputs (list glibc
-                  gcc-toolchain))
-    (native-inputs (list unzip))
-    (supported-systems '("x86_64-linux"))
-    (home-page "https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt")
-    (synopsis "FFmpeg prebuilt for NW.js")
-    (description "FFmpeg prebuilt binaries with proprietary codecs and build instructions for Window, Linux and macOS.")
-    (license license:gpl2)))
-
 (define-public 1password-gui
   (package
     (name "1password-gui")
-    (version "8.10.70")
+    (version "8.10.75")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://downloads.1password.com/linux/tar/stable"
                            "/x86_64/1password-" version ".x64.tar.gz"))
        (sha256
-        (base32 "0cha85pzg4pnynafja1pcczka8kb3a7x14wyg3hyxipagqlrwqj0"))))
+        (base32 "0n96x8c90ii3hcmsv421fvbw8q22nqbcn2wss45282sichwm698w"))))
     (build-system binary-build-system)
     ;; Where things get hairy
     ;; Based on https://zie87.github.io/posts/guix-foreign-binaries
@@ -192,11 +164,11 @@
   (package
     (inherit 1password-gui)
     (name "1password-gui-beta")
-    (version "8.10.70-24.BETA")
+    (version "8.10.76-32.BETA")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://downloads.1password.com/linux/tar/beta"
                            "/x86_64/1password-" version ".x64.tar.gz"))
        (sha256
-        (base32 "11wa5sczlmfl78d85rfysw850590z9wd1882b7v03nd187m9pnsw"))))))
+        (base32 "0smzlsnjrj4xkf09hxqx2fbk1k5dlcryx3iyjj5lhhwaa19n93yp"))))))
