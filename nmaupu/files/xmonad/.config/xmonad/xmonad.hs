@@ -35,7 +35,10 @@ import XMonad.Actions.SpawnOn
 import XMonad.Layout.Hidden
 import XMonad.Util.Cursor
 import XMonad.Hooks.ManageHelpers
+-- Virtual screens
+import XMonad.Layout.LayoutScreens
 import Data.IORef
+import XMonad.Core
 -- startup
 import XMonad.Util.SpawnOnce
 -- Keysyms (fn keys)
@@ -68,15 +71,15 @@ centerWebex win = do
 -- We get the boolean and invert it then we toggle screen layout (1 <-> 3 virtual screens)
 -- Parameter ref is passed along the keybindings func
 -- Deprecated, using xrandr directly instead
--- toggleLayoutScreens :: IORef Bool -> X ()
--- toggleLayoutScreens ref = do
---   val <- io $ readIORef ref
---   io $ writeIORef ref (not val)
---   if val
---     then
---       rescreen
---     else
---       layoutSplitScreen 3 $ ThreeColMid 1 0 (1/2)
+toggleLayoutScreens :: IORef Bool -> X ()
+toggleLayoutScreens ref = do
+  val <- io $ readIORef ref
+  io $ writeIORef ref (not val)
+  if val
+    then
+      rescreen
+    else
+      layoutSplitScreen 3 $ ThreeColMid 1 0 (1/2)
 
 
 ------------------------------------------------------------------------
@@ -157,7 +160,7 @@ keyBindings lockCmd refState conf@(XConfig {XMonad.modMask = modMask}) =
   --addKeyBinding modMask xK_s (layoutScreens 3 $ ThreeColMid 1 0 (1/2)) $
   -- Revert to single screen
   --addKeyBinding cModShift xK_s rescreen $
-  --addKeyBinding modMask xK_s (toggleLayoutScreens refState) $
+  addKeyBinding modMask xK_s (toggleLayoutScreens refState) $
   --addKeyBinding cModCtrl xK_s (spawn $ "xmessage " ++ show width ) $
 
   -- Fn keys
@@ -218,8 +221,8 @@ keyBindings lockCmd refState conf@(XConfig {XMonad.modMask = modMask}) =
   addKeyBinding cModCtrl xK_a (sendMessage MirrorShrink) $
   addKeyBinding cModCtrl xK_z (sendMessage MirrorExpand) $
   -- Restart
-  addKeyBinding modMask xK_s (spawn "xmonad --recompile && xmonad --restart") $
-  -- emacs-daemon needs to be stop otherwise, multiple daemons can be started...
+  -- addKeyBinding modMask xK_s (spawn "xmonad --recompile && xmonad --restart") $
+  -- emacs-daemon needs to be stop otherwise, multiple daemons can be started when relogin...
   addKeyBinding cModShift xK_s (spawn "herd stop emacs-daemon; pgrep -f \"xmonad\" | xargs kill -15") $
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   ([ ((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
@@ -339,6 +342,7 @@ myManageHook = composeAll
     <+> manageDocks
 
 myStartupHook = do
+  -- Takes too much CPU
   -- spawnOnce "picom"
   spawnOnce "$HOME/.config/polybar/launch.sh --forest"
 
