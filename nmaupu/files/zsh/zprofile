@@ -14,4 +14,4 @@ export XSECURELOCK_SINGLE_AUTH_WINDOW=1
 # Avoid alacritty to scale font on DPI
 export WINIT_X11_SCALE_FACTOR=1
 
-export PATH="$HOME/.bin:$HOME/.krew/bin:$HOME/.local/bin:$HOME/.local/goenv/bin:$HOME/.local/goenv-data/shims:$PATH"
+export PATH="/bin:/usr/bin:/usr/local/bin:$HOME/.bin:$HOME/.krew/bin:$HOME/.local/bin:$HOME/.local/goenv/bin:$HOME/.local/goenv-data/shims:$PATH"

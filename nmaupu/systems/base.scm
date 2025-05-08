@@ -269,6 +269,15 @@
                            (service syncthing-service-type
                                     (syncthing-configuration (user "nmaupu")))
 
+                           ;; Adding bash as a special file to be able to use it in scripts
+                           (extra-special-file "/bin/bash" (file-append bash "/bin/bash"))
+
+                           (extra-special-file "/etc/1password/custom_allowed_browsers"
+                                               (plain-file "custom_allowed_browsers"
+                                                           ".firefox-real\nfirefox"))
+
+                           (extra-special-file "/opt/1Password" (file-append 1password-gui "/bin"))
+                           (extra-special-file "/usr/bin/1password" "/opt/1Password/1password")
 
                            ;; Schedule cron jobs for system tasks
                            (simple-service 'system-cron-jobs

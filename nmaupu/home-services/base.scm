@@ -7,7 +7,6 @@
   #:use-module (nongnu packages mozilla)
   #:use-module (nongnu packages compression)
   #:use-module (nmaupu packages fonts)
-  #:use-module (nmaupu packages 1password)
   #:use-module (nmaupu packages slack)
   #:use-module (nmaupu packages keyboard-layout))
 
@@ -18,8 +17,7 @@
                      node cmake virtualization dns xdisorg)
 
 (define (home-base-profile-service config)
-  (list 1password-gui-beta
-        bc
+  (list bc
         ;; bind is the name of guile procedure, so bind package has been renamed to isc-bind
         isc-bind
         curl
