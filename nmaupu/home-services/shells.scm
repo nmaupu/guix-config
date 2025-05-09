@@ -8,7 +8,7 @@
   #:use-module (nmaupu packages antidote)
   #:use-module (nmaupu packages alacritty-theme))
 
-(use-package-modules shells terminals bash)
+(use-package-modules shells terminals bash version-control)
 
 (define (home-shells-profile-service config)
   (list alacritty
@@ -42,6 +42,10 @@
                    `((".config/zsh/.antidote"
                       ,(directory-union "antidote"
                                         (list antidote)))
+                     (".config/zsh/.git-completion.zsh"
+                      ,(file-append git-minimal "/share/zsh/site-functions/_git"))
+                     (".config/zsh/.git-completion.bash"
+                      ,(file-append git-minimal "/etc/bash_completion.d/git"))
                      (".config/alacritty/themes"
                       ,(directory-union "alacritty-theme"
                                         (list alacritty-theme)))))

@@ -2,8 +2,8 @@
 
 # History
 export HISTFILE=/home/nmaupu/.zsh_history
-export HISTSIZE=50000
-export SAVEHIST=50000
+export HISTSIZE=100000
+export SAVEHIST=100000
 setopt EXTENDED_HISTORY
 setopt SHARE_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
@@ -37,9 +37,24 @@ if [ -f ~/.ssh/config ]; then
   fi
 fi
 
+autoload -Uz compinit && compinit
+
 # Plugins and themes
 source "${ZDOTDIR:-$HOME}/.antidote/antidote.zsh"
 antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
+
+# Fixing non working git-completion because of missing functions
+# Those functions are defined in git-minimal package (guix) under the following paths:
+# /gnu/store/xxx-git-minimal-xxx/share/zsh/site-functions/_git
+# and
+# /gnu/store/xxx-git-minimal-xxx/etc/bash_completion.d/git
+zstyle ':completion:*:*:git:*' script "${ZDOTDIR:-$HOME}/.git-completion.bash"
+_git_completion_loader(){
+  source "${ZDOTDIR:-$HOME}/.git-completion.zsh"
+}
+compdef _git_completion_loader git
+##
+
 
 # FZF config
 _gen_fzf_default_opts() {
@@ -82,8 +97,6 @@ alias emacs="$HOME/.local/bin/doom-emacs"
 alias doom="$HOME/.config/emacs/bin/doom"
 alias k="kubectl"
 alias us="xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb $DISPLAY 2>/dev/null"
-
-fpath=(~/.zsh-completions $fpath)
 
 # Kubernetes - change context
 kcs() {

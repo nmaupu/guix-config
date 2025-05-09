@@ -14,7 +14,7 @@
                      web commencement databases algebra bash
                      compression vim python python-build python-web python-xyz web-browsers
                      rust-apps chromium admin ftp xorg fonts fontutils
-                     node cmake virtualization dns xdisorg)
+                     node cmake virtualization dns xdisorg perl)
 
 (define (home-base-profile-service config)
   (list
@@ -35,6 +35,7 @@
         neovim
         node ; provides npm needed for some packages installation (lsp, etc.)
         p7zip
+        perl ; sometimes useful
         python
         python-pip
         python-requests
