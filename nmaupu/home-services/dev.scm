@@ -7,6 +7,7 @@
   #:use-module (gnu home services gnupg)
   #:use-module (gnu packages patchutils)
   #:use-module (gnu packages gnupg)
+  #:use-module (gnu packages commencement)
   #:use-module (guix gexp)
   #:use-module (nmaupu packages tfenv)
   #:use-module (nmaupu packages goenv)
@@ -49,7 +50,11 @@
 
 (define (home-dev-env-vars config)
   `(("TFENV_CONFIG_DIR" . ,(with-home %tfenv-data-dir)) ; data dir where tf versions are actually downloaded
-    ("GOENV_ROOT" . ,(with-home %goenv-data-dir))))
+    ("GOENV_ROOT" . ,(with-home %goenv-data-dir))
+    ;; Added gcc-toolchain to LD_LIBRARY_PATH because for an obscure reason
+    ;; go build generates binaries that misses libgcc_s.so.1
+    ;; TODO find out why and fix
+    ("LD_LIBRARY_PATH" . ,(file-append gcc-toolchain "/lib"))))
 
 (define home-dev-service-type
   (service-type (name 'dev-tools)

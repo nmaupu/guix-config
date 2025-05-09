@@ -11,13 +11,15 @@
   #:use-module (nmaupu packages keyboard-layout))
 
 (use-package-modules curl version-control admin linux rsync
-                     web commencement databases algebra
+                     web commencement databases algebra bash
                      compression vim python python-build python-web python-xyz web-browsers
                      rust-apps chromium admin ftp xorg fonts fontutils
                      node cmake virtualization dns xdisorg)
 
 (define (home-base-profile-service config)
-  (list bc
+  (list
+        bash-completion ;; provides compgen
+        bc
         ;; bind is the name of guile procedure, so bind package has been renamed to isc-bind
         isc-bind
         curl
