@@ -25,60 +25,6 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages))
 
-;; An experimental option needs to be enabled for the sound to work properly
-;; under Lunar Lake platforms (RT1318/RT713 chipset)
-(define-public custom-linux-kernel-6.14
-  (corrupt-linux linux-libre-6.14
-                 #:configs (cons* "CONFIG_SND_SOC_INTEL_USER_FRIENDLY_LONG_NAMES=y"
-                                  "CONFIG_SND_SOC_INTEL_SOUNDWIRE_SOF_MACH=m"
-                                  (nonguix-extra-linux-options linux-libre-6.14))))
-(define-public custom-linux-kernel-6.13
-  (corrupt-linux linux-libre-6.13
-                 #:configs (cons* "CONFIG_SND_SOC_INTEL_USER_FRIENDLY_LONG_NAMES=y"
-                                  "CONFIG_SND_SOC_INTEL_SOUNDWIRE_SOF_MACH=m"
-                                  (nonguix-extra-linux-options linux-libre-6.13))))
-
-;; As of 2025-04-03, nonguix linux-firmware package doesn't have the BT drivers included
-;; so we are using a more recent commit to make BT work
-(define-public custom-linux-firmware
-  (package
-    (inherit linux-firmware)
-    (name "custom-linux-firmware")
-    (version "d864697fd38a94092b636c8030843343f265fe69")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git")
-             (commit version)))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32
-         "026bdiwz05x4330w21wgza3bqsd4sr8b3jgnv4kqary9pzgnn0cm"))))))
-
-;; Latest sof-firmware to ensure with have something up to date with our Lunar Lake platform
-(define-public custom-sof-firmware
-  (package
-   (inherit sof-firmware)
-   (name "custom-sof-firmware")
-   (version "2025.01.1")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append "https://github.com/thesofproject/sof-bin/releases/download/v"
-                         version "/sof-bin-" version ".tar.gz"))
-     (sha256
-      (base32
-       "08w3z183cva8bg2yynljrxl2j4nl3xyv5mkljq6ips25qbci0qm3"))))
-    (arguments
-     `(#:install-plan
-       '(("sof" "lib/firmware/intel/sof")
-         ("sof-ace-tplg" "lib/firmware/intel/sof-ace-tplg")
-         ("sof-ipc4" "lib/firmware/intel/sof-ipc4")
-         ("sof-ipc4-tplg" "lib/firmware/intel/sof-ipc4-tplg")
-         ("sof-tplg" "lib/firmware/intel/sof-tplg")
-         ("sof-ipc4-lib" "lib/firmware/intel/sof-ipc4-lib"))))))
-
 ;; alsa-lib is a bit too old for the sound to work, need a version >= 1.2.13
 ;; But beware, installing this package is not enough! We also need to rebuild all underlying packages using this one as dependency...
 ;; pipewire, wireplumber, etc...

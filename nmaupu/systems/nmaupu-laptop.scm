@@ -26,8 +26,7 @@
   #:use-module (nmaupu home-services emacs)
   #:use-module (nmaupu home-services shepherd-services)
   #:use-module (nmaupu home-services dev)
-  #:use-module (nmaupu home-services k8s)
-  #:use-module (nmaupu packages custom-linux))
+  #:use-module (nmaupu home-services k8s))
 
 (define home
  (home-environment
@@ -52,10 +51,8 @@
 
   ;; Using 6.13 despite 6.14 being available because of a bug when closing laptop lid.
   ;; When opening it, screen stays off, hard reboot required...
-  (kernel custom-linux-kernel-6.13)
-  (firmware (list linux-firmware custom-sof-firmware))
-  ;; (kernel linux-6.11)
-  ;; (firmware (list linux-firmware sof-firmware))
+  (kernel linux)
+  (firmware (list linux-firmware sof-firmware))
   (initrd microcode-initrd)
   ;; (kernel-arguments (append
   ;;                    '("snd-intel-dspcfg.dsp_driver=3")
