@@ -1,5 +1,6 @@
 (define-module (nmaupu packages keyboard-layout)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages xorg)
   #:use-module (guix build-system trivial)
   #:use-module (guix licenses)
   #:use-module (guix packages)
@@ -36,3 +37,19 @@
     (synopsis "Qwertyfr keyboard layout")
     (description "Keyboard layout based on the QWERTY layout with extra symbols and diacritics so that typing both in French and English is easy and fast. It is also easy to learn!")
     (license expat)))
+
+(define-public custom-xkeyboard-config
+  (package
+    (inherit xkeyboard-config)
+    (arguments
+     '(#:phases
+       (modify-phases %standard-phases
+         (add-after 'install 'add-qwerty-fr
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((out (assoc-ref outputs "out"))
+                   (qfr (assoc-ref inputs "qwerty-fr")))
+               (copy-recursively
+                (file-append qfr "/usr/share/")
+                (string-append out "/share/")))
+             #t)))))
+    (inputs (list qwerty-fr))))
