@@ -25,6 +25,20 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages))
 
+;; Updated linux-firmware for better support (try to fix suspend issue on 6.14 kernel with driver 'xe')
+(define-public custom-linux-firmware
+  (package
+    (inherit linux-firmware)
+    (name "custom-linux-firmware")
+    (version "20250509")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "mirror://kernel.org/linux/kernel/firmware/"
+                                  "linux-firmware-" version ".tar.xz"))
+              (sha256
+               (base32
+                "0gkhpl60iw83pa8pq4hf8rrrc8nk8kjychsnrcq838i6y9k0vipj"))))))
+
 ;; alsa-lib is a bit too old for the sound to work, need a version >= 1.2.13
 ;; But beware, installing this package is not enough! We also need to rebuild all underlying packages using this one as dependency...
 ;; pipewire, wireplumber, etc...
