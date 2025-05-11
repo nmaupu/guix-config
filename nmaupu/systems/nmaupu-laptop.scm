@@ -50,7 +50,8 @@
  (operating-system
   (inherit base-operating-system)
 
-  (kernel linux)
+  ;; Bug when closing laptop lid: suspend not working on kernel 6.14
+  (kernel linux-6.12)
   (firmware (list custom-linux-firmware sof-firmware))
   (initrd microcode-initrd)
   ;; (kernel-arguments (append

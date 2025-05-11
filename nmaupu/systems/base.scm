@@ -197,8 +197,13 @@
                            (service colord-service-type)
                            (service geoclue-service-type)
                            (service polkit-service-type)
-                           (service elogind-service-type)
                            ;; (service dbus-root-service-type)
+                           (service elogind-service-type)
+                           ;; (service elogind-service-type
+                           ;;          (elogind-configuration
+                           ;;           (handle-lid-switch 'hibernate)
+                           ;;           (handle-lid-switch-external-power 'hibernate)
+                           ;;           (handle-power-key 'hibernate)))
 
                            (service ntp-service-type)
 
