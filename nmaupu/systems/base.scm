@@ -13,6 +13,7 @@
   #:use-module (nongnu system linux-initrd)
   #:use-module (nmaupu packages 1password)
   #:use-module (nmaupu packages custom-linux)
+  #:use-module (nmaupu packages keyboard-layout)
   #:use-module (nmaupu systems misc polkit)
   #:use-module (nmaupu systems misc pam))
 
@@ -25,6 +26,13 @@
 
 (define onepassword-cli-group-name "onepassword-cli")
 (define onepassword-gui-group-name "onepassword")
+
+(define console-keyboard-layout
+  (keyboard-layout "us" "altgr-intl" #:model "thinkpad"))
+
+;; (define x11-keyboard-layout
+;;   (keyboard-layout "qwerty-fr" #:options '("caps:escape")))
+
 
 (define-public %custom-base-packages
   (append (list bluez
@@ -64,14 +72,14 @@
 
    ;; Choose US English keyboard layout.  The "altgr-intl"
    ;; variant provides dead keys for accented characters.
-   (keyboard-layout (keyboard-layout "us" "altgr-intl" #:model "thinkpad"))
+   (keyboard-layout console-keyboard-layout)
 
    ;; Use the UEFI variant of GRUB with the EFI System
    ;; Partition mounted on /boot/efi.
    (bootloader (bootloader-configuration
                 (bootloader grub-efi-bootloader)
                 (targets '("/boot/efi"))
-                (keyboard-layout keyboard-layout)))
+                (keyboard-layout console-keyboard-layout)))
 
    ;; Guix doesn't like when there isn't a file-systems
    ;; entry, so add one that is meant to be overridden
@@ -130,6 +138,7 @@
 
                            (service gdm-service-type)
                            (service gnome-keyring-service-type)
+
 
                            ;; Add udev rules for MTP devices so that non-root users can access
                            ;; them.
@@ -223,15 +232,23 @@
                            ;; fprintd-pam-service
                            ;; fprintd-polkit-rule-service
 
+                           (simple-service 'install-qwerty-fr-layout etc-service-type
+                                           `(("X11/xkb/symbols/qwerty-fr" ,(file-append qwerty-fr "/share/X11/xkb/symbols/qwerty-fr"))))
+
                            (set-xorg-configuration
-                            (xorg-configuration (keyboard-layout keyboard-layout)
+                            (xorg-configuration (keyboard-layout x11-keyboard-layout)
                                                 (extra-config '("Section \"InputClass\""
                                                                 "  Identifier \"libinput touchpad catchall\""
                                                                 "  MatchIsTouchpad \"on\""
                                                                 "  MatchDevicePath \"/dev/input/event*\""
                                                                 "  Driver \"libinput\""
                                                                 "  Option \"Tapping\" \"on\""
-                                                                "EndSection" ))))
+                                                                "EndSection"))))
+                                                                ;; "  Identifier \"libinput keyboard catchall\""
+                                                                ;; "  MatchIsKeyboard \"on\""
+                                                                ;; "  Option \"XkbLayout\" \"qwerty-fr\""
+                                                                ;; "  Option \"XkbOptions\" \"caps:escape\""
+                                                                ;; "EndSection"))))
 
                            (service openssh-service-type)
 

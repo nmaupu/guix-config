@@ -27,8 +27,6 @@ xrandr --addmode HDMI-1 "4096x1440_30.00"
 # [ -f .screenlayout/single-5k.sh ] && sudo xrandr --setprovideroutputsource 1 0 && .screenlayout/single-5k.sh
 #xrdb -merge ~/.Xresources
 
-# Remap shift+esc to ~
-xmodmap -e 'keysym Escape = Escape asciitilde Escape'
 
 mkdir -p ~/.logs
 
@@ -57,10 +55,15 @@ XSECURELOCK_COMPOSITE_OBSCURER=0 \
 #     --not-when-fullscreen \
 #     --timer 180 xsecurelock '' &
 
+# Deprecated: loaded directly in X11
 # Set keyboard map (no space after -I or it won't load)
-xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb "$DISPLAY"
+#xkbcomp -I$XDG_CONFIG_HOME/xkb $XDG_CONFIG_HOME/xkb/qwertyfr.xkb "$DISPLAY"
+
 # Caps lock = Escape (setting it AFTER loading keyboard)
 setxkbmap -option caps:escape
+
+# Remap shift+esc to ~
+xmodmap -e 'keysym Escape = Escape asciitilde Escape'
 
 #exec dbus-launch --exit-with-session xmonad
 exec xmonad

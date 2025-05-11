@@ -1,10 +1,11 @@
 (define-module (nmaupu packages keyboard-layout)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages xorg)
-  #:use-module (guix build-system trivial)
+  #:use-module (guix build-system copy)
   #:use-module (guix licenses)
   #:use-module (guix packages)
-  #:use-module (guix download))
+  #:use-module (guix download)
+  #:use-module (guix gexp))
 
 ; qwertyfr keyboard layout
 (define-public qwerty-fr
@@ -18,38 +19,26 @@
               (sha256
                (base32
                 "0csxzs2gk8l4y5ii1pgad8zxr9m9mfrl9nblywymg01qw74gpvnm"))))
-    (build-system trivial-build-system)
-    (native-inputs `(("source" ,source)
-                     ("unzip" ,unzip)))
-    (arguments
-     `(#:modules ((guix build utils)
-                  (srfi srfi-26))
-       #:builder (begin
-                   (use-modules (guix build utils))
-                   (let* ((PATH (string-append (assoc-ref %build-inputs "unzip")
-                                               "/bin"))
-                          (out (assoc-ref %outputs "out"))
-                          (source (assoc-ref %build-inputs "source")))
-                     (setenv "PATH" PATH)
-                     (mkdir-p out)
-                     (system* "unzip" "-d" out source)))))
+    (build-system copy-build-system)
+    (native-inputs (list unzip))
     (home-page "https://github.com/qwerty-fr/qwerty-fr")
     (synopsis "Qwertyfr keyboard layout")
     (description "Keyboard layout based on the QWERTY layout with extra symbols and diacritics so that typing both in French and English is easy and fast. It is also easy to learn!")
     (license expat)))
 
-(define-public custom-xkeyboard-config
-  (package
-    (inherit xkeyboard-config)
-    (arguments
-     '(#:phases
-       (modify-phases %standard-phases
-         (add-after 'install 'add-qwerty-fr
-           (lambda* (#:key inputs outputs #:allow-other-keys)
-             (let ((out (assoc-ref outputs "out"))
-                   (qfr (assoc-ref inputs "qwerty-fr")))
-               (copy-recursively
-                (file-append qfr "/usr/share/")
-                (string-append out "/share/")))
-             #t)))))
-    (inputs (list qwerty-fr))))
+;; (define-public xkeyboard-config-with-qwerty-fr
+;;   (package
+;;     (inherit xkeyboard-config)
+;;     (name "xkeyboard-config-with-qwerty-fr")
+;;     (arguments
+;;      `(#:phases
+;;        (modify-phases %standard-phases
+;;          (add-after 'install 'add-qwerty-fr
+;;            (lambda* (#:key inputs outputs #:allow-other-keys)
+;;              (let ((out (assoc-ref outputs "out"))
+;;                    (qfr (assoc-ref inputs "qwerty-fr")))
+;;                (copy-recursively
+;;                 (string-append qfr "/share/")
+;;                 (string-append out "/share/")))
+;;              #t)))))
+;;     (inputs (list qwerty-fr))))

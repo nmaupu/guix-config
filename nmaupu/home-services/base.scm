@@ -65,7 +65,7 @@
 (define keyboard-layout-qwerty-fr-service
   (simple-service 'keyboard-layout-qwerty-fr-service
                   home-files-service-type
-                  `((".config/xkb/symbols/qwerty-fr" ,(file-append qwerty-fr "/usr/share/X11/xkb/symbols/us_qwerty-fr"))
+                  `((".config/xkb/symbols/qwerty-fr" ,(file-append qwerty-fr "/share/X11/xkb/symbols/qwerty-fr"))
                     (".config/xkb/qwertyfr.xkb" ,(local-file "../files/xkb/qwertyfr.xkb")))))
 
 (define home-base-service-type
@@ -79,7 +79,7 @@
 
 (define-public home-base-services
   (list
-   keyboard-layout-qwerty-fr-service
+   ;; keyboard-layout-qwerty-fr-service
    (service home-base-service-type)
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
