@@ -11,6 +11,8 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_REDUCE_BLANKS
 
+export EDITOR=nvim
+
 # Do not sighup background jobs
 setopt NO_HUP
 setopt NO_CHECK_JOBS
