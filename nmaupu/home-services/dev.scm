@@ -14,13 +14,14 @@
   #:use-module (nmaupu packages google-cloud-sdk)
   #:use-module (nmaupu packages talosctl)
   #:use-module (nmaupu packages vault)
-  ;; TODO Create a specific home-service for pro tools
+  ;; TODO Create a specific home-service for work/pro tools
   #:use-module (nmaupu packages terragrunt)
   #:use-module (nmaupu packages git-secret)
   #:use-module (nmaupu packages skaffold)
   #:use-module (nmaupu packages sops)
   #:use-module (nmaupu packages docker)
-  #:use-module (nmaupu packages argocd))
+  #:use-module (nmaupu packages argocd)
+  #:use-module (gnu packages protobuf))
 
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
@@ -39,7 +40,8 @@
         skaffold
         sops
         docker-compose
-        argocd))
+        argocd
+        protobuf))
 
 (define (with-home p)
   (string-append "$HOME/" p))
