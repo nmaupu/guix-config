@@ -21,7 +21,9 @@
   #:use-module (nmaupu packages sops)
   #:use-module (nmaupu packages docker)
   #:use-module (nmaupu packages argocd)
-  #:use-module (gnu packages protobuf))
+  #:use-module (gnu packages protobuf)
+  #:use-module (gnu packages java)
+  #:use-module (gnu packages version-control))
 
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
@@ -41,7 +43,9 @@
         sops
         docker-compose
         argocd
-        protobuf))
+        protobuf
+        pre-commit
+        openjdk))
 
 (define (with-home p)
   (string-append "$HOME/" p))
