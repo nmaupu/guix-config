@@ -19,11 +19,11 @@ switchToScreen() {
 
   deleteMonitors
 
-  LEFT_WIDTH=1800
-  CENTER_WIDTH=2200
+  LEFT_WIDTH=1600
+  CENTER_WIDTH=2300
   RIGHT_WIDTH=$((5120-LEFT_WIDTH-CENTER_WIDTH))
-  xrandr --setmonitor LeftMonitor $LEFT_WIDTH/345x1440/290+0+0 "$SCREEN"
-  xrandr --setmonitor CenterMonitor $CENTER_WIDTH/345x1440/290+$LEFT_WIDTH+0 none
+  xrandr --setmonitor LeftMonitor $LEFT_WIDTH/345x1440/290+0+0 none
+  xrandr --setmonitor CenterMonitor $CENTER_WIDTH/345x1440/290+$LEFT_WIDTH+0 "$SCREEN"
   xrandr --setmonitor RightMonitor $RIGHT_WIDTH/345x1440/290+$((LEFT_WIDTH+CENTER_WIDTH))+0 none
 
   # Kill and relaunch a fresh polybar
