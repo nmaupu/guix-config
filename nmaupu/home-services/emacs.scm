@@ -6,6 +6,7 @@
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp)
   #:use-module (nmaupu packages terraform-ls)
+  #:use-module (nmaupu packages delve)
   #:use-module (nmaupu packages golangci-lint))
 
 ;; We want to have doom emacs and custom configuration *not read-only*.
@@ -15,14 +16,14 @@
 ;; and pull the needed repositories then launch emacs.
 ;; First launch is about 5 min though.
 
-(use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz debug)
+(use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz)
 
 (define (home-emacs-profile-service config)
   (append (list emacs
                 shellcheck
                 shfmt
                 gopls
-                delve
+                custom-delve
                 emacs-vterm)
           (list terraform-ls
                 golangci-lint)))
