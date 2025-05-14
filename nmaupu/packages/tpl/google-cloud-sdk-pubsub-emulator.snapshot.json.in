@@ -1,0 +1,36 @@
+{
+  "components": [
+    {
+      "data": {
+        "contents_checksum": "@checksum@",
+        "source": "",
+        "type": "tar"
+      },
+      "dependencies": [
+        "core"
+      ],
+      "details": {
+        "description": "@description@",
+        "display_name": "@display-name@"
+      },
+      "gdu_only": false,
+      "id": "@id@",
+      "is_configuration": false,
+      "is_hidden": false,
+      "is_required": false,
+      "platform": {},
+      "platform_required": false,
+      "version": {
+        "build_number": @version@,
+        "version_string": "@version-string@"
+      }
+    }
+  ],
+  "revision": @revision@,
+  "schema_version": {
+    "no_update": true,
+    "url": "@url@",
+    "version": 3
+  },
+  "version": "@gcloud-sdk-version@"
+}

@@ -6,10 +6,12 @@
   #:use-module (gnu packages compression)
   #:use-module (guix gexp)
   #:use-module (guix utils)
+  #:use-module (guix build utils)
   #:use-module ((nonguix licenses) #:prefix licensenon:)
   #:use-module (gnu packages base)
   #:use-module (gnu packages compression)
-  #:use-module (gnu packages python))
+  #:use-module (gnu packages python)
+  #:use-module (guix build copy-build-system))
 
 ;; Latest releases are available at
 ;; https://console.cloud.google.com/storage/browser/cloud-sdk-release
@@ -71,6 +73,7 @@
    (arguments
      `(#:install-plan `(("./" "/lib"))))))
 
+;; TODO: simplify and modularize templating - good luck!
 (define %google-cloud-sdk-pubsub-emulator
   (package
    (inherit (%google-cloud-sdk-component #:comp-id "pubsub-emulator"
@@ -78,7 +81,47 @@
                                          #:hash "1dzi301z0mi7ilwbdkiwry2s7gh1fmqnlzn82dsbimslybwq58ya"
                                          #:include-arch? #f))
    (arguments
-     `(#:install-plan `(("./" "/platform"))))))
+    (list
+     #:install-plan #~'(("./" "/platform"))
+     #:phases
+     #~(modify-phases %standard-phases
+         (add-after 'install 'add-manifest-file
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let* ((out (assoc-ref outputs "out"))
+                    (template-file #$(local-file "./tpl/google-cloud-sdk-pubsub-emulator.snapshot.json.in"))
+                    (template-dest (string-append out "/.install/pubsub-emulator.snapshot.json")))
+               (mkdir-p (dirname template-dest))
+               (copy-file template-file template-dest)
+               (for-each
+                (lambda (pair)
+                  (substitute* template-dest
+                    (((string-append "@" (car pair) "@")) (cdr pair))))
+                '(("checksum" . "89669e0a6be302acf1cf7e773e61d02b5514ccd84ae1e34a4dd7fa6eff1c5bef")
+                  ("description" . "Provides the Pub/Sub emulator.")
+                  ("display-name" . "Cloud Pub/Sub Emulator")
+                  ("id" . "pubsub-emulator")
+                  ("version" . "20250221145621")
+                  ("version-string" . "0.8.19")
+                  ("revision" . "20250411141747")
+                  ("url" . "https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz")
+                  ("gcloud-sdk-version" . "518.0.0")))
+               #t))))))))
+
+;; (define (template-phase template-file dest-path substitutions)
+;;   #~(lambda* (#:key outputs #:allow-other-keys)
+;;       (use-modules (guix build utils))
+;;       (let* ((out (assoc-ref outputs "out"))
+;;              (subs '#$substitutions)
+;;              (target (string-append out "/" #$dest-path)))
+;;         (mkdir-p (dirname target))
+;;         (copy-file #$template-file target)
+;;         (format (current-error-port) "DEBUG substitutions: ~s~%" subs)
+;;         (for-each
+;;          (lambda (pair)
+;;            (substitute* target
+;;              ((car pair) (cdr pair))))
+;;          subs)
+;;         #t)))
 
 ;; Creating a google-cloud-sdk combining gcloud and several components all in one
 (define-public google-cloud-sdk
@@ -103,5 +146,5 @@
            (copy-recursively google-cloud-sdk out)
            (copy-recursively google-cloud-sdk-beta out)
            (copy-recursively google-cloud-sdk-pubsub-emulator out)
-           (call-with-output-file (string-append out "/.install/pubsub-emulator.snapshot.json") (lambda (p) #t)) ; Create fake empty manifest file to mimik a real install
+           ;; (call-with-output-file (string-append out "/.install/pubsub-emulator.snapshot.json") (lambda (p) #t)) ; Create fake empty manifest file to mimik a real install
            #t))))))
