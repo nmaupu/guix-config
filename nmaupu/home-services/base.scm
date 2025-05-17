@@ -10,7 +10,7 @@
   #:use-module (nmaupu packages slack)
   #:use-module (nmaupu packages keyboard-layout))
 
-(use-package-modules curl version-control admin linux rsync
+(use-package-modules curl version-control admin linux rsync vpn
                      web commencement databases algebra bash
                      compression vim python python-build python-web python-xyz web-browsers
                      rust-apps chromium admin ftp xorg fonts fontutils
@@ -41,6 +41,7 @@
         python-requests
         qemu
         virt-manager
+        openvpn
         qutebrowser
         ripgrep
         fd
