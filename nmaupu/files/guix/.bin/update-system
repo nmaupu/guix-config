@@ -6,4 +6,4 @@ NC='\033[0m'
 
 echo -e "${GREEN}Updating ${BLUE}$(hostname)${GREEN}...${NC}"
 
-sudo guix system -L ~/.dotfiles reconfigure ~/.dotfiles/nmaupu/systems/$(hostname).scm $@
+sudo guix system -L ~/.dotfiles reconfigure $@ ~/.dotfiles/nmaupu/systems/$(hostname).scm
