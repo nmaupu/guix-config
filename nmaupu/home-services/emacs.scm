@@ -12,8 +12,8 @@
 ;; We want to have doom emacs and custom configuration *not read-only*.
 ;; To achieve that, we are using a custom shell script
 ;; to run doom-emacs.
-;; If relevant directories are missing, the startup script install the needed files
-;; and pull the needed repositories then launch emacs.
+;; If relevant directories are missing, the startup script installs the needed files
+;; and pulls the needed repositories then launches emacs.
 ;; First launch is about 5 min though.
 
 (use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz)
