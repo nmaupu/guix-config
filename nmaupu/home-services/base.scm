@@ -11,7 +11,7 @@
   #:use-module (nmaupu packages keyboard-layout))
 
 (use-package-modules curl version-control admin linux rsync vpn
-                     web commencement databases algebra bash
+                     web commencement databases algebra bash gnome
                      compression vim python python-build python-web python-xyz web-browsers
                      rust-apps chromium admin ftp xorg fonts fontutils
                      node cmake virtualization dns xdisorg perl)
@@ -23,6 +23,7 @@
         ;; bind is the name of guile procedure, so bind package has been renamed to isc-bind
         isc-bind
         curl
+        evince
         lm-sensors
         firefox
         git
