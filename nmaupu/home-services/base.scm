@@ -6,6 +6,7 @@
   #:use-module (gnu home services dotfiles)
   #:use-module (nongnu packages mozilla)
   #:use-module (nongnu packages compression)
+  #:use-module (nongnu packages chrome)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages slack)
   #:use-module (nmaupu packages keyboard-layout))
@@ -52,7 +53,8 @@
         strace
         tig
         tree
-        ungoogled-chromium
+        ;; ungoogled-chromium
+        google-chrome-stable
         unrar
         unzip
         xkbcomp

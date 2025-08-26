@@ -6,6 +6,7 @@
   #:use-module ((nonguix licenses) #:prefix licensenon:)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages commencement)
   #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages nss)
   #:use-module (gnu packages wget))
@@ -14,10 +15,12 @@
 ;; To do that, it uses xdg-open which has to be installed (see propagated-inputs)
 ;; The redirection might not work but in that case, copy the "try again" link
 ;; and focus the slack window. After 2 seconds, a redirection occurs.
+;; When upgrading, relink /lib64/ld-linux-x86-64.so.2 to the correct glibc.
+;; This is needed by slack's lib/slack/chrome_crashpad_handler
 (define-public slack
   (package
     (name "slack")
-    (version "4.43.51")
+    (version "4.45.64")
     (source
      (origin
        (method url-fetch)
@@ -26,7 +29,7 @@
                            "/slack-desktop-" version "-amd64.deb"))
        (file-name (string-append "slack-" version ".deb"))
        (sha256
-        (base32 "09lkqnfgil0zaq5nlaph9cbrh622ywx05ma29h6ak4n6pismr3jk"))))
+        (base32 "03qqxpgyiyfn47l5i13ym21qm57rp5vpskhdjgn8lxymn5mghskw"))))
     (build-system chromium-binary-build-system)
     (arguments
      (list #:substitutable? #f
