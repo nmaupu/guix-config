@@ -56,11 +56,12 @@
 
 (define (home-dev-env-vars config)
   `(("TFENV_CONFIG_DIR" . ,(with-home %tfenv-data-dir)) ; data dir where tf versions are actually downloaded
-    ("GOENV_ROOT" . ,(with-home %goenv-data-dir))
+    ("GOENV_ROOT" . ,(with-home %goenv-data-dir))))
     ;; Added gcc-toolchain to LD_LIBRARY_PATH because for an obscure reason
     ;; go build generates binaries that misses libgcc_s.so.1
     ;; TODO find out why and fix
-    ("LD_LIBRARY_PATH" . ,(file-append gcc-toolchain "/lib"))))
+    ;; Edit @2025-08-26: lots of seg fault because gcc-toolchain is outdated in home so commenting it for now
+    ;;("LD_LIBRARY_PATH" . ,(file-append gcc-toolchain "/lib"))))
 
 (define home-dev-service-type
   (service-type (name 'dev-tools)

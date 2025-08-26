@@ -16,7 +16,7 @@
 ;; and pulls the needed repositories then launches emacs.
 ;; First launch is about 5 min though.
 
-(use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz)
+(use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz golang-apps)
 
 (define (home-emacs-profile-service config)
   (append (list emacs

@@ -42,7 +42,6 @@
                 libva-utils
                 lvm2
                 ntfs-3g
-                pamtester
                 vim
                 xset
                 xss-lock)
@@ -121,8 +120,8 @@
                                            guix-service-type
                                            (guix-extension
                                             (substitute-urls
-                                             ;; (append (list "https://substitutes.nonguix.org")
-                                             (append (list "https://nonguix-proxy.ditigal.xyz")
+                                             (append (list "https://substitutes.nonguix.org")
+                                             ;; (append (list "https://nonguix-proxy.ditigal.xyz")
                                                      %default-substitute-urls))
                                             (authorized-keys
                                              (append (list (plain-file "nonguix.pub"
