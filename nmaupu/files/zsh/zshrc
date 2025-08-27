@@ -153,3 +153,16 @@ GCLOUD_DIR=$(dirname $(dirname $(realpath /home/nmaupu/.guix-home/profile/bin/gc
 if [ -f "$GCLOUD_DIR/path.zsh.inc" ]; then . "$GCLOUD_DIR/path.zsh.inc"; fi
 # The next line enables shell command completion for gcloud.
 if [ -f "$GCLOUD_DIR/completion.zsh.inc" ]; then . "$GCLOUD_DIR/completion.zsh.inc"; fi
+
+# Fix go run / go build not setting the correct RPATH
+go() {
+  CC=$HOME/.guix-home/profile/bin/gcc
+  CGO_RPATH=$HOME/.guix-profile/lib
+  if [ "${CGO_ENABLED:-1}" = "1" ]; then
+    CGO_ENABLED=1 CC="$CC" CGO_LDFLAGS="-Wl,-rpath=$CGO_RPATH${CGO_LDFLAGS:+ $CGO_LDFLAGS}" \
+    GOFLAGS="-ldflags=-linkmode=external${GOFLAGS:+ ${GOFLAGS}}" \
+    command /usr/bin/env go "$@"
+  else
+    command /usr/bin/env go "$@"
+  fi
+}
