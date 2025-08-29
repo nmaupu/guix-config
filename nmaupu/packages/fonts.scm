@@ -95,6 +95,11 @@ and others.")
                       #:version "3.3.0"
                       #:hash "0msqm9rnc5rzmwmfs2sx534hqz3apmfja00m6iib8627nr30n2yl"))
 
+(define-public nerd-font-jetbrains
+  (%nerd-font-package #:font-name "JetBrainsMono"
+                      #:version "3.0.4"
+                      #:hash "0g29gj9d6720grfr2vasnvdppzw4hycpfyd5di54d2p4mkrmzw3n"))
+
 (define-public fonts-all
   (list nerd-font-commitmono
         nerd-font-iosevka
@@ -102,4 +107,5 @@ and others.")
         nerd-font-noto
         nerd-font-droid-sans-mono
         nerd-font-terminus
+        nerd-font-jetbrains
         polybar-themes-fonts))

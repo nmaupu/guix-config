@@ -21,6 +21,8 @@
   #:use-module (nmaupu packages sops)
   #:use-module (nmaupu packages docker)
   #:use-module (nmaupu packages argocd)
+  #:use-module (nmaupu packages cursor-ai)
+  #:use-module (nmaupu packages postman)
   #:use-module (gnu packages protobuf)
   #:use-module (gnu packages java)
   #:use-module (gnu packages version-control))
@@ -45,7 +47,9 @@
         argocd
         protobuf
         pre-commit
-        openjdk))
+        openjdk
+        cursor-ai
+        postman))
 
 (define (with-home p)
   (string-append "$HOME/" p))

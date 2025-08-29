@@ -62,7 +62,8 @@
         fontconfig
         nerd-font-commitmono
         font-adobe-source-han-serif
-        font-google-noto-emoji))
+        font-google-noto-emoji
+        glibc-utf8-locales))
 
 ;; Load this layout with the following command
 ;; xkbcomp -I~/.config/xkb ~/.config/xkb/qwertyfr.xkb $DISPLAY &>/dev/null
