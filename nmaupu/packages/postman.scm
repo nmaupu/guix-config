@@ -10,6 +10,7 @@
   #:use-module (gnu packages commencement)
   #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages glib)
+  #:use-module (gnu packages gnome)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages gl)
   #:use-module (gnu packages xml)
@@ -94,6 +95,7 @@
                                     (string-append #$eudev "/lib")
                                     (string-append #$alsa-lib "/lib")
                                     (string-append #$gcc-toolchain "/lib")
+                                    (string-append #$libsecret "/lib")
                                     (string-append #$nspr "/lib"))
                               ":"))
                      ;; Get all files, then keep only ELFs.
@@ -104,12 +106,22 @@
                     (invoke #$(file-append patchelf "/bin/patchelf")
                             "--set-rpath" rpath f)))
                  elfs)
+                #t)))
+          (add-after 'patch-elf 'wrap-ld-library-path
+            (lambda _
+              (use-modules (guix build utils))
+              (let* ((out    #$output)
+                     (bindir (string-append out "/bin")))
+                (wrap-program (string-append bindir "/postman")
+                  `("LD_LIBRARY_PATH" ":" prefix
+                    ,(list (string-append #$nss "/lib/nss"))))
                 #t))))))
+
     (inputs
      (list nss glib nspr dbus at-spi2-core cups libdrm
            gtk+ pango cairo libx11 libxcomposite libxdamage libxext
            libxfixes libxrandr mesa expat libxcb libxkbcommon eudev alsa-lib
-           gcc-toolchain))
+           gcc-toolchain libsecret))
     (native-inputs
      (list patchelf))
     (propagated-inputs
