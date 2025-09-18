@@ -4,8 +4,7 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
-  #:use-module (guix gexp)
-  #:use-module (nmaupu packages xidlehook))
+  #:use-module (guix gexp))
 
 (use-package-modules emacs haskell-apps fonts xdisorg)
 
