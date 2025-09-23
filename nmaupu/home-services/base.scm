@@ -15,7 +15,7 @@
                      web commencement databases algebra bash gnome
                      compression vim python python-build python-web python-xyz web-browsers
                      rust-apps chromium admin ftp xorg fonts fontutils
-                     node cmake virtualization dns xdisorg perl)
+                     node cmake virtualization dns xdisorg perl textutils)
 
 (define (home-base-profile-service config)
   (list
@@ -53,7 +53,7 @@
         strace
         tig
         tree
-        ;; ungoogled-chromium
+        ungoogled-chromium
         google-chrome-stable
         unrar
         unzip
