@@ -7,7 +7,7 @@
 (define-public goenv
   (package
     (name "goenv")
-    (version "2.2.24")
+    (version "2.2.29")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -16,7 +16,7 @@
               (file-name (git-file-name name version))
               (sha256
                (base32
-                "18yya53rkpr4mcagvghvn50kd8dng4hgjy3d3j82qjm9mr5k42ks"))))
+                "0743clbnsx48wc4z4fj3k6h7qfqqgcr10k2xh27kpd7viiaz95yw"))))
     (build-system copy-build-system)
     (arguments
      `(#:phases
