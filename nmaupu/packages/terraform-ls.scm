@@ -8,14 +8,14 @@
 (define-public terraform-ls
   (package
     (name "terraform-ls")
-    (version "0.36.4")
+    (version "0.38.0")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://releases.hashicorp.com/terraform-ls/" version
                            "/terraform-ls_" version "_linux_amd64.zip"))
        (sha256
-        (base32 "08wjzabcmjfy8jnng5xh9xvrp6ffsg5gxvkblfkh4rgyblnibx4a"))))
+        (base32 "0wcsqyk5cnvah3r11hsc7y6gq4bvmiiihaak2zg545hcbxq254jg"))))
     (build-system copy-build-system)
     (native-inputs (list unzip))
     (arguments
