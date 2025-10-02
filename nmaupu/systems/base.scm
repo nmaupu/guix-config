@@ -4,6 +4,7 @@
   #:use-module (gnu system)
   #:use-module (gnu system nss)
   #:use-module (gnu system setuid)
+  #:use-module (gnu system locale)
   #:use-module (gnu system privilege)
   #:use-module (gnu services authentication)
   #:use-module (gnu services sound)
@@ -42,6 +43,7 @@
                 libva-utils
                 lvm2
                 ntfs-3g
+                font-sazanami
                 vim
                 xset
                 xss-lock)
@@ -52,6 +54,11 @@
    (host-name "hackstock")
    (timezone "Europe/Paris")
    (locale "en_US.utf8")
+   (locale-definitions
+    (append
+     (list (locale-definition
+            (name "ja_JP.eucjp") (source "ja_JP") (charset "EUC-JP")))
+     %default-locale-definitions))
 
    ;; Use non-free Linux and firmware
    (kernel linux)
