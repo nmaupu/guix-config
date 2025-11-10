@@ -46,4 +46,7 @@ instance = "Alacritty"
 [keyboard]
 bindings = [
   # { key = ";", mods = "Control", chars = "\u001f" }
+  { key = "Slash", mods = "Control", chars = "\u001f" },
+  { key = ">", mods = "Control", chars = "\u001f" },
+  { key = "<", mods = "Control", chars = "\u001f" },
 ]
