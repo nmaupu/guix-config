@@ -16,7 +16,7 @@
 ;; and pulls the needed repositories then launches emacs.
 ;; First launch is about 5 min though.
 
-(use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz golang-apps)
+(use-package-modules emacs emacs-xyz terminals haskell-apps shellutils golang-xyz golang-apps lisp web)
 
 (define (home-emacs-profile-service config)
   (append (list emacs
@@ -24,7 +24,10 @@
                 shfmt
                 gopls
                 custom-delve
-                emacs-vterm)
+                emacs-vterm
+                sbcl
+                go-github-com-fatih-gomodifytags
+                jansson)
           (list terraform-ls
                 golangci-lint)))
 
