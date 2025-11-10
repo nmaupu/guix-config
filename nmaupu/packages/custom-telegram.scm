@@ -7,6 +7,9 @@
   #:use-module (gnu packages linux)
   #:use-module (gnu packages telegram))
 
+;; As of 2025-11-03 this is not being used anymore
+;; remains here for reference
+
 ;; From 2025-04-23, pipewire has been updated from 1.2.7 to 1.4.0 which breaks
 ;; telegram-desktop package...
 ;; guix commit: 366af125a3672f48b38816f7c0433f62965f8e31
@@ -77,5 +80,5 @@
               (lambda _
                 ;; Apply patch after lib_base is copied into place
                 (with-directory-excursion "Telegram/lib_base"
-                  (invoke "patch" "-p0" "-i" 
+                  (invoke "patch" "-p0" "-i"
                           #$(local-file "./patches/telegram-desktop-fix-qt-version-check.patch")))))))))))
