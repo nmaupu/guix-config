@@ -5,8 +5,6 @@
   #:use-module (guix download)
   #:use-module (guix git-download))
 
-(define nerd-font-version "3.3.0")
-
 (define* (%nerd-font-package #:key font-name version hash)
   (package
     (name (string-append "nerd-font-" (string-downcase font-name)))
@@ -97,7 +95,7 @@ and others.")
 
 (define-public nerd-font-jetbrains
   (%nerd-font-package #:font-name "JetBrainsMono"
-                      #:version "3.0.4"
+                      #:version "3.4.0"
                       #:hash "0g29gj9d6720grfr2vasnvdppzw4hycpfyd5di54d2p4mkrmzw3n"))
 
 (define-public fonts-all
