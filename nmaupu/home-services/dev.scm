@@ -25,6 +25,7 @@
   #:use-module (nmaupu packages postman)
   #:use-module (gnu packages protobuf)
   #:use-module (gnu packages java)
+  #:use-module (gnu packages golang-apps)
   #:use-module (gnu packages version-control))
 
 (define (home-dev-profile-service config)
@@ -45,6 +46,7 @@
         sops
         docker-compose
         argocd
+        go-jsonnet
         protobuf
         pre-commit
         openjdk
