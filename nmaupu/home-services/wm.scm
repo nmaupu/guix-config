@@ -6,6 +6,7 @@
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp)
+  #:use-module (nongnu packages messaging)
   #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages polybar-themes)
@@ -19,6 +20,7 @@
         arandr
         blueman
         telegram-desktop
+        zoom
         picom
         ;; xidlehook ;; custom package to replace xautolock or xss-lock
         xsecurelock
