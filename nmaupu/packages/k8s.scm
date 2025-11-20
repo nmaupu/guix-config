@@ -28,10 +28,10 @@
         (base32
          "0jx094zw27388qp7m6y7yi0dd3yhamkilsvq0yng1b2qlfp5m1x6"))))))
 
-(define-public k9s-0.40
+(define-public k9s-0.50
   (package
     (inherit k9s)
-    (version "0.40.10")
+    (version "0.50.16")
     (source
      (origin
        (method url-fetch)
@@ -40,7 +40,7 @@
              version "/k9s_Linux_amd64.tar.gz"))
        (sha256
         (base32
-         "0m0axrxgkzjlyjb241l3kzx49jbdg2bdiqcn2c5rrr8ljg5vy2s9"))))))
+         "063qvc3wmm1j35b2v1syf3b26bxm2n5ngv9v5gz8g2d06309v85x"))))))
 
 (define-public kubectl-1.32
   (package

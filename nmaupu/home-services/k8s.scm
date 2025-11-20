@@ -10,7 +10,7 @@
 (define (home-kubernetes-profile-service config)
   (list
    helm-kubernetes-3.17
-   k9s-0.40
+   k9s-0.50
    kind-0.27
    kubectl-1.32))
 
