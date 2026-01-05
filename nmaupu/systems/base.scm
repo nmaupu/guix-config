@@ -30,6 +30,8 @@
 (define-public %custom-base-packages
   (append (list bluez
                 bluez-alsa
+                brlaser
+                cups-filters
                 brightnessctl
                 dconf
                 exfat-utils
@@ -278,6 +280,8 @@
 
                            ;; Enable the build service for Nix package manager
                            (service nix-service-type)
+
+                           ; (service gnome-desktop-service-type)
 
                            ;; Syncthing service
                            (service syncthing-service-type

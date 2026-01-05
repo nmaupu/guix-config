@@ -14,16 +14,16 @@
 (define-public cursor-ai
   (package
     (name "cursor-ai")
-    (version "1.5.5")
+    (version "2.2.20")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://downloads.cursor.com/production/"
-                           "823f58d4f60b795a6aefb9955933f3a2f0331d7b/"
+                           "b3573281c4775bfc6bba466bf6563d3d498d1074/"
                            "linux/x64/deb/amd64/deb/cursor_" version "_amd64.deb"))
        (file-name (string-append "cursor-" version ".deb"))
        (sha256
-        (base32 "0pqjv3zyzfz8qa9vx3rvdwrhvsj9ggrg0815540c8brdfj0zfbhg"))))
+        (base32 "1gcy7fl26qkqwdrhyxrxcfc8yfycddn9nfp4d0n1xranx50x7hn4"))))
     (build-system chromium-binary-build-system)
     (arguments
      (list #:substitutable? #f
