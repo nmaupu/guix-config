@@ -37,8 +37,8 @@
                 exfat-utils
                 fuse-exfat
                 git
-                gnome-keyring
-                libgnome-keyring
+                ;; gnome-keyring
+                ;; libgnome-keyring
                 gvfs    ;; Enable user mounts
                 intel-media-driver/nonfree
                 ;; intel-microcode
@@ -48,6 +48,8 @@
                 font-sazanami
                 vim
                 xinit
+                xorg-server
+                xauth
                 xset
                 xss-lock
                 greetd
@@ -143,7 +145,7 @@
                                                                 "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
                                               %default-authorized-guix-keys))))
 
-                           (service gnome-keyring-service-type)
+                           ;; (service gnome-keyring-service-type)
 
                            (service greetd-service-type
                                     (greetd-configuration
@@ -157,8 +159,11 @@
                                           #~(string-append
                                              #$(file-append tuigreet "/bin/tuigreet")
                                              " --time --remember --remember-user-session --asterisks"
-                                             " --cmd "
-                                             #$(file-append xinit "/bin/startx"))))))))
+                                             " --cmd '"
+                                             #$(file-append xinit "/bin/startx")
+                                             " -- "
+                                             #$(file-append xorg-server "/bin/Xorg")
+                                             "'")))))))
                            (service mingetty-service-type (mingetty-configuration (tty "tty2")))
                            (service mingetty-service-type (mingetty-configuration (tty "tty3")))
                            (service mingetty-service-type (mingetty-configuration (tty "tty4")))
