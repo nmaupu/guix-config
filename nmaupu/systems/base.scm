@@ -22,7 +22,7 @@
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
                      networking wm fonts libusb cups freedesktop file-systems xorg
-                     version-control package-management vim freedesktop xdisorg)
+                     version-control package-management vim freedesktop xdisorg admin)
 
 (define onepassword-cli-group-name "onepassword-cli")
 (define onepassword-gui-group-name "onepassword")
@@ -47,8 +47,11 @@
                 ntfs-3g
                 font-sazanami
                 vim
+                xinit
                 xset
-                xss-lock)
+                xss-lock
+                greetd
+                tuigreet)
           %base-packages))
 
 (define-public base-operating-system
@@ -124,23 +127,43 @@
    (packages %custom-base-packages)
 
    ;; Configure only the services necessary to run the system
-   (services (append (modify-services %base-services)
-                     (list (simple-service 'add-nonguix-substitutes
-                                           guix-service-type
-                                           (guix-extension
-                                            (substitute-urls
-                                             (append (list "https://substitutes.nonguix.org")
-                                             ;; (append (list "https://nonguix-proxy.ditigal.xyz")
-                                                     %default-substitute-urls))
-                                            (authorized-keys
-                                             (append (list (plain-file "nonguix.pub"
-                                                                       "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
-                                                     %default-authorized-guix-keys))))
+   (services (append
+              (remove (lambda (svc)
+                        (eq? (service-kind svc) mingetty-service-type))
+                      %base-services)
+              (list (simple-service 'add-nonguix-substitutes
+                                    guix-service-type
+                                    (guix-extension
+                                     (substitute-urls
+                                      (append (list "https://substitutes.nonguix.org")
+                                              ;; (append (list "https://nonguix-proxy.ditigal.xyz")
+                                              %default-substitute-urls))
+                                     (authorized-keys
+                                      (append (list (plain-file "nonguix.pub"
+                                                                "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
+                                              %default-authorized-guix-keys))))
 
-                           (service gdm-service-type
-                                    (gdm-configuration
-                                     (auto-suspend? #f)))
                            (service gnome-keyring-service-type)
+
+                           (service greetd-service-type
+                                    (greetd-configuration
+                                     (greeter-supplementary-groups '("video" "input"))
+                                     (terminals
+                                      (list
+                                       (greetd-terminal-configuration
+                                        (terminal-vt "1")
+                                        (terminal-switch #t)
+                                        (default-session-command
+                                          #~(string-append
+                                             #$(file-append tuigreet "/bin/tuigreet")
+                                             " --time --remember --remember-user-session --asterisks"
+                                             " --cmd "
+                                             #$(file-append xinit "/bin/startx"))))))))
+                           (service mingetty-service-type (mingetty-configuration (tty "tty2")))
+                           (service mingetty-service-type (mingetty-configuration (tty "tty3")))
+                           (service mingetty-service-type (mingetty-configuration (tty "tty4")))
+                           (service mingetty-service-type (mingetty-configuration (tty "tty5")))
+                           (service mingetty-service-type (mingetty-configuration (tty "tty6")))
 
                            ;; Add udev rules for MTP devices so that non-root users can access
                            ;; them.
