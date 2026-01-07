@@ -82,6 +82,11 @@
                             "../files/dunst"
                             "../files/picom"
                             "../files/flameshot"))))
+   ;; Create .xinitrc that sources .xsession for startx compatibility
+   ;; Note: .xsession is already deployed via dotfiles service, so we just source it
+   (simple-service 'xinitrc
+                   home-files-service-type
+                   `((".xinitrc" ,(plain-file "xinitrc" "#!/bin/sh\n# Source .xsession for startx compatibility\n. ~/.xsession\n"))))
    (simple-service 'polybar-themes
                    home-files-service-type
                    `((".config/polybar"

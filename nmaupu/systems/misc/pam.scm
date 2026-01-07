@@ -13,7 +13,9 @@
                     (list (pam-extension
                            (transformer
                             (lambda (pam)
-                              (if (or (string=? "gdm-password" (pam-service-name pam))
+                              ;; Note: GDM has been replaced with greetd/tuigreet
+                              ;; If fprintd is needed for tuigreet, use "greetd" or "login" service name
+                              (if (or (string=? "login" (pam-service-name pam))
                                       ;; (string=? "sudo" (pam-service-name pam))
                                       ;; (string=? "xsecurelock" (pam-service-name pam)) ;; not working for now
                                   )

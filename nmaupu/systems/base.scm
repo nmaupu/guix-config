@@ -158,17 +158,20 @@
                                         (default-session-command
                                           #~(string-append
                                              #$(file-append tuigreet "/bin/tuigreet")
-                                             " --time --remember --remember-user-session --asterisks"
+                                             " --time --remember --remember-session --asterisks --user-menu --debug"
                                              " --cmd '"
                                              #$(file-append xinit "/bin/startx")
                                              " -- "
                                              #$(file-append xorg-server "/bin/Xorg")
                                              "'")))))))
+
+
                            (service mingetty-service-type (mingetty-configuration (tty "tty2")))
                            (service mingetty-service-type (mingetty-configuration (tty "tty3")))
                            (service mingetty-service-type (mingetty-configuration (tty "tty4")))
                            (service mingetty-service-type (mingetty-configuration (tty "tty5")))
                            (service mingetty-service-type (mingetty-configuration (tty "tty6")))
+                           (service mingetty-service-type (mingetty-configuration (tty "tty7")))
 
                            ;; Add udev rules for MTP devices so that non-root users can access
                            ;; them.
@@ -236,7 +239,6 @@
                            (service colord-service-type)
                            (service geoclue-service-type)
                            (service polkit-service-type)
-                           ;; (service dbus-root-service-type)
                            (service elogind-service-type)
                            ;; (service elogind-service-type
                            ;;          (elogind-configuration
