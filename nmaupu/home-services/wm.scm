@@ -15,6 +15,10 @@
 (use-package-modules linux xdisorg xorg haskell haskell-apps networking compton
                      suckless wm image terminals gnupg xorg haskell-xyz telegram)
 
+;; xmonad package is installed as part of the operating system
+;; to get the /run/current-system/profile/share/xsessions/xmonad.desktop
+;; file configured
+
 (define (home-wm-base-profile-service config)
   (list acpi
         arandr
@@ -46,8 +50,7 @@
                 ghc-regex-tdfa
                 libxft
                 polybar
-                rofi
-                xmonad)
+                rofi)
           fonts-all))
 
 (define home-base-service-type
