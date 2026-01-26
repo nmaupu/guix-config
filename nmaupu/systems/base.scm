@@ -18,7 +18,7 @@
   #:use-module (nmaupu systems misc pam))
 
 (use-service-modules dns guix admin sysctl pm nix avahi dbus cups desktop linux
-                     mcron networking xorg ssh docker audio virtualization sound)
+                     mcron networking xorg ssh docker audio virtualization sound sddm)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
                      networking wm fonts libusb cups freedesktop file-systems xorg
@@ -47,6 +47,7 @@
                 ntfs-3g
                 font-sazanami
                 vim
+                xmonad
                 xset
                 xss-lock)
           %base-packages))
@@ -137,9 +138,10 @@
                                                                        "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))"))
                                                      %default-authorized-guix-keys))))
 
-                           (service gdm-service-type
-                                    (gdm-configuration
-                                     (auto-suspend? #f)))
+                           ;; (service gdm-service-type
+                           ;;          (gdm-configuration
+                           ;;           (auto-suspend? #f)))
+                           (service sddm-service-type)
                            (service gnome-keyring-service-type)
 
                            ;; Add udev rules for MTP devices so that non-root users can access
@@ -247,7 +249,8 @@
                                                                 "  MatchDevicePath \"/dev/input/event*\""
                                                                 "  Driver \"libinput\""
                                                                 "  Option \"Tapping\" \"on\""
-                                                                "EndSection" ))))
+                                                                "EndSection" )))
+                            sddm-service-type)
 
                            (service openssh-service-type)
 
