@@ -39,14 +39,14 @@
 (define-public 1password-cli
   (package
     (name "1password-cli")
-    (version "2.30.3")
+    (version "2.32.1")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://cache.agilebits.com/dist/1P/op2/pkg/v"
                            version "/op_linux_amd64_v" version ".zip"))
        (sha256
-        (base32 "0a7fsmbmwa2x5kg1cijggj4w1hw0qgqg8vvs3l4zsh6brvmhfqx1"))))
+        (base32 "18dj0ldd10a0bpxq7izj4l756plrhhz6wm48xqxkycxhs6r9v934"))))
     (build-system copy-build-system)
     (native-inputs (list unzip))
     (arguments
@@ -61,14 +61,14 @@
 (define-public 1password-gui
   (package
     (name "1password-gui")
-    (version "8.10.75")
+    (version "8.12.2")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://downloads.1password.com/linux/tar/stable"
                            "/x86_64/1password-" version ".x64.tar.gz"))
        (sha256
-        (base32 "0n96x8c90ii3hcmsv421fvbw8q22nqbcn2wss45282sichwm698w"))))
+        (base32 "0nsb4229kv97g3sdy8z3slvn8h8my7pxgskdxzx2j375130qd7xw"))))
     (build-system binary-build-system)
     ;; Where things get hairy
     ;; Based on https://zie87.github.io/posts/guix-foreign-binaries
@@ -164,11 +164,11 @@
   (package
     (inherit 1password-gui)
     (name "1password-gui-beta")
-    (version "8.10.76-32.BETA")
+    (version "8.12.4-44.BETA")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://downloads.1password.com/linux/tar/beta"
                            "/x86_64/1password-" version ".x64.tar.gz"))
        (sha256
-        (base32 "0smzlsnjrj4xkf09hxqx2fbk1k5dlcryx3iyjj5lhhwaa19n93yp"))))))
+        (base32 "0wwpccddvwk006ifyy8zbx8s6hf2vnmacnl3cp0jj57d833nf12i"))))))
