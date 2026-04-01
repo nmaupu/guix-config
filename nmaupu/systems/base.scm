@@ -15,9 +15,10 @@
   #:use-module (nmaupu packages 1password)
   #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu systems misc polkit)
-  #:use-module (nmaupu systems misc pam))
+  #:use-module (nmaupu systems misc pam)
+  #:use-module (btv tailscale))
 
-(use-service-modules dns guix admin sysctl pm nix avahi dbus cups desktop linux
+(use-service-modules dns guix admin sysctl pm avahi dbus cups desktop linux
                      mcron networking xorg ssh docker audio virtualization sound sddm)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
@@ -47,6 +48,8 @@
                 ntfs-3g
                 font-sazanami
                 vim
+                tailscale
+                tailscaled
                 xmonad
                 xset
                 xss-lock)
@@ -161,6 +164,9 @@
                            ;; perform administrative tasks (similar to "sudo").
                            polkit-wheel-service
 
+                           ;; tailscale support
+                           (service tailscale-service-type)
+
                            ;; Allow desktop users to also mount NTFS and NFS file systems
                            ;; without root.
                            (simple-service 'mount-setuid-helpers privileged-program-service-type
@@ -222,8 +228,8 @@
 
                            (service x11-socket-directory-service-type)
 
-                           (service alsa-service-type
-                                    (alsa-configuration (pulseaudio? #f)))
+                           (service alsa-service-type)
+                                    ;; (alsa-configuration (pulseaudio? #f)))
 
                            ;;;;;
                            ;;;;;
@@ -278,11 +284,10 @@
                                      (wifi-pwr-on-bat? #t)))
 
                            ;; Add udev rules for a few packages
-                           (udev-rules-service 'pipewire-add-udev-rules custom-pipewire) ;; Not sure it's needed
                            (udev-rules-service 'brightnessctl-udev-rules brightnessctl)
 
                            ;; Enable the build service for Nix package manager
-                           (service nix-service-type)
+                           ;; (service nix-service-type)
 
                            ; (service gnome-desktop-service-type)
 
