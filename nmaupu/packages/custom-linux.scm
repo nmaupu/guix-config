@@ -1,10 +1,11 @@
 (define-module (nmaupu packages custom-linux)
   #:use-module (gnu packages linux)
+  #:use-module (gnu packages disk)
+  #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages ncurses)
   #:use-module (gnu packages pulseaudio)
   #:use-module (gnu packages glib)
-  #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages lua)
   ;; custom-pipewire
   #:use-module (gnu packages avahi)
@@ -23,7 +24,8 @@
   #:use-module (guix download)
   #:use-module (guix gexp)
   #:use-module ((guix licenses) #:prefix license:)
-  #:use-module (guix packages))
+  #:use-module (guix packages)
+  #:use-module (guix utils))
 
 ;; Updated linux-firmware for better support (try to fix suspend issue on 6.14 kernel with driver 'xe')
 (define-public custom-linux-firmware
@@ -158,3 +160,17 @@
         (base32 "0g6gv7apwyc74z4rfhcdgdgwidda7cy4znwjjq39q4jh24dg70j4"))))
     (inputs (modify-inputs (package-inputs wireplumber)
                            (replace "pipewire" custom-pipewire)))))
+
+;; ndctl: disable libtracefs to fix ABI mismatch with libtraceevent-1.7.3.
+;; Use rewrite-ndctl in base.scm to propagate this fix transitively.
+(define-public custom-ndctl
+  (package
+    (inherit ndctl)
+    (name "custom-ndctl")
+    (arguments
+     (substitute-keyword-arguments (package-arguments ndctl)
+       ((#:configure-flags flags)
+        #~(append #$flags (list "-Dlibtracefs=disabled")))))
+    (inputs (modify-inputs (package-inputs ndctl)
+                           (delete "libtraceevent")
+                           (delete "libtracefs")))))

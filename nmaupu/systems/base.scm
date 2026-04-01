@@ -14,6 +14,8 @@
   #:use-module (nongnu system linux-initrd)
   #:use-module (nmaupu packages 1password)
   #:use-module (nmaupu packages custom-linux)
+  #:use-module (gnu packages disk)
+  #:use-module (guix packages)
   #:use-module (nmaupu systems misc polkit)
   #:use-module (nmaupu systems misc pam)
   #:use-module (btv tailscale))
@@ -27,6 +29,11 @@
 
 (define onepassword-cli-group-name "onepassword-cli")
 (define onepassword-gui-group-name "onepassword")
+
+;; Globally replace ndctl with custom-ndctl (libtracefs disabled) to fix
+;; ABI mismatch between libtracefs-1.7.0 and libtraceevent-1.7.3.
+(define rewrite-ndctl
+  (package-input-rewriting `((,ndctl . ,custom-ndctl))))
 
 (define-public %custom-base-packages
   (append (list bluez
@@ -125,7 +132,7 @@
             %base-groups))
 
    ;; Install bare-minimum system packages
-   (packages %custom-base-packages)
+   (packages (map rewrite-ndctl %custom-base-packages))
 
    ;; Configure only the services necessary to run the system
    (services (append (modify-services %base-services)
