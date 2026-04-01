@@ -70,7 +70,6 @@
                                                  "sys-root"
                                                  "sys-docker"
                                                  "sys-gnustore"
-                                                 "sys-nixstore"
                                                  "sys-home"
                                                  "sys-log"))
                                   (type lvm-device-mapping))))
@@ -84,7 +83,6 @@
                                             (dependencies mapped-devices)))
                              '(("/"               "/dev/mapper/sys-root"     #t "ext4")
                                ("/gnu/store"      "/dev/mapper/sys-gnustore" #t "ext4")
-                               ("/nix/store"      "/dev/mapper/sys-nixstore" #t "ext4")
                                ("/home"           "/dev/mapper/sys-home"     #f "xfs")
                                ("/var/lib/docker" "/dev/mapper/sys-docker"   #f "xfs")
                                ("/var/log"        "/dev/mapper/sys-log"      #f "xfs")))
