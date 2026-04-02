@@ -52,7 +52,7 @@
                                guix-service-type
                                (guix-extension
                                 (substitute-urls
-                                 (append (list "https://substitutes.nonguix.org")
+                                 (append (list "https://nonguix-proxy.ditigal.xyz")
                                          %default-substitute-urls))
                                 (authorized-keys
                                  (append (list (plain-file "nonguix.pub"
