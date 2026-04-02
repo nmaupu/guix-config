@@ -54,7 +54,14 @@
                               #:arm64-hash (base32 "1f3c0wv35pd398c2li41wy5wxb5kkx7vp79dxmv4snij53jaak0x")))
     (name "terragrunt-0.78")))
 
+(define-public terragrunt-0.99
+  (package
+    (inherit (make-terragrunt #:version "0.99.5"
+                              #:amd64-hash (base32 "1kbl1ydz82yhlh9k97d7h7g33r6wcgy73zcnav46f6zdrvh31av5")
+                              #:arm64-hash (base32 "195dri5na9jw51c7h4r49sp9kmxdlhq6mqz2cdwnxh81g76vp92p")))
+    (name "terragrunt-0.99")))
+
 (define-public terragrunt
   (package
-    (inherit terragrunt-0.78)
+    (inherit terragrunt-0.99)
     (name "terragrunt")))
