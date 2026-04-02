@@ -140,8 +140,19 @@
               (sha256
                (base32
                 "0kqicbigz71ipnslqks8bz6zibcaqr9bydd7b9kb7k4sz5vg655v"))))
+    (arguments
+     (list
+      #:configure-flags
+      #~(list (string-append "-Dudevrulesdir=" #$output "/lib/udev/rules.d")
+              "-Dman=enabled"
+              "-Drlimits-install=false"
+              "-Dsession-managers=[]"
+              "-Dsysconfdir=/etc"
+              "-Dsystemd=disabled"
+              "-Dlibcamera=disabled")))
     (inputs (modify-inputs (package-inputs pipewire)
-                           (replace "alsa-lib" custom-alsa-lib)))))
+                           (replace "alsa-lib" custom-alsa-lib)
+                           (delete "libcamera")))))
 
 (define-public custom-wireplumber
   (package
