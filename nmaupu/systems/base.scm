@@ -216,7 +216,9 @@
 
                            ;; The D-Bus clique.
                            (service avahi-service-type)
-                           (service udisks-service-type)
+                           (service udisks-service-type
+                                    (udisks-configuration
+                                     (udisks (rewrite-ndctl udisks))))
                            (service upower-service-type)
                            (service accountsservice-service-type)
                            (service cups-pk-helper-service-type)
