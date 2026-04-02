@@ -10,7 +10,8 @@
   #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages polybar-themes)
-  #:use-module (nmaupu packages custom-telegram))
+  #:use-module (nmaupu packages custom-telegram)
+  #:use-module (nmaupu packages custom-arandr))
 
 (use-package-modules linux xdisorg xorg haskell haskell-apps networking compton
                      suckless wm image terminals gnupg xorg haskell-xyz telegram)
@@ -21,7 +22,7 @@
 
 (define (home-wm-base-profile-service config)
   (list acpi
-        arandr
+        custom-arandr
         blueman
         telegram-desktop
         zoom
