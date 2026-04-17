@@ -140,8 +140,8 @@
                                            guix-service-type
                                            (guix-extension
                                             (substitute-urls
-                                             ;; (append (list "https://substitutes.nonguix.org")
-                                             (append (list "https://nonguix-proxy.ditigal.xyz")
+                                             (append (list "https://substitutes.nonguix.org") ;; ipv6 only
+                                             ;; (append (list "https://nonguix-proxy.ditigal.xyz")
                                                      %default-substitute-urls))
                                             (authorized-keys
                                              (append (list (plain-file "nonguix.pub"
