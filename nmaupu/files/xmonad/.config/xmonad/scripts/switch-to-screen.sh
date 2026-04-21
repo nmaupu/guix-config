@@ -14,17 +14,18 @@ deleteMonitors() {
 }
 
 switchToScreen() {
-  xrandr --output eDP-1 --off \
-      --output "$SCREEN" --primary --mode 5120x1440 --pos 0x0 --rotate normal
+  xrandr --output "$LAPTOP" --mode 1920x1200 --pos 0x1440 --rotate normal \
+      --output "$SCREEN" --primary --mode 5120x1440 --pos 1920x0 --rotate normal
 
   deleteMonitors
 
+  SCREEN_X=1920
   LEFT_WIDTH=1600
   CENTER_WIDTH=2300
   RIGHT_WIDTH=$((5120-LEFT_WIDTH-CENTER_WIDTH))
-  xrandr --setmonitor LeftMonitor $LEFT_WIDTH/345x1440/290+0+0 none
-  xrandr --setmonitor CenterMonitor $CENTER_WIDTH/345x1440/290+$LEFT_WIDTH+0 "$SCREEN"
-  xrandr --setmonitor RightMonitor $RIGHT_WIDTH/345x1440/290+$((LEFT_WIDTH+CENTER_WIDTH))+0 none
+  xrandr --setmonitor LeftMonitor $LEFT_WIDTH/345x1440/290+$SCREEN_X+0 none
+  xrandr --setmonitor CenterMonitor $CENTER_WIDTH/345x1440/290+$((SCREEN_X+LEFT_WIDTH))+0 "$SCREEN"
+  xrandr --setmonitor RightMonitor $RIGHT_WIDTH/345x1440/290+$((SCREEN_X+LEFT_WIDTH+CENTER_WIDTH))+0 none
 
   # Kill and relaunch a fresh polybar
   "$HOME/.config/polybar/launch.sh" --forest
