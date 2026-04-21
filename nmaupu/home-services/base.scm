@@ -21,8 +21,7 @@
   (list
         bash-completion ;; provides compgen
         bc
-        ;; bind is the name of guile procedure, so bind package has been renamed to isc-bind
-        isc-bind
+        (list isc-bind "utils") ;; provides dig, nslookup, host, etc.
         curl
         evince
         lm-sensors
