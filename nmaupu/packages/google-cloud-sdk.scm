@@ -56,19 +56,19 @@
 
 (define-public google-cloud-sdk-gke-gcloud-auth-plugin
   (%google-cloud-sdk-component #:comp-id "gke-gcloud-auth-plugin"
-                               #:version "20250117151628"
-                               #:hash "1nkkbsdc8p323ddlj1aykl5ilmb2hmi6dq13mpskn5g9h7a7rqab"))
+                               #:version "20260821073916"
+                               #:hash "1q7fkxnqfqsscplk3qah2h4nrvkzx50ia0ffcs1g2bzjd7jmmsb0"))
 
 (define-public google-cloud-sdk-minikube
   (%google-cloud-sdk-component #:comp-id "minikube"
-                               #:version "20250210213649"
-                               #:hash "0pybkn95l9kr0wsk63jfb1riadpf5jcsx7xljb3wlgm818vm6k8x"))
+                               #:version "20260309182415"
+                               #:hash "1s71mnm5b5v53qh04g36vn4my8lri8asnapbk78pg0z8mi165a0g"))
 
 (define %google-cloud-sdk-beta
   (package
    (inherit (%google-cloud-sdk-component #:comp-id "beta"
-                                         #:version "20250221145621"
-                                         #:hash "0q2pq5sf5mwc1jcb4kmla7z4cng7b399kqfyzns50i51ahl42zbh"
+                                         #:version "20260831161632"
+                                         #:hash "18n8g5xcblmb9p0n0ws98lgaxggc14x498g0va83dlg8gs7i6d00"
                                          #:include-arch? #f))
    (arguments
      `(#:install-plan `(("./" "/lib"))))))
@@ -77,8 +77,8 @@
 (define %google-cloud-sdk-pubsub-emulator
   (package
    (inherit (%google-cloud-sdk-component #:comp-id "pubsub-emulator"
-                                         #:version "20250221145621"
-                                         #:hash "1dzi301z0mi7ilwbdkiwry2s7gh1fmqnlzn82dsbimslybwq58ya"
+                                         #:version "20260814074256"
+                                         #:hash "0kpyw6ijs3w4016y10884kv0dm37l06dnqclkrkg4d1zgjkck22d"
                                          #:include-arch? #f))
    (arguments
     (list

@@ -4,7 +4,8 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
-  #:use-module (guix gexp))
+  #:use-module (guix gexp)
+  #:use-module (nmaupu packages custom-greenclip))
 
 (use-package-modules emacs haskell-apps fonts xdisorg)
 
@@ -48,4 +49,4 @@
                                  (respawn? #t)
                                  (stop #~(make-kill-destructor))
                                  (start #~(make-forkexec-constructor
-                                           (list #$(file-append greenclip "/bin/greenclip") "daemon"))))))))))
+                                           (list #$(file-append custom-greenclip "/bin/greenclip") "daemon"))))))))))

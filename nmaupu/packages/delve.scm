@@ -7,7 +7,7 @@
   (package
     (inherit delve)
     (name "delve")
-    (version "1.24.2")
+    (version "1.27.1")
     (source
      (origin
        (method git-fetch)
@@ -17,4 +17,4 @@
        (file-name (git-file-name name version))
        (sha256
         (base32
-         "13lk8m7nkhmdm6qgnbniwkw0ffyv91x9z763c8qwy5v4kb6v6mq4"))))))
+         "176vrc4xm6xbri5pqdm0yra32dfg4nklvpbwfcl0ijxapjf51p8z"))))))

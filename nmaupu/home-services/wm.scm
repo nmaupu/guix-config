@@ -11,7 +11,8 @@
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages polybar-themes)
   #:use-module (nmaupu packages custom-telegram)
-  #:use-module (nmaupu packages custom-arandr))
+  #:use-module (nmaupu packages custom-arandr)
+  #:use-module (nmaupu packages custom-greenclip))
 
 (use-package-modules linux xdisorg xorg haskell haskell-apps networking compton
                      suckless wm image terminals gnupg xorg haskell-xyz telegram)
@@ -38,19 +39,19 @@
 (define (home-xmonad-profile-service config)
   (append (list custom-alsa-utils
                 brightnessctl
-                greenclip
+                custom-greenclip
                 dmenu
-                dunst
+                (@ (gnu packages window-management) dunst)
                 flameshot
                 fzf
                 xmessage ; useful when recompiling xmonad in case of errors
                 ghc
-                ghc-xmonad-contrib
+                (@ (gnu packages window-management) ghc-xmonad-contrib)
                 ghc-raw-strings-qq
                 ghc-regex-base
                 ghc-regex-tdfa
                 libxft
-                polybar
+                (@ (gnu packages window-management) polybar)
                 rofi)
           fonts-all))
 
