@@ -20,12 +20,12 @@
   #:use-module (nmaupu systems misc pam)
   #:use-module (btv tailscale))
 
-(use-service-modules dns guix admin sysctl pm avahi dbus cups desktop linux
-                     mcron networking xorg ssh docker audio virtualization sound sddm)
+(use-service-modules dns guix admin sysctl pm avahi dbus cups desktop linux shepherd
+                     networking xorg ssh docker audio virtualization sound sddm)
 
 (use-package-modules audio video nfs certs shells ssh linux bash emacs gnome authentication
                      networking wm fonts libusb cups freedesktop file-systems xorg
-                     version-control package-management vim freedesktop xdisorg)
+                     version-control package-management vim freedesktop xdisorg base)
 
 (define onepassword-cli-group-name "onepassword-cli")
 (define onepassword-gui-group-name "onepassword")
@@ -57,10 +57,18 @@
                 vim
                 tailscale
                 tailscaled
-                xmonad
+                (@ (gnu packages window-management) xmonad)
                 xset
                 xss-lock)
           %base-packages))
+
+(define garbage-collection-timer
+  ;; Run 'guix gc' everyday at 5AM.
+  (shepherd-timer '(garbage-collection)
+                  #~(calendar-event #:hours '(5) #:minutes '(0))
+                  #~("/run/current-system/profile/bin/guix"
+                     "gc" "-d" "2m" "-F" "50G")
+                  #:requirement '(guix-daemon)))
 
 (define-public base-operating-system
   (operating-system
@@ -315,13 +323,9 @@
                            (extra-special-file "/usr/bin/1password" "/opt/1Password/1password")
 
                            ;; Schedule cron jobs for system tasks
-                           (simple-service 'system-cron-jobs
-                                           mcron-service-type
-                                           (list
-                                            ;; Run `guix gc' 5 minutes after midnight every day.
-                                            ;; ;; Clean up generations older than 2 months and free
-                                            ;; ;; at least 10G of space.
-                                            #~(job "5 0 * * *" "guix gc -d 2m -F 10G"))))))
+                           (simple-service 'timers
+                                   shepherd-root-service-type
+                                   (list garbage-collection-timer)))))
 
    ;; Allow resolution of '.local' host names with mDNS
    (name-service-switch %mdns-host-lookup-nss)))
