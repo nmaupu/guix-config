@@ -9,7 +9,7 @@ export QT_IM_MODULE=ibus
 export SAL_USE_VCLPLUGIN=gen lowriter
 
 # Lock screen only on one screen
-export XSECURELOCK_SINGLE_AUTH_WINDOW=1
+#export XSECURELOCK_SINGLE_AUTH_WINDOW=1
 
 # Avoid alacritty to scale font on DPI
 export WINIT_X11_SCALE_FACTOR=1
