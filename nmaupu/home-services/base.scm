@@ -9,7 +9,8 @@
   #:use-module (nongnu packages chrome)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages slack)
-  #:use-module (nmaupu packages keyboard-layout))
+  #:use-module (nmaupu packages keyboard-layout)
+  #:use-module (nmaupu packages keep-presence))
 
 (use-package-modules curl version-control admin linux rsync vpn
                      web commencement databases algebra bash gnome
@@ -30,6 +31,7 @@
         gcc-toolchain
         htop
         jq
+        keep-presence
         lftp
         cmake
         (specification->package "make")
