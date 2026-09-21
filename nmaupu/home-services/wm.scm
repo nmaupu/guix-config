@@ -7,7 +7,6 @@
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp)
   #:use-module (nongnu packages messaging)
-  #:use-module (nmaupu packages custom-linux)
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages polybar-themes)
   #:use-module (nmaupu packages custom-telegram)
@@ -37,7 +36,7 @@
         setxkbmap))
 
 (define (home-xmonad-profile-service config)
-  (append (list custom-alsa-utils
+  (append (list alsa-utils
                 brightnessctl
                 custom-greenclip
                 dmenu

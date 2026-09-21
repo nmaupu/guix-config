@@ -10,7 +10,8 @@
   #:use-module (nmaupu packages fonts)
   #:use-module (nmaupu packages slack)
   #:use-module (nmaupu packages keyboard-layout)
-  #:use-module (nmaupu packages keep-presence))
+  #:use-module (nmaupu packages keep-presence)
+  #:use-module (nmaupu packages ollama))
 
 (use-package-modules curl version-control admin linux rsync vpn
                      web commencement databases algebra bash gnome
@@ -37,6 +38,7 @@
         (specification->package "make")
         neovim
         node ; provides npm needed for some packages installation (lsp, etc.)
+        ollama
         p7zip
         perl ; sometimes useful
         python

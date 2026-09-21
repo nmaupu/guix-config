@@ -8,19 +8,18 @@
   #:use-module (gnu home services desktop)
   #:use-module (gnu home services shepherd)
   #:use-module (gnu home services sound)
-  #:use-module (guix gexp)
-  #:use-module (nmaupu packages custom-linux))
+  #:use-module (guix gexp))
 
 (define (home-pipewire-profile-service config)
   (list xdg-desktop-portal
         (@ (gnu packages pulseaudio) pasystray)
         (@ (gnu packages pulseaudio) pavucontrol)
-        custom-pipewire
-        custom-wireplumber))
+        pipewire
+        wireplumber))
 
 ;;;;;;;;;;
 ;; This is basically a copy/paste of the service from guix repo
-;; Needed to make use of our own pipewire, wireplumber, etc. dependencies
+;; Kept so the daemons can be pointed at specific pipewire/wireplumber packages if needed
 (define (home-pipewire-shepherd-service config)
   (list
    ;; Start Pipewire daemon
@@ -29,7 +28,7 @@
     (provision '(pipewire))
     (stop  #~(make-kill-destructor))
     (start #~(make-forkexec-constructor
-              (list #$(file-append custom-pipewire "/bin/pipewire"))
+              (list #$(file-append pipewire "/bin/pipewire"))
               #:log-file (string-append
                           (or (getenv "XDG_LOG_HOME")
                               (format #f "~a/.local/var/log"
@@ -44,7 +43,7 @@
     (provision '(pipewire-pulse))
     (stop  #~(make-kill-destructor))
     (start #~(make-forkexec-constructor
-              (list #$(file-append custom-pipewire "/bin/pipewire-pulse"))
+              (list #$(file-append pipewire "/bin/pipewire-pulse"))
               #:log-file (string-append
                           (or (getenv "XDG_LOG_HOME")
                               (format #f "~a/.local/var/log"
@@ -59,7 +58,7 @@
     (provision '(wireplumber))
     (stop  #~(make-kill-destructor))
     (start #~(make-forkexec-constructor
-              (list #$(file-append custom-wireplumber "/bin/wireplumber"))
+              (list #$(file-append wireplumber "/bin/wireplumber"))
               #:log-file (string-append
                           (or (getenv "XDG_LOG_HOME")
                               (format #f "~a/.local/var/log"
@@ -73,13 +72,13 @@
   `(("alsa/asoundrc"
      ,(mixed-text-file
        "asoundrc"
-       "<" custom-pipewire "/share/alsa/alsa.conf.d/50-pipewire.conf>\n"
-       "<" custom-pipewire "/share/alsa/alsa.conf.d/99-pipewire-default.conf>\n"
+       "<" pipewire "/share/alsa/alsa.conf.d/50-pipewire.conf>\n"
+       "<" pipewire "/share/alsa/alsa.conf.d/99-pipewire-default.conf>\n"
        "pcm_type.pipewire {\n"
-       "  lib \"" custom-pipewire "/lib/alsa-lib/libasound_module_pcm_pipewire.so\"\n"
+       "  lib \"" pipewire "/lib/alsa-lib/libasound_module_pcm_pipewire.so\"\n"
        "}\n"
        "ctl_type.pipewire {\n"
-       "  lib \"" custom-pipewire "/lib/alsa-lib/libasound_module_ctl_pipewire.so\"\n"
+       "  lib \"" pipewire "/lib/alsa-lib/libasound_module_ctl_pipewire.so\"\n"
        "}\n"))))
 
 (define home-pipewire-service-type
