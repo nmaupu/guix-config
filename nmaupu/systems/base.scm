@@ -16,6 +16,8 @@
   #:use-module (nmaupu packages custom-linux)
   #:use-module (gnu packages disk)
   #:use-module (guix packages)
+  #:use-module ((guix gexp) #:select (mixed-text-file))
+  #:use-module ((gnu packages containers) #:select (runc))
   #:use-module (nmaupu systems misc polkit)
   #:use-module (nmaupu systems misc pam)
   #:use-module (btv tailscale))
@@ -279,7 +281,23 @@
 
                            ;; Docker and qemu
                            (service containerd-service-type)
-                           (service docker-service-type)
+                           ;; Guix patches the stock runtime name to the runc *store
+                           ;; path*, which changes on every upgrade. Containers record
+                           ;; the runtime name at creation, so after an upgrade they
+                           ;; fail with "Unknown runtime specified /gnu/store/<old>".
+                           ;; Registering an explicitly named runtime keeps the name
+                           ;; recorded in containers stable across upgrades.
+                           (service docker-service-type
+                                    (docker-configuration
+                                     (config-file
+                                      (mixed-text-file
+                                       "daemon.json"
+                                       "{\n"
+                                       "  \"default-runtime\": \"runc\",\n"
+                                       "  \"runtimes\": {\n"
+                                       "    \"runc\": { \"path\": \"" runc "/sbin/runc\" }\n"
+                                       "  }\n"
+                                       "}\n"))))
                            (service libvirt-service-type
                                     (libvirt-configuration
                                      (unix-sock-group "libvirt")
