@@ -13,3 +13,19 @@
 
 [safe]
   directory = ~/work/perso/guix
+
+[merge]
+  tool = meld
+  conflictStyle = diff3
+
+[mergetool]
+  # Do not prompt to confirm opening each conflicting file
+  prompt = false
+  # Do not keep the .orig backup files after a successful merge
+  keepBackup = false
+
+[mergetool "meld"]
+  # Tell Git to trust Meld's exit code to determine if the merge succeeded
+  trustExitCode = true
+  # Guix specific: If your tool is in a custom profile, explicitly define the path
+  # path = /home/USER/.guix-profile/bin/meld
