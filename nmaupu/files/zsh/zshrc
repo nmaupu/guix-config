@@ -132,11 +132,12 @@ if [ -d "${ZDOTDIR:-$HOME}/.zshrc.d" ]; then
 fi
 
 # kube configs
+# Rebuilt from scratch (not appended to the inherited value) so nested shells
+# don't accumulate duplicates or keep files that have since been deleted:
+# kubectl ignores missing files but kube-rs based tools (kubectl-view-allocations) fail.
 if [ -d "$HOME/.kube/conf.d" ]; then
-  find "$HOME/.kube/conf.d" -type f | while read -r file; do
-    KUBECONFIG="${KUBECONFIG}:${file}"
-  done
-  export KUBECONFIG
+  # Keep find's order: kubectl takes current-context from the first file setting it
+  export KUBECONFIG="$(find "$HOME/.kube/conf.d" -type f | paste -sd:)"
 fi
 
 # Autosuggestions default color is the same as the background color...

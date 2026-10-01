@@ -23,9 +23,11 @@
   #:use-module (nmaupu packages argocd)
   #:use-module (nmaupu packages cursor-ai)
   #:use-module (nmaupu packages postman)
+  #:use-module (nmaupu packages kubectl-view-allocations)
   #:use-module (gnu packages protobuf)
   #:use-module (gnu packages java)
   #:use-module (gnu packages golang-apps)
+  #:use-module (gnu packages rust)
   #:use-module (gnu packages version-control))
 
 (define (home-dev-profile-service config)
@@ -51,7 +53,10 @@
         pre-commit
         openjdk
         cursor-ai
-        postman))
+        postman
+        kubectl-view-allocations
+        ;; The profile accepts (package "output") tuples to select a non-default output
+        (list rust "cargo")))
 
 (define (with-home p)
   (string-append "$HOME/" p))
