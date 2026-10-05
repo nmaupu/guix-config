@@ -21,6 +21,7 @@
   #:use-module (nmaupu packages sops)
   #:use-module (nmaupu packages docker)
   #:use-module (nmaupu packages argocd)
+  #:use-module (nmaupu packages argonaut)
   #:use-module (nmaupu packages cursor-ai)
   #:use-module (nmaupu packages postman)
   #:use-module (nmaupu packages kubectl-view-allocations)
@@ -48,6 +49,7 @@
         sops
         docker-compose
         argocd
+        argonaut
         go-jsonnet
         protobuf
         pre-commit
