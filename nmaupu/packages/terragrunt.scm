@@ -47,13 +47,6 @@
       (description "Terragrunt is a flexible orchestration tool that allows Infrastructure as Code written in OpenTofu/Terraform to scale.")
       (license license:expat))))
 
-(define-public terragrunt-0.78
-  (package
-    (inherit (make-terragrunt #:version "0.78.0"
-                              #:amd64-hash (base32 "0iiwx5nvam958km2hg7968gwdz4c0vw3yp4rhc7ifbjgqhvmpg6y")
-                              #:arm64-hash (base32 "1f3c0wv35pd398c2li41wy5wxb5kkx7vp79dxmv4snij53jaak0x")))
-    (name "terragrunt-0.78")))
-
 (define-public terragrunt-0.99
   (package
     (inherit (make-terragrunt #:version "0.99.5"
@@ -61,7 +54,14 @@
                               #:arm64-hash (base32 "195dri5na9jw51c7h4r49sp9kmxdlhq6mqz2cdwnxh81g76vp92p")))
     (name "terragrunt-0.99")))
 
+(define-public terragrunt-1.1.6
+  (package
+    (inherit (make-terragrunt #:version "1.1.6"
+                              #:amd64-hash (base32 "014vyrmh7pshczwl37hdm56apkbza15pzcdwv80bln274sxq0nnp")
+                              #:arm64-hash (base32 "17b4h5akk474770q12pkbhagp17vksyq04c3vfgk0ymfkgwkvd24")))
+    (name "terragrunt-1.1.6")))
+
 (define-public terragrunt
   (package
-    (inherit terragrunt-0.99)
+    (inherit terragrunt-1.1.6)
     (name "terragrunt")))
