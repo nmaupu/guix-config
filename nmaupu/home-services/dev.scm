@@ -25,11 +25,13 @@
   #:use-module (nmaupu packages cursor-ai)
   #:use-module (nmaupu packages postman)
   #:use-module (nmaupu packages kubectl-view-allocations)
+  #:use-module (nmaupu packages pi-extensions)
   #:use-module (gnu packages protobuf)
   #:use-module (gnu packages java)
   #:use-module (gnu packages golang-apps)
   #:use-module (gnu packages rust)
-  #:use-module (gnu packages version-control))
+  #:use-module (gnu packages version-control)
+  #:use-module (gnu packages web))
 
 (define (home-dev-profile-service config)
   ;; goenv is linked to ~/.local/goenv
@@ -76,6 +78,84 @@
     ;; Edit @2025-08-26: lots of seg fault because gcc-toolchain is outdated in home so commenting it for now
     ;;("LD_LIBRARY_PATH" . ,(file-append gcc-toolchain "/lib"))))
 
+(define (pi-extensions-files)
+  ;; Files are linked one by one so ~/.pi/agent stays writable for pi
+  ;; (settings, sessions, auth) and for custom agents/prompts.
+  (let ((share (lambda (p) (file-append pi-extensions "/share/pi/" p))))
+    (append
+     `((".local/bin/pi" ,pi-wrapper)
+       (".pi/agent/extensions/plan-mode" ,(share "extensions/plan-mode"))
+       (".pi/agent/extensions/subagent" ,(share "extensions/subagent")))
+     (map (lambda (f)
+            (list (string-append ".pi/agent/agents/" f)
+                  (share (string-append "agents/" f))))
+          '("planner.md" "reviewer.md" "scout.md" "worker.md"))
+     (map (lambda (f)
+            (list (string-append ".pi/agent/prompts/" f)
+                  (share (string-append "prompts/" f))))
+          '("implement.md" "implement-and-review.md" "scout-and-plan.md")))))
+
+;; Pi packages (what `pi install <source>` would add).  They are merged into
+;; ~/.pi/agent/settings.json, which pi also writes to and therefore cannot be a
+;; read-only symlink; pi installs missing packages on next startup.
+;; Entries are matched by package identity (npm version ignored) so bumping a
+;; version here replaces the previous one.  Removing an entry does not remove it
+;; from settings.json, use `pi remove <source>` for that.
+(define %pi-packages
+  '("npm:pi-ollama-cloud@0.13.0"
+    "npm:@aliou/pi-guardrails@0.19.0"
+    "npm:@juicesharp/rpiv-ask-user-question@2.13.8"
+    "npm:@juicesharp/rpiv-todo@2.13.8"
+    ;; pi-lens needs the gcc libs from pi-wrapper for its native tools
+    "npm:pi-lens@4.4.3"))
+
+(define pi-settings-activation
+  (with-imported-modules '((guix build utils))
+    #~(begin
+        (use-modules (guix build utils) (ice-9 popen) (ice-9 textual-ports))
+        (let* ((dir (string-append (getenv "HOME") "/.pi/agent"))
+               (file (string-append dir "/settings.json"))
+               (tmp (string-append file ".guix-tmp"))
+               (filter "def id: (if type == \"string\" then . else .source end)
+                          | sub(\"^npm:(?<n>@?[^@]+)(@.*)?$\"; \"npm:\\(.n)\");
+                        ($pkgs | map(id)) as $ids
+                        | .packages = ([(.packages // [])[]
+                                        | select(id as $i | $ids | index($i) | not)]
+                                       + $pkgs)"))
+          (mkdir-p dir)
+          (unless (file-exists? file)
+            (call-with-output-file file (lambda (port) (display "{}" port))))
+          (let* ((pipe (open-pipe* OPEN_READ #$(file-append jq "/bin/jq")
+                                   "--argjson" "pkgs"
+                                   #$(string-append
+                                      "["
+                                      (string-join (map (lambda (p) (string-append "\"" p "\""))
+                                                        %pi-packages)
+                                                   ",")
+                                      "]")
+                                   filter file))
+                 (json (get-string-all pipe)))
+            (unless (zero? (status:exit-val (close-pipe pipe)))
+              (error "pi-packages: jq failed on" file))
+            (call-with-output-file tmp (lambda (port) (display json port))))
+          (rename-file tmp file)))))
+
+;; pi is installed by npm in ~/.npm-global.  This wrapper (first on PATH via
+;; ~/.local/bin) gives pi and the tools it spawns the gcc runtime libs:
+;; prebuilt binaries pulled by pi packages (e.g. ast-grep for pi-lens) need
+;; libgcc_s.so.1.  Scoped to pi as a global LD_LIBRARY_PATH caused segfaults.
+(define pi-wrapper
+  (computed-file
+   "pi"
+   #~(begin
+       (call-with-output-file #$output
+         (lambda (port)
+           (format port "#!/bin/sh
+export LD_LIBRARY_PATH=\"~a/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"
+exec \"$HOME/.npm-global/bin/pi\" \"$@\"
+" #$gcc-toolchain)))
+       (chmod #$output #o555))))
+
 (define home-dev-service-type
   (service-type (name 'dev-tools)
                 (description "Dev tools configuration and packages.")
@@ -97,6 +177,12 @@
                    home-files-service-type
                    `((,%goenv-root
                       ,(directory-union "goenv" (list goenv)))))
+   (simple-service 'pi-extensions
+                   home-files-service-type
+                   (pi-extensions-files))
+   (simple-service 'pi-packages
+                   home-activation-service-type
+                   pi-settings-activation)
    (service home-gpg-agent-service-type
          (home-gpg-agent-configuration
           (pinentry-program
