@@ -78,12 +78,18 @@
     ;; Edit @2025-08-26: lots of seg fault because gcc-toolchain is outdated in home so commenting it for now
     ;;("LD_LIBRARY_PATH" . ,(file-append gcc-toolchain "/lib"))))
 
+(define pi-mcp-config
+  (local-file "../files/pi/agent/mcp.json"))
+
 (define (pi-extensions-files)
   ;; Files are linked one by one so ~/.pi/agent stays writable for pi
   ;; (settings, sessions, auth) and for custom agents/prompts.
+  ;; OAuth tokens are intentionally kept out of this declarative config; pi stores
+  ;; them separately in ~/.pi/agent/mcp-auth.json after `pi mcp login <server>`.
   (let ((share (lambda (p) (file-append pi-extensions "/share/pi/" p))))
     (append
      `((".local/bin/pi" ,pi-wrapper)
+       (".pi/agent/mcp.json" ,pi-mcp-config)
        (".pi/agent/extensions/plan-mode" ,(share "extensions/plan-mode"))
        (".pi/agent/extensions/subagent" ,(share "extensions/subagent")))
      (map (lambda (f)
