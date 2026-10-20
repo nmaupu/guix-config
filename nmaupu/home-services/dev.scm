@@ -8,7 +8,10 @@
   #:use-module (gnu packages patchutils)
   #:use-module (gnu packages gnupg)
   #:use-module (gnu packages commencement)
+  #:use-module (gnu packages networking)
   #:use-module (guix gexp)
+  #:use-module (guix packages)
+  #:use-module (guix git-download)
   #:use-module (nmaupu packages tfenv)
   #:use-module (nmaupu packages goenv)
   #:use-module (nmaupu packages google-cloud-sdk)
@@ -45,6 +48,7 @@
         pinentry-rofi
         ;; TODO Create a specific home-service for pro tools
         gnupg
+        proxychains-ng
         terragrunt
         git-secret
         skaffold
@@ -81,6 +85,19 @@
 (define pi-mcp-config
   (local-file "../files/pi/agent/mcp.json"))
 
+;; Anthropic's skills collection (https://github.com/anthropics/skills).  Only
+;; selected skills are linked below so the others don't clutter pi's system
+;; prompt.  Bump: `git rev-parse HEAD` + `guix hash -rx .` on a fresh clone.
+(define anthropic-skills-src
+  (origin
+    (method git-fetch)
+    (uri (git-reference
+          (url "https://github.com/anthropics/skills")
+          (commit "dbd4588f9e1033efb41dad4bef2f7947c8993d44")))
+    (file-name "anthropic-skills-checkout")
+    (sha256
+     (base32 "1x81ypg4nfacr4ma9vphj890yrnwhhv6i6124npq6y7jgh32lhpr"))))
+
 (define (pi-extensions-files)
   ;; Files are linked one by one so ~/.pi/agent stays writable for pi
   ;; (settings, sessions, auth) and for custom agents/prompts.
@@ -91,7 +108,9 @@
      `((".local/bin/pi" ,pi-wrapper)
        (".pi/agent/mcp.json" ,pi-mcp-config)
        (".pi/agent/extensions/plan-mode" ,(share "extensions/plan-mode"))
-       (".pi/agent/extensions/subagent" ,(share "extensions/subagent")))
+       (".pi/agent/extensions/subagent" ,(share "extensions/subagent"))
+       (".pi/agent/skills/frontend-design"
+        ,(file-append anthropic-skills-src "/skills/frontend-design")))
      (map (lambda (f)
             (list (string-append ".pi/agent/agents/" f)
                   (share (string-append "agents/" f))))
@@ -104,8 +123,8 @@
 ;; Pi packages (what `pi install <source>` would add).  They are merged into
 ;; ~/.pi/agent/settings.json, which pi also writes to and therefore cannot be a
 ;; read-only symlink; pi installs missing packages on next startup.
-;; Entries are matched by package identity (npm version ignored) so bumping a
-;; version here replaces the previous one.  Removing an entry does not remove it
+;; Entries are matched by package identity (npm version / git ref ignored) so
+;; bumping a version here replaces the previous one.  Removing an entry does not remove it
 ;; from settings.json, use `pi remove <source>` for that.
 (define %pi-packages
   '("npm:pi-ollama-cloud@0.13.0"
@@ -113,7 +132,10 @@
     "npm:@juicesharp/rpiv-ask-user-question@2.13.8"
     "npm:@juicesharp/rpiv-todo@2.13.8"
     ;; pi-lens needs the gcc libs from pi-wrapper for its native tools
-    "npm:pi-lens@4.4.3"))
+    "npm:pi-lens@4.4.3"
+    ;; Agent Skills library; pi auto-discovers its skills/ dir.  Loaded as
+    ;; /skill:<name> commands (brainstorming, test-driven-development, ...).
+    "git:github.com/obra/superpowers@v7.0.0"))
 
 (define pi-settings-activation
   (with-imported-modules '((guix build utils))
@@ -122,8 +144,11 @@
         (let* ((dir (string-append (getenv "HOME") "/.pi/agent"))
                (file (string-append dir "/settings.json"))
                (tmp (string-append file ".guix-tmp"))
+               ;; id strips a trailing @version / @ref ("npm:@s/p@1.0" -> "npm:@s/p",
+               ;; "git:host/repo@v1" -> "git:host/repo"); ssh sources like
+               ;; "git:git@host:repo" are untouched since their '@' is not trailing.
                (filter "def id: (if type == \"string\" then . else .source end)
-                          | sub(\"^npm:(?<n>@?[^@]+)(@.*)?$\"; \"npm:\\(.n)\");
+                          | sub(\"@[^@/:]+$\"; \"\");
                         ($pkgs | map(id)) as $ids
                         | .packages = ([(.packages // [])[]
                                         | select(id as $i | $ids | index($i) | not)]
