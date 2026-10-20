@@ -109,7 +109,8 @@ kcs() {
     new_context=$(kubectl config get-contexts -o=name | fzf -0 -1 --tac -q "${1:-""}")
   fi
 
-  kubectl config use-context "${new_context}"
+  kubectl config use-context "${new_context}";
+  rm -f "${ZDOTDIR:-$HOME}/.kube/conf.d/gke_gcloud_auth_plugin_cache"
 }
 
 # Kubernetes - change current namespace
