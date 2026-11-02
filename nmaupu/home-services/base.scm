@@ -92,4 +92,5 @@
    (service home-dotfiles-service-type
             (home-dotfiles-configuration
              (directories '("../files/firefox-no-libva"
+                            "../files/android-studio"
                             "../files/nvim"))))))

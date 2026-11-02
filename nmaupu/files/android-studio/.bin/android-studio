@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+# Android Studio (nonguix) runs inside a container where its PID is always low
+# (e.g. 12). If it is not shut down cleanly (reboot, logout), it leaves a stale
+# lock file holding that PID. On next launch, another process in the new
+# container may have that same PID, so the IDE thinks it's already running and
+# exits with DirectoryLock$CannotActivateException.
+# Remove stale lock/port files when no Android Studio instance is running.
+
+SANDBOX_HOME="${GUIX_SANDBOX_HOME:-$HOME/.local/share/guix-sandbox-home}"
+
+if ! pgrep -f 'com\.android\.tools\.idea\.MainWrapper' > /dev/null 2>&1; then
+    rm -f "$SANDBOX_HOME"/.config/Google/AndroidStudio*/.lock \
+          "$SANDBOX_HOME"/.cache/Google/AndroidStudio*/.port
+fi
+
+exec "$HOME/.guix-profile/bin/android-studio" "$@"
