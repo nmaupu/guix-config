@@ -20,7 +20,7 @@
 (define-public slack
   (package
     (name "slack")
-    (version "4.45.64")
+    (version "4.53.292")
     (source
      (origin
        (method url-fetch)
@@ -29,7 +29,7 @@
                            "/slack-desktop-" version "-amd64.deb"))
        (file-name (string-append "slack-" version ".deb"))
        (sha256
-        (base32 "03qqxpgyiyfn47l5i13ym21qm57rp5vpskhdjgn8lxymn5mghskw"))))
+        (base32 "1z8hr4sc2x84c6z5lb7k2ndqd2gdgfi8my47l8kpbhgb2mynlcf6"))))
     (build-system chromium-binary-build-system)
     (arguments
      (list #:substitutable? #f
