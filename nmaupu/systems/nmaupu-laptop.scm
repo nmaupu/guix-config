@@ -5,6 +5,7 @@
   #:use-module (gnu packages) ;specification->package procedure
   #:use-module (gnu packages file-systems)
   #:use-module (gnu services)
+  #:use-module (gnu services nix)
   #:use-module (gnu system)
   #:use-module (gnu system nss)
   #:use-module (gnu system uuid)
@@ -59,6 +60,10 @@
   ;;                    %default-kernel-arguments))
 
   (host-name "nmaupu-laptop")
+
+  ;; Nix package manager daemon (store lives on /dev/mapper/sys-nixstore)
+  (services (cons (service nix-service-type)
+                  (operating-system-user-services base-operating-system)))
 
   ;; Creating a mapped luks device for all the LVM partitions
   (mapped-devices (list
